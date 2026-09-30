@@ -1,0 +1,990 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>AI Learning Shelf</title>
+    <meta
+      name="description"
+      content="A curated shelf of free courses, talks, tutorials and articles for learning agent skills, MCP, harnesses, context engineering, evals and more."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316181d'/%3E%3Crect x='6' y='7' width='5' height='18' fill='%23c9b8ff'/%3E%3Crect x='13' y='10' width='5' height='15' fill='%23d4f25c'/%3E%3Crect x='20' y='5' width='6' height='20' fill='%238fd3ff' transform='rotate(8 23 15)'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* Layout: a library shelf. Sticky search bar on top, a category rail
+         on the left (chip scroller on phones), and a main pane where each
+         category is a shelf of tactile, hard-edged resource slips. */
+      :root {
+        --bg: #eef1ec;
+        --surface: #ffffff;
+        --sunk: #e2e7df;
+        --ink: #16181d;
+        --ink-soft: #4a4f57;
+        --dim: #6f746c;
+        --line: #16181d;
+        --hair: #c7cdc3;
+        --accent: #3b2bd9;
+        --on-accent: #ffffff;
+        --chip-ink: #16181d;
+        --shadow: #16181d;
+
+        /* category swatches: pastel fills that always carry dark text */
+        --c-skills: #c9b8ff;
+        --c-agents: #8fd3ff;
+        --c-harness: #ffd166;
+        --c-context: #8ef0c4;
+        --c-mcp: #d4f25c;
+        --c-evals: #ffb3d9;
+        --c-graphrag: #ffab91;
+        --c-docs: #b5e3e0;
+        --c-coding: #e6c9a8;
+
+        --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+        --body: "Atkinson Hyperlegible", -apple-system, "Segoe UI", system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+        --rail: 248px;
+        --bar: 64px;
+        color-scheme: light;
+      }
+      /* dark theme: Catppuccin Frappé, hex values from the official palette */
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #303446;          /* base */
+          --surface: #414559;     /* surface0 */
+          --sunk: #292c3c;        /* mantle */
+          --ink: #c6d0f5;         /* text */
+          --ink-soft: #a5adce;    /* subtext0 */
+          --dim: #838ba7;         /* overlay1 */
+          --line: #949cbb;        /* overlay2 */
+          --hair: #51576d;        /* surface1 */
+          --accent: #ca9ee6;      /* mauve */
+          --on-accent: #232634;   /* crust */
+          --shadow: #232634;      /* crust */
+          --chip-ink: #232634;    /* crust */
+          --c-skills: #ca9ee6;    /* mauve */
+          --c-agents: #99d1db;    /* sky */
+          --c-harness: #e5c890;   /* yellow */
+          --c-context: #81c8be;   /* teal */
+          --c-mcp: #a6d189;       /* green */
+          --c-evals: #f4b8e4;     /* pink */
+          --c-graphrag: #ef9f76;  /* peach */
+          --c-docs: #85c1dc;      /* sapphire */
+          --c-coding: #eebebe;    /* flamingo */
+          color-scheme: dark;
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #303446;          /* base */
+        --surface: #414559;     /* surface0 */
+        --sunk: #292c3c;        /* mantle */
+        --ink: #c6d0f5;         /* text */
+        --ink-soft: #a5adce;    /* subtext0 */
+        --dim: #838ba7;         /* overlay1 */
+        --line: #949cbb;        /* overlay2 */
+        --hair: #51576d;        /* surface1 */
+        --accent: #ca9ee6;      /* mauve */
+        --on-accent: #232634;   /* crust */
+        --shadow: #232634;      /* crust */
+        --chip-ink: #232634;    /* crust */
+        --c-skills: #ca9ee6;    /* mauve */
+        --c-agents: #99d1db;    /* sky */
+        --c-harness: #e5c890;   /* yellow */
+        --c-context: #81c8be;   /* teal */
+        --c-mcp: #a6d189;       /* green */
+        --c-evals: #f4b8e4;     /* pink */
+        --c-graphrag: #ef9f76;  /* peach */
+        --c-docs: #85c1dc;      /* sapphire */
+        --c-coding: #eebebe;    /* flamingo */
+        color-scheme: dark;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font: 400 16px/1.55 var(--body);
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+      a {
+        color: inherit;
+      }
+      button,
+      input {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      ::selection {
+        background: var(--accent);
+        color: var(--on-accent);
+      }
+      [hidden] {
+        display: none !important;
+      }
+
+      /* ---------- top bar ---------- */
+      .bar {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        z-index: 10;
+        display: grid;
+        grid-template-columns: var(--rail) minmax(0, 1fr) auto;
+        align-items: center;
+        min-height: var(--bar);
+        background: var(--bg);
+        border-bottom: 1px solid var(--hair);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-inline: 20px;
+        height: 100%;
+        border-right: 1px solid var(--hair);
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.15rem;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+      }
+      .brand-mark {
+        display: flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 22px;
+      }
+      .brand-mark i {
+        display: block;
+        width: 6px;
+        border: 1.5px solid var(--line);
+      }
+      .brand-mark i:nth-child(1) { height: 20px; background: var(--c-skills); }
+      .brand-mark i:nth-child(2) { height: 15px; background: var(--c-mcp); }
+      .brand-mark i:nth-child(3) { height: 22px; background: var(--c-agents); transform: rotate(9deg); transform-origin: bottom left; }
+
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-inline: 20px;
+        padding: 0 12px;
+        height: 42px;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        box-shadow: 3px 3px 0 var(--shadow);
+        min-width: 0;
+      }
+      .search:focus-within {
+        box-shadow: 5px 5px 0 var(--hair);
+      }
+      .search svg {
+        flex: none;
+        color: var(--dim);
+      }
+      .search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: none;
+        outline: none;
+        height: 100%;
+      }
+      .search input::placeholder {
+        color: var(--dim);
+      }
+      kbd {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        padding: 1px 6px;
+        border: 1.5px solid var(--hair);
+        background: var(--sunk);
+        color: var(--ink-soft);
+      }
+      /* hide the browser's own × so only our clear button shows */
+      .search input::-webkit-search-cancel-button,
+      .search input::-webkit-search-decoration {
+        -webkit-appearance: none;
+        appearance: none;
+        display: none;
+      }
+      .search-clear {
+        flex: none;
+        border: 1.5px solid var(--hair);
+        background: var(--sunk);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--ink-soft);
+        padding: 2px 8px;
+        box-shadow: 0 0 0 var(--shadow);
+        transition: transform 0.15s ease, box-shadow 0.15s ease,
+          background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      }
+      .search-clear:hover,
+      .search-clear:focus-visible {
+        background: var(--c-evals);
+        border-color: var(--line);
+        color: var(--chip-ink);
+        transform: translate(-2px, -2px);
+        box-shadow: 2px 2px 0 var(--shadow);
+      }
+      .search-clear:active {
+        transform: translate(0, 0);
+        box-shadow: 0 0 0 var(--shadow);
+      }
+      .bar-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-inline: 0 20px;
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--ink-soft);
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+      .bar-meta b {
+        color: var(--ink);
+      }
+      .theme-btn {
+        border: 2px solid var(--line);
+        background: var(--surface);
+        padding: 6px 10px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        box-shadow: 2px 2px 0 var(--shadow);
+      }
+      .theme-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
+
+      /* ---------- shell ---------- */
+      .shell {
+        display: grid;
+        grid-template-columns: var(--rail) minmax(0, 1fr);
+        align-items: start;
+      }
+
+      /* ---------- category rail ---------- */
+      .rail {
+        position: sticky;
+        top: calc(env(safe-area-inset-top, 0px) + var(--bar));
+        max-height: calc(100vh - var(--bar));
+        overflow-y: auto;
+        border-right: 1px solid var(--hair);
+        min-height: calc(100vh - var(--bar));
+        padding-block: 20px;
+      }
+      .rail-label {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+        padding: 0 20px 10px;
+      }
+      .rail-nav {
+        display: flex;
+        flex-direction: column;
+      }
+      .rail-item {
+        display: grid;
+        grid-template-columns: 14px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 9px 20px;
+        border: 0;
+        background: none;
+        text-align: left;
+        font-size: 0.95rem;
+      }
+      .rail-item:hover {
+        background: var(--sunk);
+      }
+      .rail-item .sw {
+        width: 14px;
+        height: 14px;
+        border: 1.5px solid var(--line);
+        background: var(--sw, var(--surface));
+      }
+      .rail-item .n {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--dim);
+        font-variant-numeric: tabular-nums;
+      }
+      .rail-item[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .rail-item[aria-pressed="true"] .n {
+        color: var(--bg);
+      }
+      .rail-item[aria-pressed="true"] .sw {
+        border-color: var(--bg);
+      }
+      .rail-foot {
+        margin: 24px 20px 0;
+        padding-top: 16px;
+        border-top: 1.5px dashed var(--hair);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .fmt-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .fmt-btn {
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        padding: 3px 8px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+      }
+      .fmt-btn[aria-pressed="true"] {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--on-accent);
+      }
+
+      /* ---------- main ---------- */
+      main {
+        min-width: 0;
+        padding: 36px 40px 24px;
+      }
+      .view-toggle {
+        display: flex;
+        border: 2px solid var(--line);
+        box-shadow: 2px 2px 0 var(--shadow);
+      }
+      .view-toggle button {
+        border: 0;
+        background: var(--surface);
+        padding: 6px 10px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+      }
+      .view-toggle button + button {
+        border-left: 2px solid var(--line);
+      }
+      .view-toggle button[aria-pressed="true"] {
+        background: var(--ink);
+        color: var(--bg);
+      }
+
+      /* ---------- shelves ---------- */
+      .shelves {
+        display: flex;
+        flex-direction: column;
+        gap: 44px;
+      }
+      .shelf-head {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+        margin-bottom: 16px;
+      }
+      .shelf-head h2 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.6rem;
+        letter-spacing: -0.02em;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .shelf-head h2 .tab {
+        display: inline-block;
+        width: 18px;
+        height: 18px;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        transform: rotate(-6deg);
+      }
+
+      /* list view: slips stacked like index cards in a drawer */
+      .slips {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .slip {
+        display: grid;
+        grid-template-columns: 96px minmax(0, 1fr);
+        align-items: center;
+        gap: 18px;
+        padding: 14px 18px;
+        background: var(--surface);
+        border: 2px solid var(--line);
+        box-shadow: 4px 4px 0 var(--shadow);
+        text-decoration: none;
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+      .slip:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 6px 6px 0 var(--sw);
+      }
+      .slip:active {
+        transform: translate(4px, 4px);
+        box-shadow: 0 0 0 var(--shadow);
+      }
+      .fmt {
+        justify-self: start;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px 8px;
+        border: 1.5px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+      }
+      .fmt svg {
+        width: 11px;
+        height: 11px;
+      }
+      .slip-body {
+        min-width: 0;
+      }
+      .slip-title {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 1.12rem;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
+        margin: 0;
+        text-wrap: balance;
+      }
+      .slip-meta {
+        margin: 4px 0 0;
+        font-size: 0.85rem;
+        color: var(--ink-soft);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 12px;
+      }
+      .slip-meta .host {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--dim);
+        overflow-wrap: anywhere;
+      }
+
+      /* cards view */
+      .grid-view .slips {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+      }
+      .grid-view .slip {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto 1fr;
+        align-items: start;
+        min-height: 170px;
+        padding: 0;
+        gap: 0;
+      }
+      .grid-view .fmt {
+        grid-column: 1;
+        margin: 16px 0 0 16px;
+      }
+      .grid-view .slip-body {
+        align-self: end;
+        padding: 18px 16px 16px;
+        border-top: 2px dashed var(--hair);
+        margin-top: 16px;
+      }
+
+      .empty {
+        padding: 48px 24px;
+        border: 2px dashed var(--hair);
+        text-align: center;
+        color: var(--ink-soft);
+      }
+      .empty strong {
+        display: block;
+        font-family: var(--display);
+        font-size: 1.4rem;
+        color: var(--ink);
+        margin-bottom: 6px;
+      }
+      .empty button {
+        margin-top: 14px;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        padding: 6px 14px;
+        box-shadow: 3px 3px 0 var(--shadow);
+      }
+
+      footer {
+        margin-top: 56px;
+        padding-top: 18px;
+        border-top: 1px solid var(--hair);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 8px 24px;
+        font-size: 0.85rem;
+        color: var(--dim);
+      }
+      footer .keys {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      /* ---------- narrow screens ---------- */
+      @media (max-width: 860px) {
+        .bar {
+          grid-template-columns: minmax(0, 1fr) auto;
+          padding-block: 10px;
+          padding-inline: 16px;
+          row-gap: 10px;
+        }
+        .brand {
+          border-right: 0;
+          padding-inline: 0;
+        }
+        .bar-meta {
+          padding-inline: 0;
+        }
+        .bar-meta .counter {
+          display: none;
+        }
+        .search {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          margin-inline: 0;
+        }
+        .search kbd {
+          display: none;
+        }
+        .shell {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .rail {
+          position: static;
+          min-height: 0;
+          max-height: none;
+          border-right: 0;
+          border-bottom: 1px solid var(--hair);
+          padding-block: 14px;
+        }
+        .rail-label {
+          padding-inline: 16px;
+        }
+        .rail-nav {
+          flex-direction: row;
+          overflow-x: auto;
+          gap: 8px;
+          padding: 2px 16px 6px;
+          scrollbar-width: thin;
+        }
+        .rail-item {
+          width: auto;
+          flex: none;
+          grid-template-columns: 12px auto auto;
+          gap: 8px;
+          padding: 6px 12px;
+          border: 2px solid var(--line);
+          background: var(--surface);
+          white-space: nowrap;
+        }
+        .rail-foot {
+          margin: 12px 16px 0;
+          padding-top: 12px;
+        }
+        main {
+          padding: 24px 16px 16px;
+        }
+        .slip {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 10px;
+        }
+        footer .keys {
+          display: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .bar {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .bar-meta {
+          grid-row: 3;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="bar">
+      <a class="brand" href="#top" aria-label="AI Learning Shelf, back to top">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        AI Learning Shelf
+      </a>
+
+      <label class="search" for="q">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="2" />
+          <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="2" />
+        </svg>
+        <input
+          id="q"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Search titles, topics or publishers"
+          aria-label="Search resources"
+        />
+        <button class="search-clear" id="q-clear" type="button" hidden>clear</button>
+        <kbd>/</kbd>
+      </label>
+
+      <div class="bar-meta">
+        <span class="counter"><b id="count-shown">0</b> / <span id="count-total">0</span> resources</span>
+        <div class="view-toggle" role="group" aria-label="Layout">
+          <button type="button" id="view-list" aria-pressed="false">list</button>
+          <button type="button" id="view-grid" aria-pressed="true">cards</button>
+        </div>
+        <button class="theme-btn" id="theme-btn" type="button">theme</button>
+      </div>
+    </header>
+
+    <div class="shell" id="top">
+      <nav class="rail" aria-label="Topics">
+        <div class="rail-label">Topics</div>
+        <div class="rail-nav" id="rail-nav"></div>
+        <div class="rail-foot">
+          <div class="rail-label" style="padding: 0">Format</div>
+          <div class="fmt-row" id="fmt-row"></div>
+        </div>
+      </nav>
+
+      <main id="main">
+        <div class="shelves" id="shelves"></div>
+
+        <footer>
+          <span>AI Learning Shelf · links open on the publisher's site in a new tab.</span>
+          <span class="keys">
+            <span><kbd>/</kbd> search</span>
+            <span><kbd>esc</kbd> clear</span>
+            <span><kbd>v</kbd> switch layout</span>
+          </span>
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      const TOPICS = [
+        {
+          id: "skills",
+          name: "Agent Skills",
+        },
+        {
+          id: "mcp",
+          name: "MCP",
+        },
+        {
+          id: "agents",
+          name: "AI Agents",
+        },
+        {
+          id: "harness",
+          name: "Harness",
+        },
+        {
+          id: "context",
+          name: "Context Engineering",
+        },
+        {
+          id: "evals",
+          name: "Evals",
+        },
+        {
+          id: "graphrag",
+          name: "GraphRAG",
+        },
+        {
+          id: "docs",
+          name: "Document Parsing",
+        },
+        {
+          id: "coding",
+          name: "Coding Agents",
+        },
+      ];
+
+      const RESOURCES = [
+        { t: "skills", f: "course", title: "Introduction to Agent Skills", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-agent-skills" },
+        { t: "skills", f: "course", title: "Agent Skills with Anthropic", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/agent-skills-with-anthropic" },
+        { t: "skills", f: "article", title: "Skills explained", by: "Claude blog", url: "https://claude.com/blog/skills-explained" },
+        { t: "skills", f: "tutorial", title: "Writing your first SKILL.md file", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/writing-your-first-skill-md-file" },
+
+        { t: "harness", f: "article", title: "The engine behind autonomous AI agents: harnesses and autoresearch", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
+        { t: "context", f: "article", title: "Context engineering", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" },
+
+        { t: "agents", f: "series", title: "Python + AI: Level Up", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/" },
+        { t: "agents", f: "series", title: "Python + Agents: Building AI agents and workflows with Agent Framework", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1631/" },
+
+        { t: "graphrag", f: "article", title: "GraphRAG: How AI answers questions hidden across many documents", by: "ByteByteGo", url: "https://blog.bytebytego.com/p/graphrag-how-ai-answers-questions" },
+        { t: "evals", f: "article", title: "How evals are central to harness engineering", by: "Hugo Bowne-Anderson", url: "https://hugobowne.substack.com/p/how-evals-are-central-to-harness" },
+
+        { t: "coding", f: "course", title: "Spec-Driven Development with Coding Agents", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents" },
+
+        { t: "mcp", f: "course", title: "Introduction to Model Context Protocol", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-model-context-protocol" },
+        { t: "mcp", f: "course", title: "MCP: Build Rich-Context AI Apps with Anthropic", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic" },
+        { t: "mcp", f: "video", title: "How Model Context Protocol (MCP) actually works", by: "Google Cloud Tech", url: "https://youtu.be/cGuyrANVi4A" },
+        { t: "mcp", f: "tutorial", title: "Build your first MCP server in Python", by: "Pamela Fox · PyCon US 2026", url: "https://pamelafox.github.io/pycon2026-mcp-tutorial/" },
+        { t: "mcp", f: "series", title: "Python + MCP: From local to production", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1614/" },
+        { t: "mcp", f: "video", title: "MCP Live! playlist", by: "YouTube", url: "https://youtube.com/playlist?list=PLJ2a7YWJ3jxk&si=YUapAKeneZH5kzri" },
+        { t: "mcp", f: "notes", title: "Claude and MCP study notes", by: "Knowledge Lab", url: "https://senthilcaesar.github.io/knowledgelab/#claude-mcp" },
+
+        { t: "docs", f: "video", title: "Building the document context layer for AI agents", by: "Jerry Liu, LlamaIndex · AI Engineer", url: "https://youtu.be/RQi7x-navxU" },
+      ];
+
+      const FORMATS = {
+        course: { label: "Course", icon: '<path d="M1 4l5-3 5 3-5 3z M3 5.5V8.5c1.5 1.3 4.5 1.3 6 0V5.5" fill="none" stroke="currentColor" stroke-width="1.4"/>' },
+        video: { label: "Video", icon: '<path d="M3 1.5v9l7.5-4.5z" fill="currentColor"/>' },
+        series: { label: "Series", icon: '<path d="M1 2h10M1 6h10M1 10h10" stroke="currentColor" stroke-width="1.6"/>' },
+        tutorial: { label: "Tutorial", icon: '<path d="M4 3L1 6l3 3M8 3l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.5"/>' },
+        article: { label: "Article", icon: '<path d="M2 1h8v10H2z M4 4h4M4 6h4M4 8h2" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
+        notes: { label: "Notes", icon: '<path d="M2 1h6l2 2v8H2z M4 5h4M4 7.5h4" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
+      };
+
+      const state = { topic: "all", format: "all", q: "", view: "grid" };
+      try {
+        const saved = JSON.parse(localStorage.getItem("shelf-prefs") || "{}");
+        if (saved.view === "list") state.view = "list";
+      } catch (e) {}
+
+      const $ = (s) => document.querySelector(s);
+      const esc = (s) =>
+        s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+      const host = (u) => new URL(u).hostname.replace(/^www\./, "");
+      const topicOf = (id) => TOPICS.find((t) => t.id === id);
+
+      function matches(r) {
+        if (state.format !== "all" && r.f !== state.format) return false;
+        if (!state.q) return true;
+        const hay = [r.title, r.by, host(r.url), topicOf(r.t).name, FORMATS[r.f].label]
+          .join(" ")
+          .toLowerCase();
+        return state.q
+          .toLowerCase()
+          .split(/\s+/)
+          .every((w) => hay.includes(w));
+      }
+
+      function renderRail() {
+        const pool = RESOURCES.filter(matches);
+        const items = [{ id: "all", name: "All topics" }, ...TOPICS];
+        $("#rail-nav").innerHTML = items
+          .map((t) => {
+            const n = t.id === "all" ? pool.length : pool.filter((r) => r.t === t.id).length;
+            const sw = t.id === "all" ? "var(--surface)" : `var(--c-${t.id})`;
+            return `<button class="rail-item" type="button" data-topic="${t.id}" aria-pressed="${state.topic === t.id}" style="--sw:${sw}">
+              <span class="sw" aria-hidden="true"></span><span>${esc(t.name)}</span><span class="n">${n}</span></button>`;
+          })
+          .join("");
+
+        const fmts = ["all", ...Object.keys(FORMATS).filter((f) => RESOURCES.some((r) => r.f === f))];
+        $("#fmt-row").innerHTML = fmts
+          .map(
+            (f) =>
+              `<button class="fmt-btn" type="button" data-format="${f}" aria-pressed="${state.format === f}">${f === "all" ? "any" : FORMATS[f].label.toLowerCase()}</button>`
+          )
+          .join("");
+      }
+
+      function slip(r) {
+        const fmt = FORMATS[r.f];
+        return `<li><a class="slip" href="${esc(r.url)}" target="_blank" rel="noopener" style="--sw:var(--c-${r.t})">
+          <span class="fmt"><svg viewBox="0 0 12 12" aria-hidden="true">${fmt.icon}</svg>${fmt.label}</span>
+          <span class="slip-body">
+            <p class="slip-title">${esc(r.title)}</p>
+            <p class="slip-meta"><span>${esc(r.by)}</span><span class="host">${host(r.url)}</span></p>
+          </span>
+        </a></li>`;
+      }
+
+      function renderShelves() {
+        const visible = RESOURCES.filter(matches);
+        const topics = state.topic === "all" ? TOPICS : [topicOf(state.topic)];
+        const html = topics
+          .map((t) => {
+            const rs = visible.filter((r) => r.t === t.id);
+            if (!rs.length) return "";
+            return `<section class="shelf" id="${t.id}" aria-labelledby="h-${t.id}">
+              <div class="shelf-head">
+                <h2 id="h-${t.id}"><span class="tab" style="--sw:var(--c-${t.id})" aria-hidden="true"></span>${esc(t.name)}</h2>
+              </div>
+              <ul class="slips">${rs.map(slip).join("")}</ul>
+            </section>`;
+          })
+          .join("");
+
+        const shown = topics.reduce((n, t) => n + visible.filter((r) => r.t === t.id).length, 0);
+        $("#count-shown").textContent = shown;
+        $("#count-total").textContent = RESOURCES.length;
+
+        $("#shelves").innerHTML =
+          html ||
+          `<div class="empty"><strong>Nothing on this shelf</strong>No resources match “${esc(state.q || "")}”${
+            state.format !== "all" ? " in " + FORMATS[state.format].label.toLowerCase() + "s" : ""
+          }. Try a broader word or another format.<br /><button type="button" id="reset">Show everything</button></div>`;
+
+        $("#shelves").classList.toggle("grid-view", state.view === "grid");
+        $("#view-list").setAttribute("aria-pressed", state.view === "list");
+        $("#view-grid").setAttribute("aria-pressed", state.view === "grid");
+        $("#q-clear").hidden = !state.q;
+      }
+
+      function render() {
+        renderRail();
+        renderShelves();
+      }
+
+      function reset() {
+        state.topic = "all";
+        state.format = "all";
+        state.q = "";
+        $("#q").value = "";
+        render();
+      }
+
+      $("#rail-nav").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-topic]");
+        if (!b) return;
+        state.topic = b.dataset.topic;
+        render();
+        $("#main").scrollIntoView({ block: "start", behavior: "smooth" });
+      });
+      $("#fmt-row").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-format]");
+        if (!b) return;
+        state.format = b.dataset.format;
+        render();
+      });
+      $("#shelves").addEventListener("click", (e) => {
+        if (e.target.id === "reset") reset();
+      });
+      $("#q").addEventListener("input", (e) => {
+        state.q = e.target.value.trim();
+        render();
+      });
+      $("#q-clear").addEventListener("click", (e) => {
+        e.preventDefault();
+        state.q = "";
+        $("#q").value = "";
+        render();
+        $("#q").focus();
+      });
+
+      function setView(v) {
+        state.view = v;
+        try {
+          localStorage.setItem("shelf-prefs", JSON.stringify({ view: v }));
+        } catch (e) {}
+        renderShelves();
+      }
+      $("#view-list").addEventListener("click", () => setView("list"));
+      $("#view-grid").addEventListener("click", () => setView("grid"));
+
+      // theme: starts from the saved choice or the system setting,
+      // then each click flips between light and dark
+      const root = document.documentElement;
+      const themeBtn = $("#theme-btn");
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+      let saved = null;
+      try {
+        saved = localStorage.getItem("shelf-theme");
+      } catch (e) {}
+      if (saved !== "light" && saved !== "dark") saved = null;
+
+      function currentTheme() {
+        return saved || (systemDark.matches ? "dark" : "light");
+      }
+      function applyTheme() {
+        if (saved) root.setAttribute("data-theme", saved);
+        else root.removeAttribute("data-theme");
+        const t = currentTheme();
+        themeBtn.textContent = "theme: " + t;
+        themeBtn.setAttribute("aria-label", "Switch to " + (t === "dark" ? "light" : "dark") + " theme");
+      }
+      applyTheme();
+      systemDark.addEventListener("change", applyTheme);
+      themeBtn.addEventListener("click", () => {
+        saved = currentTheme() === "dark" ? "light" : "dark";
+        applyTheme();
+        try {
+          localStorage.setItem("shelf-theme", saved);
+        } catch (e) {}
+      });
+
+      document.addEventListener("keydown", (e) => {
+        const typing = e.target.matches("input");
+        if (e.key === "/" && !typing) {
+          e.preventDefault();
+          $("#q").focus();
+        } else if (e.key === "Escape") {
+          if (typing) $("#q").blur();
+          reset();
+        } else if (e.key === "v" && !typing && !e.metaKey && !e.ctrlKey) {
+          setView(state.view === "list" ? "grid" : "list");
+        }
+      });
+
+      // deep link to a topic: index.html#mcp
+      const hash = location.hash.slice(1);
+      if (topicOf(hash)) state.topic = hash;
+      render();
+    </script>
+  </body>
+</html>
