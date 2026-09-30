@@ -57,33 +57,7 @@
         --bar: 64px;
         color-scheme: light;
       }
-      /* dark theme: Catppuccin Frappé, hex values from the official palette */
-      @media (prefers-color-scheme: dark) {
-        :root:not([data-theme="light"]) {
-          --bg: #303446;          /* base */
-          --surface: #414559;     /* surface0 */
-          --sunk: #292c3c;        /* mantle */
-          --ink: #c6d0f5;         /* text */
-          --ink-soft: #a5adce;    /* subtext0 */
-          --dim: #838ba7;         /* overlay1 */
-          --line: #949cbb;        /* overlay2 */
-          --hair: #51576d;        /* surface1 */
-          --accent: #ca9ee6;      /* mauve */
-          --on-accent: #232634;   /* crust */
-          --shadow: #232634;      /* crust */
-          --chip-ink: #232634;    /* crust */
-          --c-skills: #ca9ee6;    /* mauve */
-          --c-agents: #99d1db;    /* sky */
-          --c-harness: #e5c890;   /* yellow */
-          --c-context: #81c8be;   /* teal */
-          --c-mcp: #a6d189;       /* green */
-          --c-evals: #f4b8e4;     /* pink */
-          --c-graphrag: #ef9f76;  /* peach */
-          --c-docs: #85c1dc;      /* sapphire */
-          --c-coding: #eebebe;    /* flamingo */
-          color-scheme: dark;
-        }
-      }
+      /* dark theme (chosen with the toggle): Catppuccin Frappé, hex values from the official palette */
       :root[data-theme="dark"] {
         --bg: #303446;          /* base */
         --surface: #414559;     /* surface0 */
@@ -937,34 +911,26 @@
       $("#view-list").addEventListener("click", () => setView("list"));
       $("#view-grid").addEventListener("click", () => setView("grid"));
 
-      // theme: starts from the saved choice or the system setting,
-      // then each click flips between light and dark
+      // theme: opens in light unless the visitor chose dark before;
+      // each click flips between light and dark
       const root = document.documentElement;
       const themeBtn = $("#theme-btn");
-      const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
-      let saved = null;
+      let theme = "light";
       try {
-        saved = localStorage.getItem("shelf-theme");
+        if (localStorage.getItem("shelf-theme") === "dark") theme = "dark";
       } catch (e) {}
-      if (saved !== "light" && saved !== "dark") saved = null;
 
-      function currentTheme() {
-        return saved || (systemDark.matches ? "dark" : "light");
-      }
       function applyTheme() {
-        if (saved) root.setAttribute("data-theme", saved);
-        else root.removeAttribute("data-theme");
-        const t = currentTheme();
-        themeBtn.textContent = "theme: " + t;
-        themeBtn.setAttribute("aria-label", "Switch to " + (t === "dark" ? "light" : "dark") + " theme");
+        root.setAttribute("data-theme", theme);
+        themeBtn.textContent = "theme: " + theme;
+        themeBtn.setAttribute("aria-label", "Switch to " + (theme === "dark" ? "light" : "dark") + " theme");
       }
       applyTheme();
-      systemDark.addEventListener("change", applyTheme);
       themeBtn.addEventListener("click", () => {
-        saved = currentTheme() === "dark" ? "light" : "dark";
+        theme = theme === "dark" ? "light" : "dark";
         applyTheme();
         try {
-          localStorage.setItem("shelf-theme", saved);
+          localStorage.setItem("shelf-theme", theme);
         } catch (e) {}
       });
 
