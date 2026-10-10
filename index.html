@@ -48,6 +48,7 @@
         --c-graphrag: #ffab91;
         --c-docs: #b5e3e0;
         --c-coding: #e6c9a8;
+        --c-foundations: #aab4ff;
 
         --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
         --body: "Atkinson Hyperlegible", -apple-system, "Segoe UI", system-ui, sans-serif;
@@ -80,6 +81,7 @@
         --c-graphrag: #ef9f76;  /* peach */
         --c-docs: #85c1dc;      /* sapphire */
         --c-coding: #eebebe;    /* flamingo */
+        --c-foundations: #babbf1; /* lavender */
         color-scheme: dark;
       }
 
@@ -733,6 +735,10 @@
           id: "coding",
           name: "Coding Agents",
         },
+        {
+          id: "foundations",
+          name: "Foundations",
+        },
       ];
 
       const RESOURCES = [
@@ -746,6 +752,13 @@
 
         { t: "agents", f: "series", title: "Python + AI: Level Up", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/" },
         { t: "agents", f: "series", title: "Python + Agents: Building AI agents and workflows with Agent Framework", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1631/" },
+        { t: "agents", f: "course", title: "CS 329Z: Engineering AI Agents", by: "Stanford University", url: "https://cs329z.stanford.edu/" },
+        { t: "agents", f: "course", title: "CS 329A: Self-Improving AI Agents", by: "Stanford University", url: "https://cs329a.stanford.edu/" },
+        { t: "agents", f: "course", title: "Introduction to Deep Agents", by: "LangChain Academy", url: "https://academy.langchain.com/courses/foundation-introduction-to-deepagents" },
+
+        { t: "foundations", f: "course", title: "CS 336: Language Modeling from Scratch", by: "Stanford University", url: "https://cs336.stanford.edu/" },
+        { t: "foundations", f: "course", title: "CS 2680: Modern AI Systems — Agents and System Optimizations", by: "Harvard University", url: "https://cs2680.com/" },
+        { t: "foundations", f: "profile", title: "Pavlos Protopapas — data science and machine learning courses", by: "Harvard IACS on edX", url: "https://www.edx.org/bio/pavlos-protopapas-3" },
 
         { t: "graphrag", f: "article", title: "GraphRAG: How AI answers questions hidden across many documents", by: "ByteByteGo", url: "https://blog.bytebytego.com/p/graphrag-how-ai-answers-questions" },
         { t: "graphrag", f: "course", title: "Generative AI courses", by: "Neo4j GraphAcademy", url: "https://graphacademy.neo4j.com/categories/generative-ai" },
@@ -772,6 +785,7 @@
         tutorial: { label: "Tutorial", icon: '<path d="M4 3L1 6l3 3M8 3l3 3-3 3" fill="none" stroke="currentColor" stroke-width="1.5"/>' },
         article: { label: "Article", icon: '<path d="M2 1h8v10H2z M4 4h4M4 6h4M4 8h2" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
         notes: { label: "Notes", icon: '<path d="M2 1h6l2 2v8H2z M4 5h4M4 7.5h4" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
+        profile: { label: "Profile", icon: '<path d="M6 5.5a2 2 0 100-4 2 2 0 000 4z M1.8 10.8c0-2.3 1.9-3.6 4.2-3.6s4.2 1.3 4.2 3.6" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
       };
 
       const state = { topic: "all", format: "all", q: "", view: "grid" };
