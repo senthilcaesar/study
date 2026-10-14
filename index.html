@@ -1748,19 +1748,19 @@
 
       function renderHero() {
         const total = ROADMAP.reduce((a, w) => a + required(w).length, 0);
-        const got = ROADMAP.reduce((a, w) => a + weekDone(w), 0);
+        const got = ROADMAP.reduce((a, w) => a + (weekComplete(w) ? required(w).length : weekDone(w)), 0);
         const weeks = ROADMAP.filter(weekComplete).length;
         const cur = currentWeek();
         const stage = STAGES.find((s) => s.id === (cur || ROADMAP[ROADMAP.length - 1]).stage);
         $("#count-shown").textContent = got;
         $("#count-total").textContent = total;
-        $("#count-unit").textContent = "steps done";
+        $("#count-unit").textContent = "items done";
 
         return `<div class="rm-hero">
           <p>A ${ROADMAP.length}-week path in three stages. Pick any stop on the path to see what to learn that week.</p>
           <div class="stats">
             <div class="stat"><b>${weeks}/${ROADMAP.length}</b><span>weeks complete</span></div>
-            <div class="stat"><b>${got}/${total}</b><span>steps done</span></div>
+            <div class="stat"><b>${got}/${total}</b><span title="Core courses and articles ticked off; optional ones don't count">items done</span></div>
             <div class="stat"><b>${esc(stage.name)}</b><span>current stage</span></div>
           </div>
         </div>`;
@@ -1787,7 +1787,7 @@
               const n = required(w).length;
               const cls = complete ? "is-done" : w === cur ? "is-current" : d ? "is-started" : "is-todo";
               const dim = state.q && !weekMatches(w) ? " dim" : "";
-              const status = complete ? "complete" : d === n ? "ready to complete" : w === cur ? (d ? `in progress · ${d}/${n}` : "up next") : d ? `${d}/${n} done` : `${n} step${n === 1 ? "" : "s"}`;
+              const status = complete ? "complete" : d === n ? "ready to complete" : w === cur ? (d ? `in progress · ${d}/${n}` : "up next") : d ? `${d}/${n} done` : `${n} item${n === 1 ? "" : "s"}`;
               return `<div class="stop-row">
                 <button class="stop ${cls}${dim}" type="button" data-week="${w.n}" aria-pressed="${state.open && state.sel === w.n}"
                   aria-label="Week ${w.n}: ${esc(w.title)}, ${status}" style="--k:${k};--p:${complete ? 100 : pctOf(w)};--sw:var(--c-${w.t})">
@@ -2020,6 +2020,7 @@
         if (fin) {
           const w = weekByN(+fin.dataset.complete);
           done.add("week:" + w.n);
+          required(w).forEach((k) => done.add(k));
           saveProgress();
           renderRoadmap();
           const nxt = weekByN(w.n + 1);
