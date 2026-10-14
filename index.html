@@ -1280,6 +1280,86 @@
           padding: 14px 20px;
         }
       }
+      /* hover preview of a week on the path */
+      .peek {
+        position: fixed;
+        z-index: 20;
+        width: 330px;
+        max-width: calc(100vw - 32px);
+        border: 1.5px solid var(--line);
+        border-top: 5px solid var(--sw);
+        background: var(--surface);
+        box-shadow: 4px 4px 0 var(--shadow);
+        padding: 14px 16px 12px;
+        pointer-events: none;
+        opacity: 0;
+        transform: translateY(4px);
+        transition: opacity 0.15s ease, transform 0.15s ease;
+      }
+      .peek.show {
+        opacity: 1;
+        transform: none;
+      }
+      .peek-kicker {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--dim);
+      }
+      .peek h4 {
+        margin: 2px 0 6px;
+        font-family: var(--display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+      .peek-goal {
+        margin: 0;
+        font-size: 0.88rem;
+        line-height: 1.5;
+        color: var(--ink-soft);
+      }
+      .peek-sub {
+        margin: 12px 0 6px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .peek ol {
+        margin: 0;
+        padding: 0 0 0 1.2em;
+        font-size: 0.86rem;
+        line-height: 1.45;
+        color: var(--ink);
+      }
+      .peek ol li + li {
+        margin-top: 3px;
+      }
+      .peek ol small {
+        color: var(--dim);
+        font-size: 0.78rem;
+      }
+      .peek-extra {
+        margin: 6px 0 0;
+        font-size: 0.8rem;
+        color: var(--dim);
+      }
+      .peek-foot {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 12px;
+        padding-top: 9px;
+        border-top: 1px solid var(--hair);
+        font-size: 0.78rem;
+        color: var(--dim);
+      }
+      .peek-foot b {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
       .toast {
         position: fixed;
         left: 50%;
@@ -1491,6 +1571,7 @@
 
     <div class="sheet-backdrop" id="backdrop"></div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="peek" id="peek" role="tooltip" hidden></div>
 
     <script>
       const TOPICS = [
@@ -2111,6 +2192,7 @@
       }
 
       function openSheet() {
+        hidePeek();
         state.open = true;
         $("#panel").classList.add("open");
         $("#backdrop").classList.add("open");
@@ -2149,6 +2231,60 @@
             t.closest(".step").scrollIntoView({ block: "nearest" });
           }
         }
+      }
+
+      // hover preview: what a week covers, shown beside its stop on the path
+      const peekEl = $("#peek");
+      let peekTimer;
+      function peekHTML(w) {
+        const si = STAGES.findIndex((s) => s.id === w.stage);
+        const core = w.learn.filter((s) => !s.opt && byUrl[s.url]);
+        const extras = w.learn.filter((s) => s.opt).length;
+        const d = weekDone(w);
+        const n = required(w).length;
+        const status = weekComplete(w) ? "Completed" : d ? `${d} of ${n} done` : "Not started";
+        return `<p class="peek-kicker">Week ${w.n} of ${ROADMAP.length}, ${esc(STAGES[si].name.toLowerCase())} stage</p>
+          <h4>${esc(w.title)}</h4>
+          <p class="peek-goal">${esc(w.goal)}</p>
+          <p class="peek-sub">You'll learn from</p>
+          <ol>${core
+            .map((s) => {
+              const r = byUrl[s.url];
+              return `<li>${esc(r.title)} <small>${FORMATS[r.f].label.toLowerCase()}, ${esc(r.by)}</small></li>`;
+            })
+            .join("")}</ol>
+          ${extras ? `<p class="peek-extra">Plus ${extras} optional extra${extras === 1 ? "" : "s"}.</p>` : ""}
+          <div class="peek-foot"><b>${status}</b><span>Click to open this week</span></div>`;
+      }
+      function showPeek(stop) {
+        const w = weekByN(+stop.dataset.week);
+        if (!w || state.open) return;
+        peekEl.style.setProperty("--sw", `var(--c-${w.t})`);
+        peekEl.innerHTML = peekHTML(w);
+        peekEl.hidden = false;
+        // sit in the clear space right of the path so neighbouring labels stay readable;
+        // on narrower screens fall back to just beside this stop
+        const node = stop.querySelector(".node").getBoundingClientRect();
+        const label = stop.querySelector(".stop-label").getBoundingClientRect();
+        const clear = Math.max(...[...document.querySelectorAll("#path .stop-label, #path .node")].map((el) => el.getBoundingClientRect().right));
+        const pw = peekEl.offsetWidth;
+        const ph = peekEl.offsetHeight;
+        let x = clear + 28;
+        if (x + pw > innerWidth - 16) x = Math.max(node.right, label.right) + 20;
+        if (x + pw > innerWidth - 16) x = Math.min(node.left, label.left) - pw - 20;
+        x = Math.max(16, Math.min(x, innerWidth - pw - 16));
+        let y = node.top + node.height / 2 - ph / 2;
+        y = Math.max(76, Math.min(y, innerHeight - ph - 16));
+        peekEl.style.left = x + "px";
+        peekEl.style.top = y + "px";
+        stop.setAttribute("aria-describedby", "peek");
+        requestAnimationFrame(() => peekEl.classList.add("show"));
+      }
+      function hidePeek() {
+        clearTimeout(peekTimer);
+        peekEl.classList.remove("show");
+        peekEl.hidden = true;
+        document.querySelectorAll(".stop[aria-describedby]").forEach((b) => b.removeAttribute("aria-describedby"));
       }
 
       function toast(msg, t) {
@@ -2259,6 +2395,24 @@
         if (again) again.focus({ preventScroll: true });
       });
       $("#backdrop").addEventListener("click", closeSheet);
+      if (matchMedia("(hover: hover)").matches) {
+        $("#rm-main").addEventListener("mouseover", (e) => {
+          const stop = e.target.closest(".stop");
+          if (!stop || stop.contains(e.relatedTarget)) return;
+          clearTimeout(peekTimer);
+          peekTimer = setTimeout(() => showPeek(stop), 120);
+        });
+        $("#rm-main").addEventListener("mouseout", (e) => {
+          const stop = e.target.closest(".stop");
+          if (stop && !stop.contains(e.relatedTarget)) hidePeek();
+        });
+      }
+      $("#rm-main").addEventListener("focusin", (e) => {
+        const stop = e.target.closest(".stop");
+        if (stop && stop.matches(":focus-visible")) showPeek(stop);
+      });
+      $("#rm-main").addEventListener("focusout", hidePeek);
+      addEventListener("scroll", hidePeek, { passive: true });
       new ResizeObserver(() => drawPath()).observe($("#main"));
       if (document.fonts) document.fonts.ready.then(drawPath);
       $("#q").addEventListener("input", (e) => {
