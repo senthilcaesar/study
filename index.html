@@ -837,16 +837,10 @@
         color: var(--ink-soft);
       }
 
-      /* the week panel: a drawer that slides in from the right. It is deliberately
-         quieter than the rest of the page: hairlines, soft shadows, rounded corners. */
-      :root {
-        --tick-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7.4l2.6 2.5L11 4.3' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-        --drawer-shadow: -28px 0 60px rgba(22, 24, 29, 0.16), -2px 0 8px rgba(22, 24, 29, 0.06);
-      }
-      :root[data-theme="dark"] {
-        --tick-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7.4l2.6 2.5L11 4.3' fill='none' stroke='%23232634' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-        --drawer-shadow: -28px 0 60px rgba(0, 0, 0, 0.45), -2px 0 8px rgba(0, 0, 0, 0.25);
-      }
+      /* the week panel: a drawer that reads like one page of a syllabus.
+         The week number in its colour block is the one loud element; the
+         reading list underneath stays plain, numbered in suggested order,
+         and each number doubles as that item's checkbox. */
       .panel {
         position: fixed;
         top: 0;
@@ -859,28 +853,25 @@
         overflow: auto;
         overscroll-behavior: contain;
         background: var(--surface);
-        border-left: 1px solid var(--hair);
-        box-shadow: var(--drawer-shadow);
-        font-family: var(--body);
+        border-left: 2px solid var(--line);
+        box-shadow: -24px 0 48px rgba(22, 24, 29, 0.14);
         transform: translateX(104%);
         visibility: hidden;
-        transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.38s;
+        transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.34s;
       }
       .panel.open {
         transform: none;
         visibility: visible;
-        transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+        transition: transform 0.34s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .sheet-backdrop {
         position: fixed;
         inset: 0;
         z-index: 25;
-        background: rgba(22, 24, 29, 0.28);
-        -webkit-backdrop-filter: blur(3px);
-        backdrop-filter: blur(3px);
+        background: rgba(22, 24, 29, 0.38);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.25s ease;
       }
       .sheet-backdrop.open {
         opacity: 1;
@@ -895,69 +886,35 @@
       }
 
       .panel-head {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        padding: 28px 40px 24px;
-        background: var(--surface);
-        border-bottom: 1px solid var(--hair);
-      }
-      .panel-head::before {
-        content: "";
-        position: absolute;
-        inset: 0 0 auto;
-        height: 4px;
-        background: var(--sw);
+        padding: 18px 40px 32px;
       }
       .panel-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-      }
-      .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
+        font-size: 0.9rem;
         color: var(--dim);
-      }
-      .eyebrow .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--sw);
-        box-shadow: 0 0 0 3px color-mix(in srgb, var(--sw) 35%, transparent);
       }
       .arrows {
         display: flex;
         align-items: center;
-        gap: 4px;
-      }
-      .arrows .sep {
-        width: 1px;
-        height: 20px;
-        margin: 0 6px;
-        background: var(--hair);
+        gap: 2px;
       }
       .icon-btn {
         display: grid;
         place-items: center;
-        width: 34px;
-        height: 34px;
+        width: 36px;
+        height: 36px;
         padding: 0;
         border: 0;
-        border-radius: 8px;
+        border-radius: 6px;
         background: transparent;
         color: var(--ink-soft);
-        transition: background 0.15s ease, color 0.15s ease;
       }
       .icon-btn svg {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
       }
       .icon-btn:hover:not(:disabled) {
         background: var(--sunk);
@@ -967,310 +924,273 @@
         opacity: 0.3;
         cursor: default;
       }
-      .panel-head h2 {
-        margin: 18px 0 8px;
+      .wk-head {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        align-items: start;
+        gap: 28px;
+        margin-top: 18px;
+      }
+      .wk-num {
+        display: grid;
+        place-items: center;
+        width: 112px;
+        height: 112px;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
         font-family: var(--display);
+        font-size: 5rem;
+        font-weight: 800;
+        font-variation-settings: "wdth" 75;
+        letter-spacing: -0.05em;
+        line-height: 1;
+      }
+      .panel-head h2 {
+        margin: 2px 0 0;
+        font-family: var(--display);
+        font-size: 2rem;
         font-weight: 700;
-        font-size: 1.85rem;
-        line-height: 1.15;
-        letter-spacing: -0.02em;
+        line-height: 1.1;
+        letter-spacing: -0.025em;
         color: var(--ink);
+        text-wrap: balance;
       }
       .panel-head .goal {
-        margin: 0;
-        max-width: 60ch;
-        font-size: 1rem;
+        margin: 12px 0 0;
+        max-width: 58ch;
+        font-size: 1.02rem;
         line-height: 1.6;
         color: var(--ink-soft);
-      }
-      .wk-bar {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-top: 22px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        color: var(--ink-soft);
-        white-space: nowrap;
-        font-variant-numeric: tabular-nums;
-      }
-      .wk-bar .track {
-        flex: 1;
-        height: 6px;
-        border-radius: 99px;
-        background: var(--sunk);
-        overflow: hidden;
-      }
-      .wk-bar .fill {
-        height: 100%;
-        border-radius: 99px;
-        background: var(--accent);
-        transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       }
 
       .panel-body {
         flex: 1;
         display: grid;
         align-content: start;
-        gap: 28px;
-        padding: 28px 40px 32px;
+        gap: 36px;
+        padding: 0 40px 40px;
       }
-      .sec-h {
+      .list-head {
         display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 0 0 14px;
-        font-size: 0.78rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: var(--dim);
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--line);
       }
-      .sec-h .count {
-        padding: 1px 8px;
-        border-radius: 99px;
-        background: var(--sunk);
+      .list-head h3 {
+        margin: 0;
+        font-family: var(--display);
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: var(--ink);
+      }
+      .list-head span {
+        font-size: 0.9rem;
+        color: var(--dim);
+        font-variant-numeric: tabular-nums;
+      }
+      .extras .list-head {
+        border-bottom-width: 1px;
+        border-bottom-color: var(--hair);
+      }
+      .extras .list-head h3 {
+        font-size: 1rem;
         color: var(--ink-soft);
-        letter-spacing: 0;
       }
       .steps {
         list-style: none;
         margin: 0;
         padding: 0;
-        display: grid;
-        gap: 10px;
       }
       .step {
+        position: relative;
         display: grid;
-        grid-template-columns: 22px minmax(0, 1fr);
+        grid-template-columns: 32px minmax(0, 1fr);
         align-items: start;
-        gap: 16px;
-        padding: 16px 18px;
-        border: 1px solid var(--hair);
-        border-radius: 12px;
-        background: var(--surface);
-        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        gap: 18px;
+        padding: 20px 0;
+        border-bottom: 1px solid var(--hair);
       }
-      .step:hover {
-        border-color: color-mix(in srgb, var(--ink) 25%, var(--hair));
-        box-shadow: 0 4px 16px rgba(22, 24, 29, 0.06);
+      /* the item to do next is flagged in the margin with the week's colour */
+      .step.is-next::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        bottom: -1px;
+        left: -40px;
+        width: 5px;
+        background: var(--sw);
       }
-      .step.is-next {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
-      }
-      .step.is-done {
-        background: var(--bg);
-      }
-      .step.is-done .step-title {
-        color: var(--dim);
-        text-decoration: line-through;
-        text-decoration-color: color-mix(in srgb, var(--dim) 60%, transparent);
-      }
-      .tick {
-        appearance: none;
-        -webkit-appearance: none;
+      .mark {
+        position: relative;
         display: block;
-        width: 22px;
-        height: 22px;
-        margin: 1px 0 0;
-        border: 1.5px solid color-mix(in srgb, var(--ink) 35%, var(--hair));
-        border-radius: 7px;
-        background: var(--surface);
+        width: 32px;
+        height: 32px;
         cursor: pointer;
-        transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
       }
-      .tick:hover {
-        border-color: var(--accent);
+      .mark input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer;
       }
-      .tick:checked {
-        border-color: var(--accent);
-        background: var(--accent) var(--tick-mark) center / 14px no-repeat;
-        animation: pop 0.25s ease;
+      .mark span {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        border: 1.5px solid var(--line);
+        border-radius: 4px;
+        background: var(--surface);
+        color: var(--ink);
+        font-family: var(--display);
+        font-size: 1rem;
+        font-weight: 700;
+        transition: background 0.15s ease, color 0.15s ease;
       }
-      .tick:focus-visible {
+      .mark span svg {
+        display: none;
+        width: 18px;
+        height: 18px;
+      }
+      .mark:hover span {
+        background: var(--sunk);
+      }
+      .mark input:checked + span {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: var(--surface);
+      }
+      .mark input:checked + span b {
+        display: none;
+      }
+      .mark input:checked + span svg {
+        display: block;
+      }
+      .mark input:focus-visible + span {
         outline: 2px solid var(--accent);
-        outline-offset: 3px;
-      }
-      @keyframes pop {
-        50% { transform: scale(1.12); }
+        outline-offset: 2px;
       }
       .step-body {
         min-width: 0;
+        padding-top: 4px;
       }
       .step-link {
-        display: inline-flex;
-        align-items: baseline;
-        gap: 6px;
         color: var(--ink);
         text-decoration: none;
       }
-      .step-link .ext {
-        flex: none;
-        width: 13px;
-        height: 13px;
-        color: var(--dim);
-        opacity: 0;
-        transform: translate(-3px, 1px);
-        transition: opacity 0.15s ease, transform 0.15s ease;
-      }
-      .step-link:hover .ext,
-      .step-link:focus-visible .ext {
-        opacity: 1;
-        transform: translate(0, 1px);
-      }
       .step-link:hover .step-title {
-        color: var(--accent);
+        text-decoration: underline;
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 4px;
       }
       .step-title {
-        font-family: var(--body);
+        font-size: 1.06rem;
         font-weight: 700;
-        font-size: 1.02rem;
-        line-height: 1.4;
-        transition: color 0.15s ease;
+        line-height: 1.35;
       }
-      .step-meta {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 6px 10px;
-        margin-top: 6px;
-        font-size: 0.85rem;
-        color: var(--ink-soft);
-      }
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 2px 9px;
-        border-radius: 99px;
-        background: var(--sunk);
-        color: var(--ink-soft);
-        font-size: 0.74rem;
-        font-weight: 700;
-      }
-      .pill svg {
-        width: 10px;
-        height: 10px;
-      }
-      .pill.muted {
-        background: transparent;
-        box-shadow: inset 0 0 0 1px var(--hair);
+      .step.is-done .step-title {
         color: var(--dim);
       }
-      .pill.next {
-        background: color-mix(in srgb, var(--accent) 14%, transparent);
-        color: var(--accent);
+      .step-meta {
+        margin: 3px 0 0;
+        font-size: 0.9rem;
+        color: var(--ink-soft);
       }
       .step-note {
         margin: 8px 0 0;
-        font-size: 0.88rem;
+        max-width: 56ch;
+        font-size: 0.92rem;
         line-height: 1.55;
         color: var(--dim);
       }
 
-      .complete-box {
-        display: grid;
-        gap: 10px;
-        justify-items: center;
-        text-align: center;
-        font-size: 0.85rem;
+      .wk-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px 22px;
+      }
+      .wk-actions .hint {
+        font-size: 0.92rem;
         color: var(--dim);
       }
       .complete-btn,
       .next-btn {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
         gap: 10px;
-        width: 100%;
-        padding: 15px 20px;
-        border-radius: 12px;
+        padding: 13px 22px;
+        border-radius: 6px;
         font-family: var(--body);
         font-size: 1rem;
         font-weight: 700;
-        transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+        text-align: left;
       }
-      .complete-btn svg,
-      .next-btn svg {
+      .complete-btn svg {
         width: 18px;
         height: 18px;
       }
       .complete-btn {
-        border: 0;
+        border: 2px solid var(--ink);
         background: var(--ink);
-        color: var(--bg);
-        box-shadow: 0 6px 20px rgba(22, 24, 29, 0.18);
+        color: var(--surface);
       }
       .complete-btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 10px 26px rgba(22, 24, 29, 0.22);
+        background: var(--ink-soft);
+        border-color: var(--ink-soft);
+      }
+      .next-btn {
+        border: 2px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+      }
+      .next-btn:hover {
+        background: var(--sunk);
       }
       .complete-btn:active,
       .next-btn:active {
         transform: translateY(1px);
       }
-      .done-box {
-        display: grid;
-        gap: 12px;
-      }
-      .done-row {
+      .done-line {
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        gap: 14px;
-        padding: 16px 18px;
-        border-radius: 12px;
-        background: color-mix(in srgb, var(--accent) 9%, var(--surface));
-        border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+        gap: 12px 14px;
+        width: 100%;
+        font-weight: 700;
+        color: var(--ink);
       }
-      .done-icon {
-        flex: none;
+      .done-line .swatch {
         display: grid;
         place-items: center;
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: var(--accent);
-        color: var(--on-accent);
+        width: 32px;
+        height: 32px;
+        border: 1.5px solid var(--line);
+        border-radius: 4px;
+        background: var(--sw);
+        color: var(--chip-ink);
       }
-      .done-icon svg {
+      .done-line .swatch svg {
         width: 18px;
         height: 18px;
       }
-      .done-row b {
-        display: block;
-        color: var(--ink);
-      }
-      .done-row small {
-        display: block;
-        font-size: 0.85rem;
-        color: var(--ink-soft);
-      }
-      .done-row .link-btn {
-        margin-left: auto;
-      }
-      .next-btn {
-        border: 1px solid var(--hair);
-        background: var(--surface);
-        color: var(--ink);
-        justify-content: space-between;
-        text-align: left;
-      }
-      .next-btn:hover {
-        border-color: color-mix(in srgb, var(--ink) 30%, var(--hair));
-        background: var(--bg);
-      }
       .panel .link-btn {
+        padding: 0;
         font-family: var(--body);
-        font-size: 0.85rem;
-        font-weight: 700;
+        font-size: 0.92rem;
+        font-weight: 400;
         color: var(--ink-soft);
-        text-decoration: none;
-        border-radius: 6px;
-        padding: 4px 8px;
+        text-decoration: underline;
+        text-underline-offset: 3px;
       }
       .panel .link-btn:hover {
-        background: var(--sunk);
         color: var(--ink);
       }
       .panel-foot {
@@ -1281,25 +1201,34 @@
         gap: 8px 16px;
         padding: 16px 40px;
         border-top: 1px solid var(--hair);
-        font-size: 0.82rem;
+        font-size: 0.88rem;
         color: var(--dim);
       }
       @media (max-width: 860px) {
         .panel-head {
-          padding: 22px 20px 20px;
+          padding: 12px 20px 26px;
+        }
+        .wk-head {
+          grid-template-columns: 76px minmax(0, 1fr);
+          gap: 18px;
+        }
+        .wk-num {
+          width: 76px;
+          height: 76px;
+          font-size: 3.4rem;
         }
         .panel-head h2 {
           font-size: 1.5rem;
         }
         .panel-body {
-          padding: 22px 20px 28px;
+          padding: 0 20px 32px;
+        }
+        .step.is-next::before {
+          left: -20px;
+          width: 4px;
         }
         .panel-foot {
           padding: 14px 20px;
-        }
-        .step {
-          padding: 14px;
-          gap: 12px;
         }
       }
       .toast {
@@ -1987,24 +1916,23 @@
         left: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
         right: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
         close: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
-        check: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-        ext: '<svg class="ext" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2.5h6.5V9M11.5 2.5L3 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        check: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
       };
 
-      function step(s, nk) {
+      // one reading-list row; core items carry their suggested order as the checkbox face
+      function step(s, nk, num) {
         const r = byUrl[s.url];
         if (!r) return "";
-        const fmt = FORMATS[r.f];
         const on = done.has(r.url);
         const next = r.url === nk;
         return `<li class="step${on ? " is-done" : ""}${next ? " is-next" : ""}">
-          <input class="tick" type="checkbox" data-key="${esc(r.url)}"${on ? " checked" : ""} aria-label="Mark ${esc(r.title)} as done" />
+          <label class="mark">
+            <input class="tick" type="checkbox" data-key="${esc(r.url)}"${on ? " checked" : ""} aria-label="Mark ${esc(r.title)} as done" />
+            <span aria-hidden="true"><b>${num || ""}</b>${ICON.check}</span>
+          </label>
           <div class="step-body">
-            <a class="step-link" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="step-title">${esc(r.title)}</span>${ICON.ext}</a>
-            <div class="step-meta">
-              <span class="pill"><svg viewBox="0 0 12 12" aria-hidden="true">${fmt.icon}</svg>${fmt.label}</span>
-              <span>${esc(r.by)}</span>${s.opt ? `<span class="pill muted">Optional</span>` : ""}${next ? `<span class="pill next">Up next</span>` : ""}
-            </div>
+            <a class="step-link" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="step-title">${esc(r.title)}</span></a>
+            <p class="step-meta">${FORMATS[r.f].label} from ${esc(r.by)}${next ? ", start here" : ""}</p>
             ${s.note ? `<p class="step-note">${esc(s.note)}</p>` : ""}
           </div>
         </li>`;
@@ -2018,49 +1946,57 @@
         const nk = nextKey(w);
         const nxt = weekByN(w.n + 1);
         const complete = weekComplete(w);
+        const core = w.learn.filter((s) => !s.opt);
+        const extras = w.learn.filter((s) => s.opt);
         const panel = $("#panel");
         panel.style.setProperty("--sw", `var(--c-${w.t})`);
         panel.innerHTML = `<div class="panel-head">
             <div class="panel-top">
-              <span class="eyebrow"><i class="dot" aria-hidden="true"></i>Week ${w.n} · ${esc(STAGES[si].name)} · ${esc(topicOf(w.t).name)}</span>
+              <span>${esc(STAGES[si].name)} stage, week ${w.n} of ${ROADMAP.length}</span>
               <span class="arrows">
                 <button class="icon-btn" type="button" data-go="${w.n - 1}"${w.n === 1 ? " disabled" : ""} aria-label="Previous week" title="Previous week">${ICON.left}</button>
                 <button class="icon-btn" type="button" data-go="${w.n + 1}"${nxt ? "" : " disabled"} aria-label="Next week" title="Next week">${ICON.right}</button>
-                <span class="sep" aria-hidden="true"></span>
-                <button class="icon-btn" type="button" data-close aria-label="Close" title="Close (Esc)">${ICON.close}</button>
+                <button class="icon-btn" type="button" data-close aria-label="Close" title="Close">${ICON.close}</button>
               </span>
             </div>
-            <h2 id="panel-title">${esc(w.title)}</h2>
-            <p class="goal">${esc(w.goal)}</p>
-            <div class="wk-bar">
-              <div class="track" role="progressbar" aria-label="Week progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${complete ? 100 : pctOf(w)}"><div class="fill" style="width:${complete ? 100 : pctOf(w)}%"></div></div>
-              <span>${complete ? "Completed" : `${d} of ${n} done`}</span>
+            <div class="wk-head">
+              <span class="wk-num" aria-hidden="true">${w.n}</span>
+              <div>
+                <h2 id="panel-title">${esc(w.title)}</h2>
+                <p class="goal">${esc(w.goal)}</p>
+              </div>
             </div>
           </div>
           <div class="panel-body">
             <section>
-              <h3 class="sec-h">Learning materials <span class="count">${w.learn.length}</span></h3>
-              <ul class="steps">${w.learn.map((s) => step(s, nk)).join("")}</ul>
+              <div class="list-head"><h3>This week's materials</h3><span>${complete ? "All done" : `${d} of ${n} done`}</span></div>
+              <ol class="steps">${core.map((s, i) => step(s, nk, i + 1)).join("")}</ol>
             </section>
             ${
-              complete
-                ? `<div class="done-box">
-                    <div class="done-row">
-                      <span class="done-icon">${ICON.check}</span>
-                      <span><b>Week ${w.n} completed</b><small>This week now counts toward your progress.</small></span>
+              extras.length
+                ? `<section class="extras">
+                    <div class="list-head"><h3>Optional extras</h3><span>Not needed to finish the week</span></div>
+                    <ul class="steps">${extras.map((s) => step(s, nk)).join("")}</ul>
+                  </section>`
+                : ""
+            }
+            <div class="wk-actions">
+              ${
+                complete
+                  ? `<div class="done-line">
+                      <span class="swatch">${ICON.check}</span>
+                      <span>Week ${w.n} complete</span>
                       <button class="link-btn" type="button" data-undo="${w.n}">Undo</button>
                     </div>
-                    ${nxt ? `<button class="next-btn" type="button" data-go="${nxt.n}"><span>Continue to week ${nxt.n}: ${esc(nxt.title)}</span>${ICON.right}</button>` : ""}
-                  </div>`
-                : `<div class="complete-box">
-                    <button class="complete-btn" type="button" data-complete="${w.n}">${ICON.check}Mark week ${w.n} as complete</button>
-                    <span>${d === n ? "All core materials done. You're ready to wrap up this week." : `${d} of ${n} core materials done so far.`}</span>
-                  </div>`
-            }
+                    ${nxt ? `<button class="next-btn" type="button" data-go="${nxt.n}">Start week ${nxt.n}: ${esc(nxt.title)}</button>` : ""}`
+                  : `<button class="complete-btn" type="button" data-complete="${w.n}">${ICON.check}Mark week ${w.n} complete</button>
+                    <span class="hint">${d === n ? "You've done every core item." : `${d} of ${n} core items done so far.`}</span>`
+              }
+            </div>
           </div>
           <div class="panel-foot">
             <span>Progress is saved in this browser only.</span>
-            ${done.size ? `<button class="link-btn" type="button" id="rm-reset">Reset all progress</button>` : ""}
+            ${done.size ? `<button class="link-btn" type="button" id="rm-reset">Reset progress</button>` : ""}
           </div>`;
       }
 
@@ -2213,7 +2149,7 @@
             setTimeout(() => {
               if (b.isConnected) {
                 delete b.dataset.armed;
-                b.textContent = "Reset all progress";
+                b.textContent = "Reset progress";
               }
             }, 4000);
           }
