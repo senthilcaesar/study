@@ -592,29 +592,66 @@
       .stats {
         display: flex;
         flex-wrap: wrap;
+        align-items: stretch;
         justify-content: flex-end;
-        gap: 10px;
+        gap: 8px;
         margin-left: auto;
       }
       .stat {
         display: grid;
-        padding: 8px 14px;
-        border: 2px solid var(--line);
+        align-content: center;
+        padding: 4px 10px;
+        border: 1.5px solid var(--line);
         background: var(--surface);
-        box-shadow: 3px 3px 0 var(--shadow);
+        box-shadow: 2px 2px 0 var(--shadow);
       }
       .stat b {
         font-family: var(--display);
-        font-size: 1.4rem;
-        line-height: 1.1;
+        font-size: 1rem;
+        line-height: 1.15;
         font-variant-numeric: tabular-nums;
       }
       .stat span {
         font-family: var(--mono);
-        font-size: 0.66rem;
-        letter-spacing: 0.08em;
+        font-size: 0.58rem;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--dim);
+      }
+      .reset-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        box-shadow: 2px 2px 0 var(--shadow);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--ink);
+        white-space: nowrap;
+      }
+      .reset-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+      .reset-btn:hover:not(:disabled) {
+        background: var(--sunk);
+      }
+      .reset-btn:active:not(:disabled) {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
+      .reset-btn[data-armed],
+      .reset-btn[data-armed]:hover {
+        background: var(--c-evals);
+        color: var(--chip-ink);
+      }
+      .reset-btn:disabled {
+        color: var(--dim);
+        border-color: var(--hair);
+        box-shadow: none;
+        cursor: default;
       }
       .link-btn {
         padding: 0;
@@ -1888,6 +1925,9 @@
             <div class="stat"><b>${weeks}/${ROADMAP.length}</b><span>weeks complete</span></div>
             <div class="stat"><b>${got}/${total}</b><span title="Core courses and articles ticked off; optional ones don't count">items done</span></div>
             <div class="stat"><b>${esc(stage.name)}</b><span>current stage</span></div>
+            <button class="reset-btn" type="button" data-reset${done.size ? "" : " disabled"} title="Clear all ticks and completed weeks and start again from week 1">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.6-3.7M3 2.5v2.8h2.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Start over</span>
+            </button>
           </div>
         </div>`;
       }
@@ -2046,7 +2086,7 @@
           </div>
           <div class="panel-foot">
             <span>Progress is saved in this browser only.</span>
-            ${done.size ? `<button class="link-btn" type="button" id="rm-reset">Reset progress</button>` : ""}
+            ${done.size ? `<button class="link-btn" type="button" data-reset>Reset progress</button>` : ""}
           </div>`;
       }
 
@@ -2187,19 +2227,26 @@
           if (btn) btn.focus({ preventScroll: true });
           return;
         }
-        if (e.target.id === "rm-reset") {
-          const b = e.target;
-          if (b.dataset.armed) {
+        // reset asks for a second click before wiping everything
+        const rs = e.target.closest("[data-reset]");
+        if (rs) {
+          const label = rs.querySelector("span") || rs;
+          if (rs.dataset.armed) {
             done.clear();
             saveProgress();
+            closeSheet();
+            state.sel = 1;
             renderRoadmap();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            toast("Progress cleared. Start again from week 1.", ROADMAP[0].t);
           } else {
-            b.dataset.armed = "1";
-            b.textContent = "Click again to confirm";
+            const was = label.textContent;
+            rs.dataset.armed = "1";
+            label.textContent = "Click again to reset";
             setTimeout(() => {
-              if (b.isConnected) {
-                delete b.dataset.armed;
-                b.textContent = "Reset progress";
+              if (rs.isConnected) {
+                delete rs.dataset.armed;
+                label.textContent = was;
               }
             }, 4000);
           }
