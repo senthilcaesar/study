@@ -986,17 +986,6 @@
         text-transform: uppercase;
         color: var(--dim);
       }
-      .sec-h .num {
-        display: grid;
-        place-items: center;
-        width: 22px;
-        height: 22px;
-        border: 2px solid var(--line);
-        border-radius: 50%;
-        color: var(--ink);
-        font-weight: 700;
-        letter-spacing: 0;
-      }
       .steps {
         list-style: none;
         margin: 0;
@@ -1097,20 +1086,6 @@
         margin: 6px 0 0;
         font-size: 0.84rem;
         color: var(--ink-soft);
-      }
-      .build-text {
-        cursor: pointer;
-      }
-      .ready-box {
-        margin: 0;
-        padding: 12px 14px;
-        border-left: 4px solid var(--sw);
-        background: var(--bg);
-        font-size: 0.92rem;
-        color: var(--ink-soft);
-      }
-      .ready-box b {
-        color: var(--ink);
       }
       .next-btn {
         width: 100%;
@@ -1461,8 +1436,6 @@
             { url: "https://www.ibm.com/training/artificial-intelligence", opt: true, note: "A gentler, concept-first overview if the code moves too fast." },
             { url: "https://www.edx.org/bio/pavlos-protopapas-3", opt: true, note: "Pick an intro machine learning course if you want the maths underneath." },
           ],
-          build: "Write a script that sends a prompt to a model and gets structured JSON back, for example pulling the name, date and amount out of a receipt description.",
-          ready: "you can explain tokens, the context window and temperature, and you have parsed a model's output in code.",
         },
         {
           n: 2, stage: "beginner", t: "graphrag",
@@ -1472,16 +1445,12 @@
             { url: "https://www.deeplearning.ai/courses/retrieval-augmented-generation" },
             { url: "https://youtu.be/RQi7x-navxU", note: "Why document parsing quietly decides how good your RAG is." },
           ],
-          build: "Build a Q&A bot over a folder of your own PDFs or notes, where every answer cites the chunk it came from.",
-          ready: "you can name three ways retrieval fails (bad parsing, bad chunking, wrong top-k) and how you would spot each.",
         },
         {
           n: 3, stage: "beginner", t: "context",
           title: "Context engineering",
           goal: "Treat the context window as a budget: what goes in, in what order, and what gets left out.",
           learn: [{ url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" }],
-          build: "Run three experiments on your week 2 bot: fewer versus more chunks, a bare versus a detailed system prompt, and full versus trimmed history. Write down what changed.",
-          ready: "you can explain why more context is not always better, with evidence from your own experiments.",
         },
         {
           n: 4, stage: "beginner", t: "agents",
@@ -1491,8 +1460,6 @@
             { url: "https://developer.microsoft.com/en-us/reactor/series/S-1631/" },
             { url: "https://academy.langchain.com/courses/foundation-introduction-to-deepagents" },
           ],
-          build: "Build an agent with two tools (your week 2 retriever plus a calculator or web search) and log every step of its loop.",
-          ready: "you can trace an agent run step by step and say why it called each tool.",
         },
         {
           n: 5, stage: "intermediate", t: "mcp",
@@ -1503,8 +1470,6 @@
             { url: "https://anthropic.skilljar.com/introduction-to-model-context-protocol" },
             { url: "https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic" },
           ],
-          build: "Connect an existing MCP server (filesystem or GitHub, say) to Claude Desktop or Claude Code and use it for a real task.",
-          ready: "you can sketch how a request flows from the host through a client to a server and back.",
         },
         {
           n: 6, stage: "intermediate", t: "mcp",
@@ -1516,8 +1481,6 @@
             { url: "https://youtube.com/playlist?list=PLJ2a7YWJ3jxk&si=YUapAKeneZH5kzri", opt: true },
             { url: "https://senthilcaesar.github.io/knowledgelab/#claude-mcp", opt: true, note: "Handy for review once you have built something." },
           ],
-          build: "Turn your week 4 tools into an MCP server, check it with the MCP Inspector, then deploy it remotely.",
-          ready: "your server works from at least two different MCP clients.",
         },
         {
           n: 7, stage: "intermediate", t: "skills",
@@ -1529,8 +1492,6 @@
             { url: "https://senthilcaesar.github.io/blogs/#/posts/writing-your-first-skill-md-file" },
             { url: "https://www.deeplearning.ai/courses/agent-skills-with-anthropic", opt: true },
           ],
-          build: "Write a SKILL.md for a task you repeat at work, and check that the agent picks it up from its description alone.",
-          ready: "you can explain when to reach for a Skill, an MCP server or the system prompt.",
         },
         {
           n: 8, stage: "intermediate", t: "evals",
@@ -1541,8 +1502,6 @@
             { url: "https://www.deeplearning.ai/courses/evaluating-ai-agents" },
             { url: "https://www.deeplearning.ai/courses/automated-testing-llmops" },
           ],
-          build: "Write 20 test cases for your agent, score them with code checks and an LLM judge, and run them automatically whenever the code changes.",
-          ready: "you can show a score move after a change, and you trust what it is telling you.",
         },
         {
           n: 9, stage: "advanced", t: "graphrag",
@@ -1554,8 +1513,6 @@
             { url: "https://www.deeplearning.ai/courses/agentic-knowledge-graph-construction" },
             { url: "https://graphacademy.neo4j.com/categories/generative-ai", opt: true },
           ],
-          build: "Extract entities and relationships from your week 2 documents into a graph, then answer a question that plain vector RAG got wrong.",
-          ready: "you can say which questions need a graph and which do not.",
         },
         {
           n: 10, stage: "advanced", t: "harness",
@@ -1565,8 +1522,6 @@
             { url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
             { url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents" },
           ],
-          build: "Write a spec for a small feature and have a coding agent build it. Note where the agent drifted and what in the spec would have prevented it.",
-          ready: "you can describe what a harness adds on top of a model, and your specs produce working code first time more often than not.",
         },
         {
           n: 11, stage: "advanced", t: "agents",
@@ -1577,8 +1532,6 @@
             { url: "https://cs2680.com/", note: "Pairs well with CS 329Z on the systems and optimisation side." },
             { url: "https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai", opt: true, note: "A longer, structured track if you want a certificate." },
           ],
-          build: "Harden your agent: add tracing, retries, cost and latency budgets, and a guardrail for one failure your week 8 evals uncovered.",
-          ready: "you can explain where your agent spends time and money, and what happens when a tool fails.",
         },
         {
           n: 12, stage: "advanced", t: "foundations",
@@ -1589,8 +1542,6 @@
             { url: "https://cs336.stanford.edu/", opt: true, note: "Build a language model from scratch: demanding, and well worth it." },
             { url: "https://web.stanford.edu/class/cs224w/", opt: true, note: "The theory behind graph learning, if week 9 hooked you." },
           ],
-          build: "Capstone: ship one agent that uses MCP tools, at least one Skill, retrieval (vector or graph) and an eval suite. Write up what you learned and share it.",
-          ready: "you could teach any week of this roadmap to someone else.",
         },
       ];
 
@@ -1616,7 +1567,7 @@
         } catch (e) {}
       }
 
-      // progress: a set of ticked keys (a resource url, or "build:<week>")
+      // progress: the set of ticked resource urls
       let done = new Set();
       try {
         done = new Set(JSON.parse(localStorage.getItem("shelf-progress") || "[]"));
@@ -1643,8 +1594,8 @@
         })
       );
 
-      // a week's required steps are its core resources plus the build task
-      const required = (w) => [...w.learn.filter((s) => !s.opt).map((s) => s.url), "build:" + w.n];
+      // a week's required steps are its core (non-optional) resources
+      const required = (w) => w.learn.filter((s) => !s.opt).map((s) => s.url);
       const weekDone = (w) => required(w).filter((k) => done.has(k)).length;
       const weekComplete = (w) => weekDone(w) === required(w).length;
 
@@ -1665,7 +1616,7 @@
       function weekMatches(w) {
         const res = w.learn.map((s) => byUrl[s.url]).filter(Boolean);
         return hits([
-          "week " + w.n, w.title, w.goal, w.build, w.ready, topicOf(w.t).name,
+          "week " + w.n, w.title, w.goal, topicOf(w.t).name,
           ...res.flatMap((r) => [r.title, r.by, host(r.url)]),
         ]);
       }
@@ -1754,7 +1705,7 @@
         $("#count-unit").textContent = "steps done";
 
         return `<div class="rm-hero">
-          <p>A ${ROADMAP.length}-week path in three stages. Pick any stop on the path to see what to learn, what to build and how to know you're ready to move on.</p>
+          <p>A ${ROADMAP.length}-week path in three stages. Pick any stop on the path to see what to learn that week.</p>
           <div class="stats">
             <div class="stat"><b>${weeks}/${ROADMAP.length}</b><span>weeks complete</span></div>
             <div class="stat"><b>${got}/${total}</b><span>steps done</span></div>
@@ -1784,7 +1735,7 @@
               const n = required(w).length;
               const cls = complete ? "is-done" : w === cur ? "is-current" : d ? "is-started" : "is-todo";
               const dim = state.q && !weekMatches(w) ? " dim" : "";
-              const status = complete ? "complete" : w === cur ? (d ? `in progress · ${d}/${n}` : "up next") : d ? `${d}/${n} steps` : `${n} steps`;
+              const status = complete ? "complete" : w === cur ? (d ? `in progress · ${d}/${n}` : "up next") : d ? `${d}/${n} done` : `${n} step${n === 1 ? "" : "s"}`;
               return `<div class="stop-row">
                 <button class="stop ${cls}${dim}" type="button" data-week="${w.n}" aria-pressed="${state.open && state.sel === w.n}"
                   aria-label="Week ${w.n}: ${esc(w.title)}, ${status}" style="--k:${k};--p:${complete ? 100 : pctOf(w)};--sw:var(--c-${w.t})">
@@ -1859,8 +1810,6 @@
         const d = weekDone(w);
         const n = required(w).length;
         const nk = nextKey(w);
-        const bkey = "build:" + w.n;
-        const built = done.has(bkey);
         const nxt = weekByN(w.n + 1);
         const panel = $("#panel");
         panel.style.setProperty("--sw", `var(--c-${w.t})`);
@@ -1879,22 +1828,8 @@
           </div>
           <div class="panel-body">
             <section>
-              <h3 class="sec-h"><span class="num">1</span>Learn</h3>
+              <h3 class="sec-h">Learn</h3>
               <ul class="steps">${w.learn.map((s) => step(s, nk)).join("")}</ul>
-            </section>
-            <section>
-              <h3 class="sec-h"><span class="num">2</span>Build</h3>
-              <div class="step${built ? " is-done" : ""}${nk === bkey ? " is-next" : ""}">
-                <input class="tick" type="checkbox" id="b-${w.n}" data-key="${bkey}"${built ? " checked" : ""} />
-                <div class="step-body">
-                  <label class="build-text" for="b-${w.n}">${esc(w.build)}</label>
-                  ${nk === bkey ? `<div class="step-meta"><span class="tag next">up next</span></div>` : ""}
-                </div>
-              </div>
-            </section>
-            <section>
-              <h3 class="sec-h"><span class="num">3</span>Check yourself</h3>
-              <p class="ready-box"><b>Ready to move on when</b> ${esc(w.ready)}</p>
             </section>
             ${
               d === n && nxt
