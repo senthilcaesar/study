@@ -589,43 +589,45 @@
         justify-content: space-between;
         gap: 16px 32px;
       }
+      /* progress as a compact list: label on the left, value on the right */
       .stats {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: stretch;
-        justify-content: flex-end;
-        gap: 8px;
-        margin-left: auto;
-      }
-      .stat {
         display: grid;
-        align-content: center;
-        padding: 4px 10px;
+        width: 230px;
+        margin-left: auto;
         border: 1.5px solid var(--line);
         background: var(--surface);
         box-shadow: 2px 2px 0 var(--shadow);
       }
+      .stat {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 7px 12px;
+        border-bottom: 1px solid var(--hair);
+      }
       .stat b {
         font-family: var(--display);
-        font-size: 1rem;
-        line-height: 1.15;
+        font-size: 0.95rem;
+        line-height: 1.2;
         font-variant-numeric: tabular-nums;
       }
       .stat span {
         font-family: var(--mono);
-        font-size: 0.58rem;
+        font-size: 0.62rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
         color: var(--dim);
       }
       .reset-btn {
-        display: inline-flex;
+        display: flex;
         align-items: center;
+        justify-content: center;
         gap: 6px;
-        padding: 4px 10px;
-        border: 1.5px solid var(--line);
+        width: 100%;
+        padding: 7px 12px;
+        border: 0;
         background: var(--surface);
-        box-shadow: 2px 2px 0 var(--shadow);
         font-family: var(--mono);
         font-size: 0.72rem;
         color: var(--ink);
@@ -638,10 +640,6 @@
       .reset-btn:hover:not(:disabled) {
         background: var(--sunk);
       }
-      .reset-btn:active:not(:disabled) {
-        transform: translate(2px, 2px);
-        box-shadow: none;
-      }
       .reset-btn[data-armed],
       .reset-btn[data-armed]:hover {
         background: var(--c-evals);
@@ -649,8 +647,6 @@
       }
       .reset-btn:disabled {
         color: var(--dim);
-        border-color: var(--hair);
-        box-shadow: none;
         cursor: default;
       }
       .link-btn {
@@ -1922,9 +1918,9 @@
 
         return `<div class="rm-hero">
           <div class="stats">
-            <div class="stat"><b>${weeks}/${ROADMAP.length}</b><span>weeks complete</span></div>
-            <div class="stat"><b>${got}/${total}</b><span title="Core courses and articles ticked off; optional ones don't count">items done</span></div>
-            <div class="stat"><b>${esc(stage.name)}</b><span>current stage</span></div>
+            <div class="stat"><span>Weeks complete</span><b>${weeks}/${ROADMAP.length}</b></div>
+            <div class="stat"><span title="Core courses and articles ticked off; optional ones don't count">Items done</span><b>${got}/${total}</b></div>
+            <div class="stat"><span>Current stage</span><b>${esc(stage.name)}</b></div>
             <button class="reset-btn" type="button" data-reset${done.size ? "" : " disabled"} title="Clear all ticks and completed weeks and start again from week 1">
               <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8a5 5 0 1 0 1.6-3.7M3 2.5v2.8h2.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Start over</span>
             </button>
