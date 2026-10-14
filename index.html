@@ -685,19 +685,6 @@
       .checkpoint.done .k {
         color: var(--bg);
       }
-      .pips {
-        display: flex;
-        gap: 4px;
-        margin-top: 6px;
-      }
-      .pips i {
-        width: 22px;
-        height: 7px;
-        border: 1.5px solid currentColor;
-      }
-      .pips i.on {
-        background: var(--sw);
-      }
       .stop-row {
         position: relative;
         z-index: 1;
@@ -1776,7 +1763,6 @@
           const head = `<div class="checkpoint${full ? " done" : ""}">
             <span class="k">Stage ${si + 1} · weeks ${ws[0].n}–${ws[ws.length - 1].n}${full ? " · complete" : ""}</span>
             <b>${esc(s.name)}: ${esc(s.sub)}</b>
-            <span class="pips" aria-hidden="true">${ws.map((w) => `<i class="${weekComplete(w) ? "on" : ""}" style="--sw:var(--c-${w.t})"></i>`).join("")}</span>
           </div>`;
           const stops = ws
             .map((w) => {
