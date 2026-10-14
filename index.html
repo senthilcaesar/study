@@ -1558,38 +1558,49 @@
           id: "beginner",
           name: "Beginner",
           sub: "Foundations",
-          blurb: "Get comfortable calling models from code, grounding them in your own documents, and building a first tool-using agent.",
+          blurb: "Understand what AI is, learn enough Python to use it, then call models from code, ground them in your own documents and build a first agent.",
         },
         {
           id: "intermediate",
           name: "Intermediate",
           sub: "Tools, skills and evals",
-          blurb: "Connect agents to the outside world with MCP, package know-how as Skills, and measure whether any of it works.",
+          blurb: "Manage what goes into the context window, connect agents to the outside world with MCP, package know-how as Skills, and measure whether any of it works.",
         },
         {
           id: "advanced",
           name: "Advanced",
           sub: "Systems and research",
-          blurb: "Ground agents in knowledge graphs, engineer the harness around the model, and study how production and self-improving agent systems are built.",
+          blurb: "Ground agents in knowledge graphs, engineer the harness around the model, learn the maths underneath, and study how production and self-improving systems are built.",
         },
       ];
 
+      // `id` is the stable key progress is saved under, so weeks can be
+      // reordered without losing anyone's completed weeks; `n` is the display order.
       const ROADMAP = [
         {
-          n: 1, stage: "beginner", t: "foundations",
-          title: "Build with LLMs in Python",
-          goal: "Understand what happens in an LLM API call (messages, tokens, the context window, temperature, structured output) and make one from your own code.",
+          id: "ai-basics", stage: "beginner", t: "foundations",
+          title: "What AI can and can't do",
+          goal: "Build a clear picture of what AI and generative AI are, where they help and where they fall short, before writing any code.",
           learn: [
-            { url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/" },
-            { url: "https://www.deeplearning.ai/courses/ai-python-for-beginners", opt: true, note: "New to Python? Take this first." },
-            { url: "https://www.deeplearning.ai/courses/ai-for-everyone", opt: true, note: "A non-technical tour of what AI can and can't do." },
-            { url: "https://www.deeplearning.ai/courses/generative-ai-for-everyone", opt: true, note: "How generative AI works and where it fits, without code." },
-            { url: "https://www.ibm.com/training/artificial-intelligence", opt: true, note: "A gentler, concept-first overview if the code moves too fast." },
-            { url: "https://www.edx.org/bio/pavlos-protopapas-3", opt: true, note: "Pick an intro machine learning course if you want the maths underneath." },
+            { url: "https://www.deeplearning.ai/courses/ai-for-everyone", note: "The core ideas of AI, without code." },
+            { url: "https://www.deeplearning.ai/courses/generative-ai-for-everyone", note: "How generative AI works, what it's good at and where it fits." },
+            { url: "https://www.ibm.com/training/artificial-intelligence", opt: true, note: "More beginner courses if you want another angle." },
           ],
         },
         {
-          n: 2, stage: "beginner", t: "graphrag",
+          id: "python", stage: "beginner", t: "foundations",
+          title: "Python for AI",
+          goal: "Learn enough Python to read and write the small scripts the rest of the roadmap uses: variables, functions, lists, files and calling a model.",
+          learn: [{ url: "https://www.deeplearning.ai/courses/ai-python-for-beginners" }],
+        },
+        {
+          id: "llms", stage: "beginner", t: "foundations",
+          title: "Build with LLMs in Python",
+          goal: "Understand what happens in an LLM API call (messages, tokens, the context window, temperature, structured output) and make one from your own code.",
+          learn: [{ url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/" }],
+        },
+        {
+          id: "rag", stage: "beginner", t: "graphrag",
           title: "Retrieval-augmented generation",
           goal: "Learn why models need retrieval, and how parsing, chunking, embeddings and vector search ground answers in your own documents.",
           learn: [
@@ -1598,13 +1609,7 @@
           ],
         },
         {
-          n: 3, stage: "beginner", t: "context",
-          title: "Context engineering",
-          goal: "Treat the context window as a budget: what goes in, in what order, and what gets left out.",
-          learn: [{ url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" }],
-        },
-        {
-          n: 4, stage: "beginner", t: "agents",
+          id: "agent", stage: "beginner", t: "agents",
           title: "Your first agent",
           goal: "Move from single calls to a loop where the model chooses a tool, sees the result and decides what to do next.",
           learn: [
@@ -1613,39 +1618,45 @@
           ],
         },
         {
-          n: 5, stage: "intermediate", t: "mcp",
+          id: "context", stage: "intermediate", t: "context",
+          title: "Context engineering",
+          goal: "Treat the context window as a budget: what goes in, in what order, and what gets left out as your agents take on longer tasks.",
+          learn: [{ url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" }],
+        },
+        {
+          id: "mcp", stage: "intermediate", t: "mcp",
           title: "MCP fundamentals",
           goal: "Understand the Model Context Protocol: hosts, clients and servers, and the tools, resources and prompts a server exposes.",
           learn: [
-            { url: "https://youtu.be/cGuyrANVi4A", note: "Start here: a short picture of the whole protocol." },
+            { url: "https://youtu.be/cGuyrANVi4A", note: "A short picture of the whole protocol." },
             { url: "https://anthropic.skilljar.com/introduction-to-model-context-protocol" },
             { url: "https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic" },
           ],
         },
         {
-          n: 6, stage: "intermediate", t: "mcp",
+          id: "mcp-server", stage: "intermediate", t: "mcp",
           title: "Build and ship an MCP server",
           goal: "Write your own MCP server, test it, and take it from a local process to a remote deployment.",
           learn: [
             { url: "https://pamelafox.github.io/pycon2026-mcp-tutorial/" },
             { url: "https://developer.microsoft.com/en-us/reactor/series/S-1614/" },
-            { url: "https://youtube.com/playlist?list=PLJ2a7YWJ3jxk&si=YUapAKeneZH5kzri", opt: true },
+            { url: "https://youtube.com/playlist?list=PLJ2a7YWJ3jxk&si=YUapAKeneZH5kzri", opt: true, note: "Live sessions to dip into once your own server works." },
             { url: "https://senthilcaesar.github.io/knowledgelab/#claude-mcp", opt: true, note: "Handy for review once you have built something." },
           ],
         },
         {
-          n: 7, stage: "intermediate", t: "skills",
+          id: "skills", stage: "intermediate", t: "skills",
           title: "Agent Skills",
           goal: "Package instructions, scripts and reference files as Skills, so an agent loads expertise only when a task needs it.",
           learn: [
             { url: "https://claude.com/blog/skills-explained" },
             { url: "https://anthropic.skilljar.com/introduction-to-agent-skills" },
             { url: "https://senthilcaesar.github.io/blogs/#/posts/writing-your-first-skill-md-file" },
-            { url: "https://www.deeplearning.ai/courses/agent-skills-with-anthropic", opt: true },
+            { url: "https://www.deeplearning.ai/courses/agent-skills-with-anthropic", opt: true, note: "Covers similar ground to the Anthropic course, with more hands-on examples." },
           ],
         },
         {
-          n: 8, stage: "intermediate", t: "evals",
+          id: "evals", stage: "intermediate", t: "evals",
           title: "Evaluating agents",
           goal: "Replace “it seems better” with numbers: test sets, code-based checks, LLM judges and automated runs on every change.",
           learn: [
@@ -1655,18 +1666,18 @@
           ],
         },
         {
-          n: 9, stage: "advanced", t: "graphrag",
+          id: "graphs", stage: "advanced", t: "graphrag",
           title: "Knowledge graphs and GraphRAG",
           goal: "Learn when relationships between facts matter more than similarity, and how agents can build and query knowledge graphs.",
           learn: [
             { url: "https://blog.bytebytego.com/p/graphrag-how-ai-answers-questions" },
             { url: "https://learn.deeplearning.ai/courses/knowledge-graphs-rag" },
             { url: "https://www.deeplearning.ai/courses/agentic-knowledge-graph-construction" },
-            { url: "https://graphacademy.neo4j.com/categories/generative-ai", opt: true },
+            { url: "https://graphacademy.neo4j.com/categories/generative-ai", opt: true, note: "Free Neo4j courses if you want to go deeper on graph databases." },
           ],
         },
         {
-          n: 10, stage: "advanced", t: "harness",
+          id: "harness", stage: "advanced", t: "harness",
           title: "Harnesses and coding agents",
           goal: "Understand the harness around the model (tools, memory, permissions, the loop itself) and drive coding agents with clear specs.",
           learn: [
@@ -1675,7 +1686,7 @@
           ],
         },
         {
-          n: 11, stage: "advanced", t: "agents",
+          id: "production", stage: "advanced", t: "agents",
           title: "Engineering production agent systems",
           goal: "Study how real agent systems are designed, optimised and kept reliable, cheap and fast.",
           learn: [
@@ -1685,17 +1696,25 @@
           ],
         },
         {
-          n: 12, stage: "advanced", t: "foundations",
-          title: "The research frontier and a capstone",
-          goal: "Look under the hood at self-improving agents, how language models are trained, and machine learning on graphs, then pull everything together.",
+          id: "maths", stage: "advanced", t: "foundations",
+          title: "The maths under the models",
+          goal: "Get comfortable with the linear algebra, calculus and probability that model training is built on, so research courses and papers make sense.",
           learn: [
-            { url: "https://cs329a.stanford.edu/" },
-            { url: "https://cs336.stanford.edu/", opt: true, note: "Build a language model from scratch: demanding, and well worth it." },
-            { url: "https://www.deeplearning.ai/specializations/mathematics-for-machine-learning-and-data-science", opt: true, note: "Linear algebra, calculus and probability to make CS 336 easier going." },
-            { url: "https://web.stanford.edu/class/cs224w/", opt: true, note: "The theory behind graph learning, if week 9 hooked you." },
+            { url: "https://www.deeplearning.ai/specializations/mathematics-for-machine-learning-and-data-science" },
+            { url: "https://www.edx.org/bio/pavlos-protopapas-3", opt: true, note: "Harvard data science and machine learning courses to practise the maths on." },
           ],
         },
-      ];
+        {
+          id: "frontier", stage: "advanced", t: "foundations",
+          title: "The research frontier",
+          goal: "Look under the hood at self-improving agents, how language models are trained from scratch, and machine learning on graphs.",
+          learn: [
+            { url: "https://cs329a.stanford.edu/" },
+            { url: "https://cs336.stanford.edu/", note: "Build a language model from scratch: demanding, and the payoff for the maths week." },
+            { url: "https://web.stanford.edu/class/cs224w/", opt: true, note: "The theory behind graph learning, if the knowledge graph week hooked you." },
+          ],
+        },
+      ].map((w, i) => ({ ...w, n: i + 1 }));
 
       const FORMATS = {
         course: { label: "Course", icon: '<path d="M1 4l5-3 5 3-5 3z M3 5.5V8.5c1.5 1.3 4.5 1.3 6 0V5.5" fill="none" stroke="currentColor" stroke-width="1.4"/>' },
@@ -1719,7 +1738,7 @@
         } catch (e) {}
       }
 
-      // progress: ticked resource urls, plus "week:<n>" once a week is marked complete
+      // progress: ticked resource urls, plus "week:<id>" once a week is marked complete
       let done = new Set();
       try {
         done = new Set(JSON.parse(localStorage.getItem("shelf-progress") || "[]"));
@@ -1750,7 +1769,14 @@
       const required = (w) => w.learn.filter((s) => !s.opt).map((s) => s.url);
       const weekDone = (w) => required(w).filter((k) => done.has(k)).length;
       // a week only counts as complete when the learner presses its complete button
-      const weekComplete = (w) => done.has("week:" + w.n);
+      const weekComplete = (w) => done.has("week:" + w.id);
+
+      // weeks used to be saved by number; carry those over to the stable ids
+      const OLD_WEEK_IDS = ["llms", "rag", "context", "agent", "mcp", "mcp-server", "skills", "evals", "graphs", "harness", "production", "frontier"];
+      if ([...done].some((k) => /^week:\d+$/.test(k))) {
+        done = new Set([...done].map((k) => (/^week:\d+$/.test(k) ? "week:" + OLD_WEEK_IDS[+k.slice(5) - 1] : k)));
+        saveProgress();
+      }
 
       function hits(parts) {
         if (!state.q) return true;
@@ -2142,7 +2168,7 @@
         const fin = e.target.closest("[data-complete]");
         if (fin) {
           const w = weekByN(+fin.dataset.complete);
-          done.add("week:" + w.n);
+          done.add("week:" + w.id);
           required(w).forEach((k) => done.add(k));
           saveProgress();
           renderRoadmap();
@@ -2154,7 +2180,7 @@
         }
         const undo = e.target.closest("[data-undo]");
         if (undo) {
-          done.delete("week:" + undo.dataset.undo);
+          done.delete("week:" + weekByN(+undo.dataset.undo).id);
           saveProgress();
           renderRoadmap();
           const btn = $("#panel [data-complete]");
