@@ -1599,7 +1599,7 @@
         },
         {
           id: "context",
-          name: "Context Engineering",
+          name: "Prompt & Context Engineering",
         },
         {
           id: "evals",
@@ -1631,12 +1631,16 @@
 
         { t: "harness", f: "article", title: "The engine behind autonomous AI agents: harnesses and autoresearch", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
         { t: "context", f: "article", title: "Context engineering", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" },
+        { t: "context", f: "course", title: "ChatGPT Prompt Engineering for Developers", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/chatgpt-prompt-eng" },
+        { t: "context", f: "course", title: "Prompt Engineering for ChatGPT", by: "Vanderbilt University on Coursera", url: "https://www.coursera.org/learn/prompt-engineering" },
 
         { t: "agents", f: "series", title: "Python + AI: Level Up", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/" },
         { t: "agents", f: "series", title: "Python + Agents: Building AI agents and workflows with Agent Framework", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1631/" },
         { t: "agents", f: "course", title: "CS 329Z: Engineering AI Agents", by: "Stanford University", url: "https://cs329z.stanford.edu/" },
         { t: "agents", f: "course", title: "CS 329A: Self-Improving AI Agents", by: "Stanford University", url: "https://cs329a.stanford.edu/" },
         { t: "agents", f: "course", title: "Introduction to Deep Agents", by: "LangChain Academy", url: "https://academy.langchain.com/courses/foundation-introduction-to-deepagents" },
+        { t: "agents", f: "course", title: "AI Agents and Agentic AI in Python", by: "Vanderbilt University on Coursera", url: "https://www.coursera.org/specializations/ai-agents-python" },
+        { t: "agents", f: "course", title: "AI Engineer Agentic Track: The Complete Agent & MCP Course", by: "Ed Donner on Udemy", url: "https://www.udemy.com/course/the-complete-agentic-ai-engineering-course" },
 
         { t: "foundations", f: "course", title: "CS 336: Language Modeling from Scratch", by: "Stanford University", url: "https://cs336.stanford.edu/" },
         { t: "foundations", f: "course", title: "CS 2680: Modern AI Systems — Agents and System Optimizations", by: "Harvard University", url: "https://cs2680.com/" },
@@ -1646,6 +1650,9 @@
         { t: "foundations", f: "course", title: "AI for Everyone", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/ai-for-everyone" },
         { t: "foundations", f: "course", title: "Generative AI for Everyone", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/generative-ai-for-everyone" },
         { t: "foundations", f: "course", title: "Mathematics for Machine Learning and Data Science", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/specializations/mathematics-for-machine-learning-and-data-science" },
+        { t: "foundations", f: "course", title: "Generative AI with Large Language Models", by: "DeepLearning.AI and AWS on Coursera", url: "https://www.coursera.org/learn/generative-ai-with-llms" },
+        { t: "foundations", f: "course", title: "Machine Learning Specialization", by: "Stanford and DeepLearning.AI on Coursera", url: "https://www.coursera.org/specializations/machine-learning-introduction" },
+        { t: "foundations", f: "course", title: "Machine Learning Crash Course", by: "Google for Developers", url: "https://developers.google.com/machine-learning/crash-course" },
 
         { t: "graphrag", f: "article", title: "GraphRAG: How AI answers questions hidden across many documents", by: "ByteByteGo", url: "https://blog.bytebytego.com/p/graphrag-how-ai-answers-questions" },
         { t: "graphrag", f: "course", title: "Generative AI courses", by: "Neo4j GraphAcademy", url: "https://graphacademy.neo4j.com/categories/generative-ai" },
@@ -1678,19 +1685,19 @@
           id: "beginner",
           name: "Beginner",
           sub: "Foundations",
-          blurb: "Understand what AI is, learn enough Python to use it, then call models from code, ground them in your own documents and build a first agent.",
+          blurb: "Understand what AI is, learn enough Python and prompting to use it, then call models from code, ground them in your own documents and build a first agent.",
         },
         {
           id: "intermediate",
           name: "Intermediate",
           sub: "Tools, skills and evals",
-          blurb: "Manage what goes into the context window, connect agents to the outside world with MCP, package know-how as Skills, and measure whether any of it works.",
+          blurb: "Learn how LLMs work inside, manage what goes into the context window, connect agents to the outside world with MCP, package know-how as Skills, and measure whether any of it works.",
         },
         {
           id: "advanced",
           name: "Advanced",
           sub: "Systems and research",
-          blurb: "Ground agents in knowledge graphs, engineer the harness around the model, learn the maths underneath, and study how production and self-improving systems are built.",
+          blurb: "Ground agents in knowledge graphs, engineer the harness around the model, learn machine learning and the maths underneath, and study how production and self-improving systems are built.",
         },
       ];
 
@@ -1714,6 +1721,15 @@
           learn: [{ url: "https://www.deeplearning.ai/courses/ai-python-for-beginners" }],
         },
         {
+          id: "prompting", stage: "beginner", t: "context",
+          title: "Prompting",
+          goal: "Learn to write clear, structured prompts (instructions, examples, step-by-step reasoning) and see how much better answers get before you write any app code.",
+          learn: [
+            { url: "https://www.coursera.org/learn/prompt-engineering", note: "Prompt patterns explained with plenty of examples; no coding needed." },
+            { url: "https://www.deeplearning.ai/courses/chatgpt-prompt-eng", note: "About an hour: the same ideas applied from Python, which sets up next week." },
+          ],
+        },
+        {
           id: "llms", stage: "beginner", t: "foundations",
           title: "Build with LLMs in Python",
           goal: "Understand what happens in an LLM API call (messages, tokens, the context window, temperature, structured output) and make one from your own code.",
@@ -1735,7 +1751,15 @@
           learn: [
             { url: "https://developer.microsoft.com/en-us/reactor/series/S-1631/" },
             { url: "https://academy.langchain.com/courses/foundation-introduction-to-deepagents" },
+            { url: "https://www.coursera.org/specializations/ai-agents-python", note: "A structured specialization if you want agents taught step by step in Python." },
+            { url: "https://www.udemy.com/course/the-complete-agentic-ai-engineering-course", opt: true, note: "Paid, six weeks of projects. Also covers MCP, so it carries into the two MCP weeks." },
           ],
+        },
+        {
+          id: "how-llms-work", stage: "intermediate", t: "foundations",
+          title: "How LLMs work",
+          goal: "Understand what's inside the models you've been using: transformers, pre-training, fine-tuning and alignment, and when each is worth it.",
+          learn: [{ url: "https://www.coursera.org/learn/generative-ai-with-llms" }],
         },
         {
           id: "context", stage: "intermediate", t: "context",
@@ -1813,6 +1837,15 @@
             { url: "https://cs329z.stanford.edu/", note: "A full university course: follow the lectures on the topics you need." },
             { url: "https://cs2680.com/", note: "Pairs well with CS 329Z on the systems and optimisation side." },
             { url: "https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai", opt: true, note: "A longer, structured track if you want a certificate." },
+          ],
+        },
+        {
+          id: "ml-foundations", stage: "advanced", t: "foundations",
+          title: "Machine learning foundations",
+          goal: "Learn classic machine learning (regression, classification, neural networks, how models are trained and evaluated) so the research courses that follow have solid ground.",
+          learn: [
+            { url: "https://developers.google.com/machine-learning/crash-course", note: "Fast and interactive; a good first pass." },
+            { url: "https://www.coursera.org/specializations/machine-learning-introduction", note: "Andrew Ng's three-course specialization: the thorough version." },
           ],
         },
         {
@@ -2020,7 +2053,7 @@
 
       function renderPath() {
         const cur = currentWeek();
-        const anyDone = ROADMAP.some((w) => weekDone(w) > 0);
+        const anyDone = ROADMAP.some((w) => weekComplete(w) || weekDone(w) > 0);
         let i = 0;
         const rows = STAGES.map((s, si) => {
           const ws = ROADMAP.filter((w) => w.stage === s.id);
