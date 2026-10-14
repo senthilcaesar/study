@@ -563,7 +563,23 @@
         grid-template-columns: minmax(0, 1fr);
       }
       .rm-main {
+        position: relative;
         min-width: 0;
+      }
+      /* on wide screens the stats float in the corner so the path can start at the top */
+      @media (min-width: 1101px) {
+        .rm-hero {
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index: 2;
+        }
+        .rm-main .path {
+          margin-top: 0;
+        }
+        .rm-main .path > .checkpoint:first-of-type {
+          margin-top: 0;
+        }
       }
       /* intro on the left, progress stats pinned to the top-right corner */
       .rm-hero {
