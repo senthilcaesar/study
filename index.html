@@ -565,7 +565,16 @@
       .rm-main {
         min-width: 0;
       }
+      /* intro on the left, progress stats pinned to the top-right corner */
+      .rm-hero {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px 32px;
+      }
       .rm-hero > p {
+        flex: 1 1 320px;
         margin: 0;
         color: var(--ink-soft);
         max-width: 56ch;
@@ -573,8 +582,9 @@
       .stats {
         display: flex;
         flex-wrap: wrap;
+        justify-content: flex-end;
         gap: 10px;
-        margin-top: 20px;
+        margin-left: auto;
       }
       .stat {
         display: grid;
