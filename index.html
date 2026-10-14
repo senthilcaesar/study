@@ -837,36 +837,50 @@
         color: var(--ink-soft);
       }
 
-      /* the week panel: a drawer that slides in from the right */
+      /* the week panel: a drawer that slides in from the right. It is deliberately
+         quieter than the rest of the page: hairlines, soft shadows, rounded corners. */
+      :root {
+        --tick-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7.4l2.6 2.5L11 4.3' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        --drawer-shadow: -28px 0 60px rgba(22, 24, 29, 0.16), -2px 0 8px rgba(22, 24, 29, 0.06);
+      }
+      :root[data-theme="dark"] {
+        --tick-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7.4l2.6 2.5L11 4.3' fill='none' stroke='%23232634' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        --drawer-shadow: -28px 0 60px rgba(0, 0, 0, 0.45), -2px 0 8px rgba(0, 0, 0, 0.25);
+      }
       .panel {
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
         z-index: 30;
+        display: flex;
+        flex-direction: column;
         width: min(720px, 100vw);
         overflow: auto;
         overscroll-behavior: contain;
-        border-left: 2px solid var(--line);
         background: var(--surface);
-        box-shadow: -6px 0 0 var(--shadow);
-        transform: translateX(105%);
+        border-left: 1px solid var(--hair);
+        box-shadow: var(--drawer-shadow);
+        font-family: var(--body);
+        transform: translateX(104%);
         visibility: hidden;
-        transition: transform 0.3s ease, visibility 0s linear 0.3s;
+        transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 0.38s;
       }
       .panel.open {
         transform: none;
         visibility: visible;
-        transition: transform 0.3s ease;
+        transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
       }
       .sheet-backdrop {
         position: fixed;
         inset: 0;
         z-index: 25;
-        background: rgba(22, 24, 29, 0.45);
+        background: rgba(22, 24, 29, 0.28);
+        -webkit-backdrop-filter: blur(3px);
+        backdrop-filter: blur(3px);
         opacity: 0;
         pointer-events: none;
-        transition: opacity 0.2s ease;
+        transition: opacity 0.3s ease;
       }
       .sheet-backdrop.open {
         opacity: 1;
@@ -875,137 +889,183 @@
       html.drawer-open {
         overflow: hidden;
       }
-      .panel-foot {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 6px 14px;
-        padding-top: 14px;
-        border-top: 1.5px dashed var(--hair);
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        color: var(--dim);
+      .panel :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
       }
+
       .panel-head {
         position: sticky;
         top: 0;
         z-index: 2;
-        padding: 14px 18px 16px;
-        background: var(--sw);
-        color: var(--chip-ink);
-        border-bottom: 2px solid var(--line);
+        padding: 28px 40px 24px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--hair);
       }
-      .panel-nav {
+      .panel-head::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 4px;
+        background: var(--sw);
+      }
+      .panel-top {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 10px;
-        font-family: var(--mono);
-        font-size: 0.7rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
+        gap: 16px;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
+        color: var(--dim);
+      }
+      .eyebrow .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--sw);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--sw) 35%, transparent);
       }
       .arrows {
         display: flex;
-        gap: 6px;
+        align-items: center;
+        gap: 4px;
+      }
+      .arrows .sep {
+        width: 1px;
+        height: 20px;
+        margin: 0 6px;
+        background: var(--hair);
       }
       .icon-btn {
         display: grid;
         place-items: center;
-        width: 32px;
-        height: 32px;
+        width: 34px;
+        height: 34px;
         padding: 0;
-        border: 2px solid currentColor;
+        border: 0;
+        border-radius: 8px;
         background: transparent;
-        font-family: var(--mono);
-        font-weight: 700;
+        color: var(--ink-soft);
+        transition: background 0.15s ease, color 0.15s ease;
+      }
+      .icon-btn svg {
+        width: 18px;
+        height: 18px;
       }
       .icon-btn:hover:not(:disabled) {
-        background: var(--chip-ink);
-        color: var(--sw);
+        background: var(--sunk);
+        color: var(--ink);
       }
       .icon-btn:disabled {
-        opacity: 0.35;
+        opacity: 0.3;
         cursor: default;
       }
       .panel-head h2 {
-        margin: 10px 0 6px;
+        margin: 18px 0 8px;
         font-family: var(--display);
-        font-weight: 800;
-        font-size: 1.55rem;
-        line-height: 1.1;
+        font-weight: 700;
+        font-size: 1.85rem;
+        line-height: 1.15;
         letter-spacing: -0.02em;
+        color: var(--ink);
       }
-      .panel-head p {
+      .panel-head .goal {
         margin: 0;
-        font-size: 0.95rem;
+        max-width: 60ch;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--ink-soft);
       }
       .wk-bar {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin-top: 12px;
-        font-family: var(--mono);
-        font-size: 0.75rem;
-        font-weight: 600;
+        gap: 14px;
+        margin-top: 22px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: var(--ink-soft);
         white-space: nowrap;
+        font-variant-numeric: tabular-nums;
       }
       .wk-bar .track {
         flex: 1;
-        height: 10px;
-        border: 2px solid currentColor;
+        height: 6px;
+        border-radius: 99px;
+        background: var(--sunk);
+        overflow: hidden;
       }
       .wk-bar .fill {
         height: 100%;
-        background: currentColor;
-        transition: width 0.3s ease;
+        border-radius: 99px;
+        background: var(--accent);
+        transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
       }
+
       .panel-body {
+        flex: 1;
         display: grid;
-        gap: 22px;
-        padding: 18px;
+        align-content: start;
+        gap: 28px;
+        padding: 28px 40px 32px;
       }
       .sec-h {
         display: flex;
         align-items: center;
-        gap: 10px;
-        margin: 0 0 10px;
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        font-weight: 400;
-        letter-spacing: 0.12em;
+        gap: 8px;
+        margin: 0 0 14px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
         color: var(--dim);
+      }
+      .sec-h .count {
+        padding: 1px 8px;
+        border-radius: 99px;
+        background: var(--sunk);
+        color: var(--ink-soft);
+        letter-spacing: 0;
       }
       .steps {
         list-style: none;
         margin: 0;
         padding: 0;
         display: grid;
-        gap: 8px;
+        gap: 10px;
       }
       .step {
         display: grid;
         grid-template-columns: 22px minmax(0, 1fr);
         align-items: start;
-        gap: 12px;
-        padding: 10px 12px;
-        border: 1.5px solid var(--hair);
-        background: var(--bg);
-        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        gap: 16px;
+        padding: 16px 18px;
+        border: 1px solid var(--hair);
+        border-radius: 12px;
+        background: var(--surface);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+      .step:hover {
+        border-color: color-mix(in srgb, var(--ink) 25%, var(--hair));
+        box-shadow: 0 4px 16px rgba(22, 24, 29, 0.06);
       }
       .step.is-next {
-        border: 2px solid var(--line);
-        box-shadow: 3px 3px 0 var(--sw);
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 14%, transparent);
       }
       .step.is-done {
-        border-style: dashed;
-        opacity: 0.75;
+        background: var(--bg);
       }
       .step.is-done .step-title {
+        color: var(--dim);
         text-decoration: line-through;
-        text-decoration-thickness: 1.5px;
+        text-decoration-color: color-mix(in srgb, var(--dim) 60%, transparent);
       }
       .tick {
         appearance: none;
@@ -1014,127 +1074,233 @@
         width: 22px;
         height: 22px;
         margin: 1px 0 0;
-        border: 2px solid var(--line);
+        border: 1.5px solid color-mix(in srgb, var(--ink) 35%, var(--hair));
+        border-radius: 7px;
         background: var(--surface);
         cursor: pointer;
-        transition: transform 0.12s ease;
+        transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
       }
       .tick:hover {
-        background: var(--sunk);
+        border-color: var(--accent);
       }
       .tick:checked {
-        background: var(--sw)
-          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2 7.5l3.2 3L12 3.5' fill='none' stroke='%2316181d' stroke-width='2.4'/%3E%3C/svg%3E")
-          center / 14px no-repeat;
+        border-color: var(--accent);
+        background: var(--accent) var(--tick-mark) center / 14px no-repeat;
         animation: pop 0.25s ease;
       }
+      .tick:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
       @keyframes pop {
-        50% { transform: scale(1.25); }
+        50% { transform: scale(1.12); }
       }
       .step-body {
         min-width: 0;
       }
       .step-link {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 6px;
+        color: var(--ink);
         text-decoration: none;
       }
+      .step-link .ext {
+        flex: none;
+        width: 13px;
+        height: 13px;
+        color: var(--dim);
+        opacity: 0;
+        transform: translate(-3px, 1px);
+        transition: opacity 0.15s ease, transform 0.15s ease;
+      }
+      .step-link:hover .ext,
+      .step-link:focus-visible .ext {
+        opacity: 1;
+        transform: translate(0, 1px);
+      }
       .step-link:hover .step-title {
-        text-decoration: underline;
-        text-underline-offset: 3px;
+        color: var(--accent);
       }
       .step-title {
-        font-family: var(--display);
-        font-weight: 600;
+        font-family: var(--body);
+        font-weight: 700;
         font-size: 1.02rem;
-        line-height: 1.25;
+        line-height: 1.4;
+        transition: color 0.15s ease;
       }
       .step-meta {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 4px 10px;
-        margin-top: 4px;
-        font-size: 0.8rem;
-        color: var(--ink-soft);
-      }
-      .step-meta .fmt {
-        padding: 1px 6px;
-        font-size: 0.62rem;
-      }
-      .tag {
-        padding: 1px 6px;
-        border: 1.5px dashed var(--ink-soft);
-        font-family: var(--mono);
-        font-size: 0.62rem;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--ink-soft);
-      }
-      .tag.next {
-        border: 1.5px solid var(--ink);
-        background: var(--ink);
-        color: var(--bg);
-      }
-      .step-note {
-        margin: 6px 0 0;
-        font-size: 0.84rem;
-        color: var(--ink-soft);
-      }
-      .complete-box,
-      .done-box {
-        display: grid;
-        gap: 10px;
+        gap: 6px 10px;
+        margin-top: 6px;
         font-size: 0.85rem;
         color: var(--ink-soft);
       }
-      .done-box > span {
-        display: flex;
+      .pill {
+        display: inline-flex;
         align-items: center;
-        gap: 12px;
-        padding: 10px 14px;
-        border: 2px solid var(--line);
-        background: var(--sw);
-        color: var(--chip-ink);
-        font-size: 0.95rem;
+        gap: 5px;
+        padding: 2px 9px;
+        border-radius: 99px;
+        background: var(--sunk);
+        color: var(--ink-soft);
+        font-size: 0.74rem;
+        font-weight: 700;
       }
-      .done-box .link-btn {
-        color: var(--chip-ink);
-        margin-left: auto;
+      .pill svg {
+        width: 10px;
+        height: 10px;
+      }
+      .pill.muted {
+        background: transparent;
+        box-shadow: inset 0 0 0 1px var(--hair);
+        color: var(--dim);
+      }
+      .pill.next {
+        background: color-mix(in srgb, var(--accent) 14%, transparent);
+        color: var(--accent);
+      }
+      .step-note {
+        margin: 8px 0 0;
+        font-size: 0.88rem;
+        line-height: 1.55;
+        color: var(--dim);
+      }
+
+      .complete-box {
+        display: grid;
+        gap: 10px;
+        justify-items: center;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--dim);
+      }
+      .complete-btn,
+      .next-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-family: var(--body);
+        font-size: 1rem;
+        font-weight: 700;
+        transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .complete-btn svg,
+      .next-btn svg {
+        width: 18px;
+        height: 18px;
       }
       .complete-btn {
-        width: 100%;
-        padding: 14px;
-        border: 2px solid var(--line);
-        background: var(--sw);
-        color: var(--chip-ink);
-        font-family: var(--display);
-        font-size: 1.1rem;
-        font-weight: 700;
-        box-shadow: 5px 5px 0 var(--shadow);
-        transition: transform 0.12s ease, box-shadow 0.12s ease;
-      }
-      .complete-btn:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 7px 7px 0 var(--shadow);
-      }
-      .complete-btn:active {
-        transform: translate(5px, 5px);
-        box-shadow: 0 0 0 var(--shadow);
-      }
-      .next-btn {
-        width: 100%;
-        padding: 12px 14px;
-        border: 2px solid var(--line);
+        border: 0;
         background: var(--ink);
         color: var(--bg);
-        font-family: var(--mono);
-        font-size: 0.82rem;
-        font-weight: 600;
-        text-align: left;
-        box-shadow: 4px 4px 0 var(--sw);
+        box-shadow: 0 6px 20px rgba(22, 24, 29, 0.18);
       }
+      .complete-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 10px 26px rgba(22, 24, 29, 0.22);
+      }
+      .complete-btn:active,
       .next-btn:active {
-        transform: translate(4px, 4px);
-        box-shadow: none;
+        transform: translateY(1px);
+      }
+      .done-box {
+        display: grid;
+        gap: 12px;
+      }
+      .done-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 16px 18px;
+        border-radius: 12px;
+        background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+        border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      }
+      .done-icon {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: var(--on-accent);
+      }
+      .done-icon svg {
+        width: 18px;
+        height: 18px;
+      }
+      .done-row b {
+        display: block;
+        color: var(--ink);
+      }
+      .done-row small {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--ink-soft);
+      }
+      .done-row .link-btn {
+        margin-left: auto;
+      }
+      .next-btn {
+        border: 1px solid var(--hair);
+        background: var(--surface);
+        color: var(--ink);
+        justify-content: space-between;
+        text-align: left;
+      }
+      .next-btn:hover {
+        border-color: color-mix(in srgb, var(--ink) 30%, var(--hair));
+        background: var(--bg);
+      }
+      .panel .link-btn {
+        font-family: var(--body);
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--ink-soft);
+        text-decoration: none;
+        border-radius: 6px;
+        padding: 4px 8px;
+      }
+      .panel .link-btn:hover {
+        background: var(--sunk);
+        color: var(--ink);
+      }
+      .panel-foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px 16px;
+        padding: 16px 40px;
+        border-top: 1px solid var(--hair);
+        font-size: 0.82rem;
+        color: var(--dim);
+      }
+      @media (max-width: 860px) {
+        .panel-head {
+          padding: 22px 20px 20px;
+        }
+        .panel-head h2 {
+          font-size: 1.5rem;
+        }
+        .panel-body {
+          padding: 22px 20px 28px;
+        }
+        .panel-foot {
+          padding: 14px 20px;
+        }
+        .step {
+          padding: 14px;
+          gap: 12px;
+        }
       }
       .toast {
         position: fixed;
@@ -1817,6 +1983,14 @@
           `<path class="base" d="${curve(pts.length - 1)}"/>` + (reach > 0 ? `<path class="fill" d="${curve(reach)}"/>` : "");
       }
 
+      const ICON = {
+        left: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        right: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        close: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+        check: '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        ext: '<svg class="ext" viewBox="0 0 14 14" aria-hidden="true"><path d="M5 2.5h6.5V9M11.5 2.5L3 11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      };
+
       function step(s, nk) {
         const r = byUrl[s.url];
         if (!r) return "";
@@ -1826,10 +2000,10 @@
         return `<li class="step${on ? " is-done" : ""}${next ? " is-next" : ""}">
           <input class="tick" type="checkbox" data-key="${esc(r.url)}"${on ? " checked" : ""} aria-label="Mark ${esc(r.title)} as done" />
           <div class="step-body">
-            <a class="step-link" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="step-title">${esc(r.title)}</span></a>
+            <a class="step-link" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="step-title">${esc(r.title)}</span>${ICON.ext}</a>
             <div class="step-meta">
-              <span class="fmt"><svg viewBox="0 0 12 12" aria-hidden="true">${fmt.icon}</svg>${fmt.label}</span>
-              <span>${esc(r.by)}</span>${s.opt ? `<span class="tag">optional</span>` : ""}${next ? `<span class="tag next">up next</span>` : ""}
+              <span class="pill"><svg viewBox="0 0 12 12" aria-hidden="true">${fmt.icon}</svg>${fmt.label}</span>
+              <span>${esc(r.by)}</span>${s.opt ? `<span class="pill muted">Optional</span>` : ""}${next ? `<span class="pill next">Up next</span>` : ""}
             </div>
             ${s.note ? `<p class="step-note">${esc(s.note)}</p>` : ""}
           </div>
@@ -1843,41 +2017,50 @@
         const n = required(w).length;
         const nk = nextKey(w);
         const nxt = weekByN(w.n + 1);
+        const complete = weekComplete(w);
         const panel = $("#panel");
         panel.style.setProperty("--sw", `var(--c-${w.t})`);
         panel.innerHTML = `<div class="panel-head">
-            <div class="panel-nav">
-              <span>Week ${pad(w.n)} · ${esc(STAGES[si].name)}</span>
+            <div class="panel-top">
+              <span class="eyebrow"><i class="dot" aria-hidden="true"></i>Week ${w.n} · ${esc(STAGES[si].name)} · ${esc(topicOf(w.t).name)}</span>
               <span class="arrows">
-                <button class="icon-btn" type="button" data-go="${w.n - 1}"${w.n === 1 ? " disabled" : ""} aria-label="Previous week">←</button>
-                <button class="icon-btn" type="button" data-go="${w.n + 1}"${nxt ? "" : " disabled"} aria-label="Next week">→</button>
-                <button class="icon-btn panel-close" type="button" data-close aria-label="Close week">✕</button>
+                <button class="icon-btn" type="button" data-go="${w.n - 1}"${w.n === 1 ? " disabled" : ""} aria-label="Previous week" title="Previous week">${ICON.left}</button>
+                <button class="icon-btn" type="button" data-go="${w.n + 1}"${nxt ? "" : " disabled"} aria-label="Next week" title="Next week">${ICON.right}</button>
+                <span class="sep" aria-hidden="true"></span>
+                <button class="icon-btn" type="button" data-close aria-label="Close" title="Close (Esc)">${ICON.close}</button>
               </span>
             </div>
             <h2 id="panel-title">${esc(w.title)}</h2>
-            <p>${esc(w.goal)}</p>
-            <div class="wk-bar"><div class="track"><div class="fill" style="width:${pctOf(w)}%"></div></div><span>${weekComplete(w) ? "complete ✓" : `${d} of ${n} ticked`}</span></div>
+            <p class="goal">${esc(w.goal)}</p>
+            <div class="wk-bar">
+              <div class="track" role="progressbar" aria-label="Week progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${complete ? 100 : pctOf(w)}"><div class="fill" style="width:${complete ? 100 : pctOf(w)}%"></div></div>
+              <span>${complete ? "Completed" : `${d} of ${n} done`}</span>
+            </div>
           </div>
           <div class="panel-body">
             <section>
-              <h3 class="sec-h">Learn</h3>
+              <h3 class="sec-h">Learning materials <span class="count">${w.learn.length}</span></h3>
               <ul class="steps">${w.learn.map((s) => step(s, nk)).join("")}</ul>
             </section>
             ${
-              weekComplete(w)
+              complete
                 ? `<div class="done-box">
-                    <span><b>✓ Week ${w.n} complete</b><button class="link-btn" type="button" data-undo="${w.n}">undo</button></span>
-                    ${nxt ? `<button class="next-btn" type="button" data-go="${nxt.n}">On to week ${nxt.n}: ${esc(nxt.title)} →</button>` : ""}
+                    <div class="done-row">
+                      <span class="done-icon">${ICON.check}</span>
+                      <span><b>Week ${w.n} completed</b><small>This week now counts toward your progress.</small></span>
+                      <button class="link-btn" type="button" data-undo="${w.n}">Undo</button>
+                    </div>
+                    ${nxt ? `<button class="next-btn" type="button" data-go="${nxt.n}"><span>Continue to week ${nxt.n}: ${esc(nxt.title)}</span>${ICON.right}</button>` : ""}
                   </div>`
                 : `<div class="complete-box">
-                    <button class="complete-btn" type="button" data-complete="${w.n}">Mark week ${w.n} complete</button>
-                    <span>${d === n ? "All core items ticked. Nice work." : `${d} of ${n} core items ticked so far.`}</span>
+                    <button class="complete-btn" type="button" data-complete="${w.n}">${ICON.check}Mark week ${w.n} as complete</button>
+                    <span>${d === n ? "All core materials done. You're ready to wrap up this week." : `${d} of ${n} core materials done so far.`}</span>
                   </div>`
             }
-            <div class="panel-foot">
-              <span>Progress is saved in this browser only.</span>
-              ${done.size ? `<button class="link-btn" type="button" id="rm-reset">reset all progress</button>` : ""}
-            </div>
+          </div>
+          <div class="panel-foot">
+            <span>Progress is saved in this browser only.</span>
+            ${done.size ? `<button class="link-btn" type="button" id="rm-reset">Reset all progress</button>` : ""}
           </div>`;
       }
 
@@ -2026,11 +2209,11 @@
             renderRoadmap();
           } else {
             b.dataset.armed = "1";
-            b.textContent = "click again to erase all ticks";
+            b.textContent = "Click again to confirm";
             setTimeout(() => {
               if (b.isConnected) {
                 delete b.dataset.armed;
-                b.textContent = "reset progress";
+                b.textContent = "Reset all progress";
               }
             }, 4000);
           }
