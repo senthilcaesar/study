@@ -6,7 +6,7 @@
     <title>AI Learning Shelf</title>
     <meta
       name="description"
-      content="A curated shelf of free courses, talks, tutorials and articles for learning agent skills, MCP, harnesses, context engineering, evals and more."
+      content="A 12-week roadmap from beginner to advanced, plus a curated shelf of free courses, talks, tutorials and articles on agents, MCP, skills, RAG, evals and more."
     />
     <link
       rel="icon"
@@ -548,6 +548,286 @@
         flex-wrap: wrap;
       }
 
+      /* ---------- roadmap ---------- */
+      .rm-intro {
+        margin-bottom: 44px;
+        max-width: 780px;
+      }
+      .rm-intro h1 {
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: clamp(1.9rem, 4vw, 2.8rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        margin: 0 0 12px;
+        text-wrap: balance;
+      }
+      .rm-intro p {
+        margin: 0;
+        color: var(--ink-soft);
+        max-width: 64ch;
+      }
+      .meter {
+        margin-top: 22px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 16px;
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--ink-soft);
+        font-variant-numeric: tabular-nums;
+      }
+      .meter-track {
+        flex: 1 1 220px;
+        max-width: 420px;
+        height: 14px;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        box-shadow: 2px 2px 0 var(--shadow);
+      }
+      .meter-fill {
+        height: 100%;
+        background: var(--accent);
+        transition: width 0.3s ease;
+      }
+      .next-up {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 16px;
+        padding: 6px 12px;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+        box-shadow: 3px 3px 0 var(--shadow);
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-decoration: none;
+      }
+      .next-up:active {
+        transform: translate(3px, 3px);
+        box-shadow: none;
+      }
+      .stage {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+      }
+      .stage + .stage {
+        margin-top: 60px;
+      }
+      .stage-head {
+        display: grid;
+        gap: 4px;
+        padding-bottom: 14px;
+        border-bottom: 2px solid var(--line);
+      }
+      .stage-tag {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .stage-head h2 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.8rem;
+        letter-spacing: -0.02em;
+        margin: 0;
+      }
+      .stage-head p {
+        margin: 0;
+        color: var(--ink-soft);
+        max-width: 70ch;
+      }
+      .week {
+        background: var(--surface);
+        border: 2px solid var(--line);
+        box-shadow: 4px 4px 0 var(--shadow);
+        scroll-margin-top: calc(var(--bar) + 20px);
+      }
+      .week-head {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 18px;
+        background: var(--sw);
+        color: var(--chip-ink);
+        border-bottom: 2px solid var(--line);
+      }
+      .wk-no {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 2px 8px;
+        border: 1.5px solid currentColor;
+        white-space: nowrap;
+      }
+      .week-head h3 {
+        margin: 0;
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.3rem;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        text-wrap: balance;
+      }
+      .wk-prog {
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .week-body {
+        padding: 18px;
+        display: grid;
+        gap: 18px;
+      }
+      .wk-goal {
+        margin: 0;
+        font-size: 1.02rem;
+        max-width: 72ch;
+      }
+      .wk-label {
+        margin: 0 0 8px;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+      .step {
+        display: grid;
+        grid-template-columns: 22px minmax(0, 1fr);
+        align-items: start;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 1.5px solid var(--hair);
+        background: var(--bg);
+      }
+      .step.is-done {
+        border-style: dashed;
+      }
+      .step.is-done .step-title {
+        text-decoration: line-through;
+        text-decoration-thickness: 1.5px;
+        color: var(--ink-soft);
+      }
+      .tick {
+        appearance: none;
+        -webkit-appearance: none;
+        display: block;
+        width: 22px;
+        height: 22px;
+        margin: 1px 0 0;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        cursor: pointer;
+      }
+      .tick:checked {
+        background: var(--sw)
+          url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2 7.5l3.2 3L12 3.5' fill='none' stroke='%2316181d' stroke-width='2.4'/%3E%3C/svg%3E")
+          center / 14px no-repeat;
+      }
+      .step-body {
+        min-width: 0;
+      }
+      .step-link {
+        text-decoration: none;
+      }
+      .step-link:hover .step-title {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .step-title {
+        font-family: var(--display);
+        font-weight: 600;
+        font-size: 1.05rem;
+        line-height: 1.25;
+      }
+      .step-meta {
+        margin-top: 4px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 10px;
+        font-size: 0.82rem;
+        color: var(--ink-soft);
+      }
+      .step-meta .host {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--dim);
+        overflow-wrap: anywhere;
+      }
+      .step-meta .fmt {
+        font-size: 0.64rem;
+        padding: 1px 6px;
+      }
+      .tag {
+        font-family: var(--mono);
+        font-size: 0.64rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        padding: 1px 6px;
+        border: 1.5px dashed var(--ink-soft);
+        color: var(--ink-soft);
+      }
+      .step-note {
+        margin: 6px 0 0;
+        font-size: 0.85rem;
+        color: var(--ink-soft);
+      }
+      .build-text {
+        cursor: pointer;
+      }
+      .wk-ready {
+        margin: 0;
+        padding-top: 14px;
+        border-top: 1.5px dashed var(--hair);
+        font-size: 0.92rem;
+        color: var(--ink-soft);
+      }
+      .wk-ready b {
+        color: var(--ink);
+      }
+      .rail-stage {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+        padding: 14px 20px 4px;
+      }
+      .rail-stage:first-child {
+        padding-top: 0;
+      }
+      .rail-foot p {
+        margin: 0;
+        font-size: 0.8rem;
+        color: var(--dim);
+      }
+      .wk-badge {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--dim);
+      }
+
       /* ---------- narrow screens ---------- */
       @media (max-width: 860px) {
         .bar {
@@ -619,6 +899,20 @@
         footer .keys {
           display: none;
         }
+        .rail-stage {
+          display: none;
+        }
+        .week-head {
+          grid-template-columns: minmax(0, 1fr) auto;
+          padding: 12px 14px;
+        }
+        .wk-no {
+          grid-column: 1 / -1;
+          justify-self: start;
+        }
+        .week-body {
+          padding: 14px;
+        }
       }
 
       @media (max-width: 480px) {
@@ -664,8 +958,12 @@
       </label>
 
       <div class="bar-meta">
-        <span class="counter"><b id="count-shown">0</b> / <span id="count-total">0</span> resources</span>
-        <div class="view-toggle" role="group" aria-label="Layout">
+        <span class="counter"><b id="count-shown">0</b> / <span id="count-total">0</span> <span id="count-unit">resources</span></span>
+        <div class="view-toggle" role="group" aria-label="Mode">
+          <button type="button" id="mode-roadmap" aria-pressed="true">roadmap</button>
+          <button type="button" id="mode-library" aria-pressed="false">library</button>
+        </div>
+        <div class="view-toggle" id="view-toggle" role="group" aria-label="Layout">
           <button type="button" id="view-list" aria-pressed="false">list</button>
           <button type="button" id="view-grid" aria-pressed="true">cards</button>
         </div>
@@ -675,11 +973,15 @@
 
     <div class="shell" id="top">
       <nav class="rail" aria-label="Topics">
-        <div class="rail-label">Topics</div>
+        <div class="rail-label" id="rail-label">Topics</div>
         <div class="rail-nav" id="rail-nav"></div>
-        <div class="rail-foot">
+        <div class="rail-foot" id="fmt-foot">
           <div class="rail-label" style="padding: 0">Format</div>
           <div class="fmt-row" id="fmt-row"></div>
+        </div>
+        <div class="rail-foot" id="rm-foot" hidden>
+          <p>Progress is saved in this browser only.</p>
+          <div class="fmt-row"><button class="fmt-btn" type="button" id="rm-reset">reset progress</button></div>
         </div>
       </nav>
 
@@ -687,7 +989,7 @@
         <div class="shelves" id="shelves"></div>
 
         <footer>
-          <span>AI Learning Shelf · links open on the publisher's site in a new tab.</span>
+          <span>AI Learning Shelf · links open on the publisher's site in a new tab · progress stays in your browser.</span>
           <span class="keys">
             <span><kbd>/</kbd> search</span>
             <span><kbd>esc</kbd> clear</span>
@@ -785,6 +1087,172 @@
         { t: "docs", f: "video", title: "Building the document context layer for AI agents", by: "Jerry Liu, LlamaIndex · AI Engineer", url: "https://youtu.be/RQi7x-navxU" },
       ];
 
+      // The roadmap: three stages, twelve weeks. Each week points at RESOURCES by
+      // url; `opt: true` marks extra reading that doesn't count toward progress.
+      const STAGES = [
+        {
+          id: "beginner",
+          name: "Beginner",
+          sub: "Foundations",
+          blurb: "Get comfortable calling models from code, grounding them in your own documents, and building a first tool-using agent.",
+        },
+        {
+          id: "intermediate",
+          name: "Intermediate",
+          sub: "Tools, skills and evals",
+          blurb: "Connect agents to the outside world with MCP, package know-how as Skills, and measure whether any of it works.",
+        },
+        {
+          id: "advanced",
+          name: "Advanced",
+          sub: "Systems and research",
+          blurb: "Ground agents in knowledge graphs, engineer the harness around the model, and study how production and self-improving agent systems are built.",
+        },
+      ];
+
+      const ROADMAP = [
+        {
+          n: 1, stage: "beginner", t: "foundations",
+          title: "Build with LLMs in Python",
+          goal: "Understand what happens in an LLM API call (messages, tokens, the context window, temperature, structured output) and make one from your own code.",
+          learn: [
+            { url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/" },
+            { url: "https://www.ibm.com/training/artificial-intelligence", opt: true, note: "A gentler, concept-first overview if the code moves too fast." },
+            { url: "https://www.edx.org/bio/pavlos-protopapas-3", opt: true, note: "Pick an intro machine learning course if you want the maths underneath." },
+          ],
+          build: "Write a script that sends a prompt to a model and gets structured JSON back, for example pulling the name, date and amount out of a receipt description.",
+          ready: "you can explain tokens, the context window and temperature, and you have parsed a model's output in code.",
+        },
+        {
+          n: 2, stage: "beginner", t: "graphrag",
+          title: "Retrieval-augmented generation",
+          goal: "Learn why models need retrieval, and how parsing, chunking, embeddings and vector search ground answers in your own documents.",
+          learn: [
+            { url: "https://www.deeplearning.ai/courses/retrieval-augmented-generation" },
+            { url: "https://youtu.be/RQi7x-navxU", note: "Why document parsing quietly decides how good your RAG is." },
+          ],
+          build: "Build a Q&A bot over a folder of your own PDFs or notes, where every answer cites the chunk it came from.",
+          ready: "you can name three ways retrieval fails (bad parsing, bad chunking, wrong top-k) and how you would spot each.",
+        },
+        {
+          n: 3, stage: "beginner", t: "context",
+          title: "Context engineering",
+          goal: "Treat the context window as a budget: what goes in, in what order, and what gets left out.",
+          learn: [{ url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" }],
+          build: "Run three experiments on your week 2 bot: fewer versus more chunks, a bare versus a detailed system prompt, and full versus trimmed history. Write down what changed.",
+          ready: "you can explain why more context is not always better, with evidence from your own experiments.",
+        },
+        {
+          n: 4, stage: "beginner", t: "agents",
+          title: "Your first agent",
+          goal: "Move from single calls to a loop where the model chooses a tool, sees the result and decides what to do next.",
+          learn: [
+            { url: "https://developer.microsoft.com/en-us/reactor/series/S-1631/" },
+            { url: "https://academy.langchain.com/courses/foundation-introduction-to-deepagents" },
+          ],
+          build: "Build an agent with two tools (your week 2 retriever plus a calculator or web search) and log every step of its loop.",
+          ready: "you can trace an agent run step by step and say why it called each tool.",
+        },
+        {
+          n: 5, stage: "intermediate", t: "mcp",
+          title: "MCP fundamentals",
+          goal: "Understand the Model Context Protocol: hosts, clients and servers, and the tools, resources and prompts a server exposes.",
+          learn: [
+            { url: "https://youtu.be/cGuyrANVi4A", note: "Start here: a short picture of the whole protocol." },
+            { url: "https://anthropic.skilljar.com/introduction-to-model-context-protocol" },
+            { url: "https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic" },
+          ],
+          build: "Connect an existing MCP server (filesystem or GitHub, say) to Claude Desktop or Claude Code and use it for a real task.",
+          ready: "you can sketch how a request flows from the host through a client to a server and back.",
+        },
+        {
+          n: 6, stage: "intermediate", t: "mcp",
+          title: "Build and ship an MCP server",
+          goal: "Write your own MCP server, test it, and take it from a local process to a remote deployment.",
+          learn: [
+            { url: "https://pamelafox.github.io/pycon2026-mcp-tutorial/" },
+            { url: "https://developer.microsoft.com/en-us/reactor/series/S-1614/" },
+            { url: "https://youtube.com/playlist?list=PLJ2a7YWJ3jxk&si=YUapAKeneZH5kzri", opt: true },
+            { url: "https://senthilcaesar.github.io/knowledgelab/#claude-mcp", opt: true, note: "Handy for review once you have built something." },
+          ],
+          build: "Turn your week 4 tools into an MCP server, check it with the MCP Inspector, then deploy it remotely.",
+          ready: "your server works from at least two different MCP clients.",
+        },
+        {
+          n: 7, stage: "intermediate", t: "skills",
+          title: "Agent Skills",
+          goal: "Package instructions, scripts and reference files as Skills, so an agent loads expertise only when a task needs it.",
+          learn: [
+            { url: "https://claude.com/blog/skills-explained" },
+            { url: "https://anthropic.skilljar.com/introduction-to-agent-skills" },
+            { url: "https://senthilcaesar.github.io/blogs/#/posts/writing-your-first-skill-md-file" },
+            { url: "https://www.deeplearning.ai/courses/agent-skills-with-anthropic", opt: true },
+          ],
+          build: "Write a SKILL.md for a task you repeat at work, and check that the agent picks it up from its description alone.",
+          ready: "you can explain when to reach for a Skill, an MCP server or the system prompt.",
+        },
+        {
+          n: 8, stage: "intermediate", t: "evals",
+          title: "Evaluating agents",
+          goal: "Replace “it seems better” with numbers: test sets, code-based checks, LLM judges and automated runs on every change.",
+          learn: [
+            { url: "https://hugobowne.substack.com/p/how-evals-are-central-to-harness" },
+            { url: "https://www.deeplearning.ai/courses/evaluating-ai-agents" },
+            { url: "https://www.deeplearning.ai/courses/automated-testing-llmops" },
+          ],
+          build: "Write 20 test cases for your agent, score them with code checks and an LLM judge, and run them automatically whenever the code changes.",
+          ready: "you can show a score move after a change, and you trust what it is telling you.",
+        },
+        {
+          n: 9, stage: "advanced", t: "graphrag",
+          title: "Knowledge graphs and GraphRAG",
+          goal: "Learn when relationships between facts matter more than similarity, and how agents can build and query knowledge graphs.",
+          learn: [
+            { url: "https://blog.bytebytego.com/p/graphrag-how-ai-answers-questions" },
+            { url: "https://learn.deeplearning.ai/courses/knowledge-graphs-rag" },
+            { url: "https://www.deeplearning.ai/courses/agentic-knowledge-graph-construction" },
+            { url: "https://graphacademy.neo4j.com/categories/generative-ai", opt: true },
+          ],
+          build: "Extract entities and relationships from your week 2 documents into a graph, then answer a question that plain vector RAG got wrong.",
+          ready: "you can say which questions need a graph and which do not.",
+        },
+        {
+          n: 10, stage: "advanced", t: "harness",
+          title: "Harnesses and coding agents",
+          goal: "Understand the harness around the model (tools, memory, permissions, the loop itself) and drive coding agents with clear specs.",
+          learn: [
+            { url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
+            { url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents" },
+          ],
+          build: "Write a spec for a small feature and have a coding agent build it. Note where the agent drifted and what in the spec would have prevented it.",
+          ready: "you can describe what a harness adds on top of a model, and your specs produce working code first time more often than not.",
+        },
+        {
+          n: 11, stage: "advanced", t: "agents",
+          title: "Engineering production agent systems",
+          goal: "Study how real agent systems are designed, optimised and kept reliable, cheap and fast.",
+          learn: [
+            { url: "https://cs329z.stanford.edu/", note: "A full university course: follow the lectures on the topics you need." },
+            { url: "https://cs2680.com/", note: "Pairs well with CS 329Z on the systems and optimisation side." },
+            { url: "https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai", opt: true, note: "A longer, structured track if you want a certificate." },
+          ],
+          build: "Harden your agent: add tracing, retries, cost and latency budgets, and a guardrail for one failure your week 8 evals uncovered.",
+          ready: "you can explain where your agent spends time and money, and what happens when a tool fails.",
+        },
+        {
+          n: 12, stage: "advanced", t: "foundations",
+          title: "The research frontier and a capstone",
+          goal: "Look under the hood at self-improving agents, how language models are trained, and machine learning on graphs, then pull everything together.",
+          learn: [
+            { url: "https://cs329a.stanford.edu/" },
+            { url: "https://cs336.stanford.edu/", opt: true, note: "Build a language model from scratch: demanding, and well worth it." },
+            { url: "https://web.stanford.edu/class/cs224w/", opt: true, note: "The theory behind graph learning, if week 9 hooked you." },
+          ],
+          build: "Capstone: ship one agent that uses MCP tools, at least one Skill, retrieval (vector or graph) and an eval suite. Write up what you learned and share it.",
+          ready: "you could teach any week of this roadmap to someone else.",
+        },
+      ];
+
       const FORMATS = {
         course: { label: "Course", icon: '<path d="M1 4l5-3 5 3-5 3z M3 5.5V8.5c1.5 1.3 4.5 1.3 6 0V5.5" fill="none" stroke="currentColor" stroke-width="1.4"/>' },
         video: { label: "Video", icon: '<path d="M3 1.5v9l7.5-4.5z" fill="currentColor"/>' },
@@ -795,31 +1263,76 @@
         profile: { label: "Profile", icon: '<path d="M6 5.5a2 2 0 100-4 2 2 0 000 4z M1.8 10.8c0-2.3 1.9-3.6 4.2-3.6s4.2 1.3 4.2 3.6" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
       };
 
-      const state = { topic: "all", format: "all", q: "", view: "grid" };
+      const state = { mode: "roadmap", topic: "all", format: "all", q: "", view: "grid" };
       try {
         const saved = JSON.parse(localStorage.getItem("shelf-prefs") || "{}");
         if (saved.view === "list") state.view = "list";
+        if (saved.mode === "library") state.mode = "library";
       } catch (e) {}
+      function savePrefs() {
+        try {
+          localStorage.setItem("shelf-prefs", JSON.stringify({ view: state.view, mode: state.mode }));
+        } catch (e) {}
+      }
+
+      // progress: a set of ticked keys (a resource url, or "build:<week>")
+      let done = new Set();
+      try {
+        done = new Set(JSON.parse(localStorage.getItem("shelf-progress") || "[]"));
+      } catch (e) {}
+      function saveProgress() {
+        try {
+          localStorage.setItem("shelf-progress", JSON.stringify([...done]));
+        } catch (e) {}
+      }
 
       const $ = (s) => document.querySelector(s);
       const esc = (s) =>
         s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
       const host = (u) => new URL(u).hostname.replace(/^www\./, "");
       const topicOf = (id) => TOPICS.find((t) => t.id === id);
+      const pad = (n) => String(n).padStart(2, "0");
 
-      function matches(r) {
-        if (state.format !== "all" && r.f !== state.format) return false;
+      const byUrl = Object.fromEntries(RESOURCES.map((r) => [r.url, r]));
+      const weekOf = {};
+      ROADMAP.forEach((w) =>
+        w.learn.forEach((s) => {
+          if (!byUrl[s.url]) console.warn("Roadmap link missing from RESOURCES:", s.url);
+          weekOf[s.url] = w.n;
+        })
+      );
+
+      // a week's required steps are its core resources plus the build task
+      const required = (w) => [...w.learn.filter((s) => !s.opt).map((s) => s.url), "build:" + w.n];
+      const weekDone = (w) => required(w).filter((k) => done.has(k)).length;
+      const weekComplete = (w) => weekDone(w) === required(w).length;
+
+      function hits(parts) {
         if (!state.q) return true;
-        const hay = [r.title, r.by, host(r.url), topicOf(r.t).name, FORMATS[r.f].label]
-          .join(" ")
-          .toLowerCase();
+        const hay = parts.join(" ").toLowerCase();
         return state.q
           .toLowerCase()
           .split(/\s+/)
           .every((w) => hay.includes(w));
       }
 
+      function matches(r) {
+        if (state.format !== "all" && r.f !== state.format) return false;
+        return hits([r.title, r.by, host(r.url), topicOf(r.t).name, FORMATS[r.f].label]);
+      }
+
+      function weekMatches(w) {
+        const res = w.learn.map((s) => byUrl[s.url]).filter(Boolean);
+        return hits([
+          "week " + w.n, w.title, w.goal, w.build, w.ready, topicOf(w.t).name,
+          ...res.flatMap((r) => [r.title, r.by, host(r.url)]),
+        ]);
+      }
+
       function renderRail() {
+        $("#rail-label").textContent = "Topics";
+        $("#fmt-foot").hidden = false;
+        $("#rm-foot").hidden = true;
         const pool = RESOURCES.filter(matches);
         const items = [{ id: "all", name: "All topics" }, ...TOPICS];
         $("#rail-nav").innerHTML = items
@@ -846,7 +1359,9 @@
           <span class="fmt"><svg viewBox="0 0 12 12" aria-hidden="true">${fmt.icon}</svg>${fmt.label}</span>
           <span class="slip-body">
             <p class="slip-title">${esc(r.title)}</p>
-            <p class="slip-meta"><span>${esc(r.by)}</span><span class="host">${host(r.url)}</span></p>
+            <p class="slip-meta"><span>${esc(r.by)}</span><span class="host">${host(r.url)}</span>${
+              weekOf[r.url] ? `<span class="wk-badge">week ${weekOf[r.url]}</span>` : ""
+            }</p>
           </span>
         </a></li>`;
       }
@@ -870,6 +1385,7 @@
         const shown = topics.reduce((n, t) => n + visible.filter((r) => r.t === t.id).length, 0);
         $("#count-shown").textContent = shown;
         $("#count-total").textContent = RESOURCES.length;
+        $("#count-unit").textContent = "resources";
 
         $("#shelves").innerHTML =
           html ||
@@ -883,10 +1399,150 @@
         $("#q-clear").hidden = !state.q;
       }
 
-      function render() {
-        renderRail();
-        renderShelves();
+      function renderRoadmapRail() {
+        $("#rail-label").textContent = "Weeks";
+        $("#fmt-foot").hidden = true;
+        $("#rm-foot").hidden = false;
+        $("#rail-nav").innerHTML = STAGES.map(
+          (s, i) =>
+            `<div class="rail-stage">Stage ${i + 1} · ${esc(s.name)}</div>` +
+            ROADMAP.filter((w) => w.stage === s.id)
+              .map((w) => {
+                const full = weekComplete(w);
+                return `<button class="rail-item" type="button" data-week="${w.n}" style="--sw:${full ? `var(--c-${w.t})` : "var(--surface)"}">
+                  <span class="sw" aria-hidden="true"></span><span>${pad(w.n)} · ${esc(w.title)}</span><span class="n">${
+                    full ? "done" : weekDone(w) + "/" + required(w).length
+                  }</span></button>`;
+              })
+              .join("")
+        ).join("");
       }
+
+      function step(s) {
+        const r = byUrl[s.url];
+        if (!r) return "";
+        const fmt = FORMATS[r.f];
+        const on = done.has(r.url);
+        return `<li class="step${on ? " is-done" : ""}">
+          <input class="tick" type="checkbox" data-key="${esc(r.url)}"${on ? " checked" : ""} aria-label="Mark ${esc(r.title)} as done" />
+          <div class="step-body">
+            <a class="step-link" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="step-title">${esc(r.title)}</span></a>
+            <div class="step-meta">
+              <span class="fmt"><svg viewBox="0 0 12 12" aria-hidden="true">${fmt.icon}</svg>${fmt.label}</span>
+              <span>${esc(r.by)}</span><span class="host">${host(r.url)}</span>${s.opt ? `<span class="tag">optional</span>` : ""}
+            </div>
+            ${s.note ? `<p class="step-note">${esc(s.note)}</p>` : ""}
+          </div>
+        </li>`;
+      }
+
+      function week(w) {
+        const key = "build:" + w.n;
+        const built = done.has(key);
+        const d = weekDone(w);
+        const n = required(w).length;
+        return `<article class="week" id="week-${w.n}" style="--sw:var(--c-${w.t})" aria-labelledby="wh-${w.n}">
+          <header class="week-head">
+            <span class="wk-no">Week ${pad(w.n)}</span>
+            <h3 id="wh-${w.n}">${esc(w.title)}</h3>
+            <span class="wk-prog">${d === n ? "✓ complete" : d + " / " + n}</span>
+          </header>
+          <div class="week-body">
+            <p class="wk-goal">${esc(w.goal)}</p>
+            <div>
+              <h4 class="wk-label">Learn</h4>
+              <ul class="steps">${w.learn.map(step).join("")}</ul>
+            </div>
+            <div>
+              <h4 class="wk-label">Build</h4>
+              <div class="step${built ? " is-done" : ""}">
+                <input class="tick" type="checkbox" id="b-${w.n}" data-key="${key}"${built ? " checked" : ""} />
+                <label class="build-text" for="b-${w.n}">${esc(w.build)}</label>
+              </div>
+            </div>
+            <p class="wk-ready"><b>Ready to move on when</b> ${esc(w.ready)}</p>
+          </div>
+        </article>`;
+      }
+
+      function renderRoadmap() {
+        const total = ROADMAP.reduce((a, w) => a + required(w).length, 0);
+        const got = ROADMAP.reduce((a, w) => a + weekDone(w), 0);
+        const pct = Math.round((got / total) * 100);
+        const next = ROADMAP.find((w) => !weekComplete(w));
+        $("#count-shown").textContent = got;
+        $("#count-total").textContent = total;
+        $("#count-unit").textContent = "steps done";
+
+        const stages = STAGES.map((s, i) => {
+          const ws = ROADMAP.filter((w) => w.stage === s.id);
+          const shown = ws.filter(weekMatches);
+          if (!shown.length) return "";
+          return `<section class="stage" id="stage-${s.id}" aria-labelledby="sh-${s.id}">
+            <div class="stage-head">
+              <span class="stage-tag">Stage ${i + 1} · weeks ${ws[0].n}–${ws[ws.length - 1].n}</span>
+              <h2 id="sh-${s.id}">${esc(s.name)}: ${esc(s.sub)}</h2>
+              <p>${esc(s.blurb)}</p>
+            </div>
+            ${shown.map(week).join("")}
+          </section>`;
+        }).join("");
+
+        $("#shelves").classList.remove("grid-view");
+        $("#shelves").innerHTML =
+          `<div class="rm-intro">
+            <h1>From your first API call to production agents</h1>
+            <p>A 12-week path in three stages. Each week has a goal, a short list of things to read or watch, something to build, and a check for when you're ready to move on. Optional items go deeper but don't count toward progress. Tick things off as you go.</p>
+            <div class="meter">
+              <div class="meter-track" role="progressbar" aria-label="Roadmap progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="meter-fill" style="width:${pct}%"></div></div>
+              <span>${got} of ${total} steps · ${pct}%</span>
+            </div>
+            ${
+              next
+                ? `<a class="next-up" href="#week-${next.n}" data-week="${next.n}" style="--sw:var(--c-${next.t})">${got ? "Continue" : "Start"}: week ${next.n} · ${esc(next.title)} →</a>`
+                : `<a class="next-up" href="#week-12" data-week="12" style="--sw:var(--c-mcp)">All 12 weeks complete. Time to teach it →</a>`
+            }
+          </div>` +
+          (stages ||
+            `<div class="empty"><strong>No week matches</strong>Nothing in the roadmap mentions “${esc(state.q)}”.<br /><button type="button" id="reset">Show all weeks</button></div>`);
+        $("#q-clear").hidden = !state.q;
+      }
+
+      function render() {
+        const road = state.mode === "roadmap";
+        $("#mode-roadmap").setAttribute("aria-pressed", road);
+        $("#mode-library").setAttribute("aria-pressed", !road);
+        $("#view-toggle").hidden = road;
+        if (road) {
+          renderRoadmapRail();
+          renderRoadmap();
+        } else {
+          renderRail();
+          renderShelves();
+        }
+      }
+
+      function goWeek(n, smooth = true) {
+        if (state.q && !document.getElementById("week-" + n)) {
+          state.q = "";
+          $("#q").value = "";
+          render();
+        }
+        const el = document.getElementById("week-" + n);
+        if (!el) return;
+        el.scrollIntoView({ block: "start", behavior: smooth ? "smooth" : "auto" });
+        history.replaceState(null, "", "#week-" + n);
+      }
+
+      function setMode(m) {
+        state.mode = m;
+        savePrefs();
+        history.replaceState(null, "", location.pathname + location.search);
+        render();
+        window.scrollTo(0, 0);
+      }
+      $("#mode-roadmap").addEventListener("click", () => setMode("roadmap"));
+      $("#mode-library").addEventListener("click", () => setMode("library"));
 
       function reset() {
         state.topic = "all";
@@ -897,6 +1553,8 @@
       }
 
       $("#rail-nav").addEventListener("click", (e) => {
+        const wk = e.target.closest("[data-week]");
+        if (wk) return goWeek(+wk.dataset.week);
         const b = e.target.closest("[data-topic]");
         if (!b) return;
         state.topic = b.dataset.topic;
@@ -911,6 +1569,38 @@
       });
       $("#shelves").addEventListener("click", (e) => {
         if (e.target.id === "reset") reset();
+        const wk = e.target.closest("a[data-week]");
+        if (wk) {
+          e.preventDefault();
+          goWeek(+wk.dataset.week);
+        }
+      });
+      $("#shelves").addEventListener("change", (e) => {
+        const k = e.target.dataset.key;
+        if (!k) return;
+        if (e.target.checked) done.add(k);
+        else done.delete(k);
+        saveProgress();
+        render();
+        const again = [...document.querySelectorAll(".tick")].find((t) => t.dataset.key === k);
+        if (again) again.focus({ preventScroll: true });
+      });
+      $("#rm-reset").addEventListener("click", (e) => {
+        const b = e.currentTarget;
+        if (b.dataset.armed) {
+          done.clear();
+          saveProgress();
+          delete b.dataset.armed;
+          b.textContent = "reset progress";
+          render();
+        } else {
+          b.dataset.armed = "1";
+          b.textContent = "click again to reset";
+          setTimeout(() => {
+            delete b.dataset.armed;
+            b.textContent = "reset progress";
+          }, 4000);
+        }
       });
       $("#q").addEventListener("input", (e) => {
         state.q = e.target.value.trim();
@@ -926,9 +1616,7 @@
 
       function setView(v) {
         state.view = v;
-        try {
-          localStorage.setItem("shelf-prefs", JSON.stringify({ view: v }));
-        } catch (e) {}
+        savePrefs();
         renderShelves();
       }
       $("#view-list").addEventListener("click", () => setView("list"));
@@ -958,22 +1646,35 @@
       });
 
       document.addEventListener("keydown", (e) => {
-        const typing = e.target.matches("input");
+        const typing = e.target.matches("input[type=search]");
         if (e.key === "/" && !typing) {
           e.preventDefault();
           $("#q").focus();
         } else if (e.key === "Escape") {
           if (typing) $("#q").blur();
           reset();
-        } else if (e.key === "v" && !typing && !e.metaKey && !e.ctrlKey) {
+        } else if (e.key === "v" && !typing && !e.metaKey && !e.ctrlKey && state.mode === "library") {
           setView(state.view === "list" ? "grid" : "list");
         }
       });
 
-      // deep link to a topic: index.html#mcp
+      // deep links: index.html#week-5 opens the roadmap at that week,
+      // index.html#mcp opens the library on that topic
       const hash = location.hash.slice(1);
-      if (topicOf(hash)) state.topic = hash;
+      const wkMatch = /^week-(\d+)$/.exec(hash);
+      if (wkMatch) state.mode = "roadmap";
+      else if (topicOf(hash)) {
+        state.mode = "library";
+        state.topic = hash;
+      }
       render();
+      if (wkMatch) goWeek(+wkMatch[1], false);
+      window.addEventListener("hashchange", () => {
+        const m = /^#week-(\d+)$/.exec(location.hash);
+        if (!m) return;
+        if (state.mode !== "roadmap") setMode("roadmap");
+        goWeek(+m[1]);
+      });
     </script>
   </body>
 </html>
