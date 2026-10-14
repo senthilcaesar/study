@@ -548,161 +548,500 @@
         flex-wrap: wrap;
       }
 
-      /* ---------- roadmap ---------- */
-      .rm-intro {
-        margin-bottom: 44px;
-        max-width: 780px;
+      /* ---------- roadmap ----------
+         Overview first, details on demand: a winding path of week stops
+         (done / current / upcoming) on the left, and the selected week's
+         checklist in a sticky panel on the right (a bottom sheet on phones). */
+      .shell.solo {
+        grid-template-columns: minmax(0, 1fr);
       }
-      .rm-intro h1 {
+      .shell.solo .rail {
+        display: none;
+      }
+      .rm {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(380px, 460px);
+        gap: 40px;
+        align-items: start;
+      }
+      .rm-main {
+        min-width: 0;
+      }
+      .rm-hero h1 {
         font-family: var(--display);
         font-weight: 800;
-        font-size: clamp(1.9rem, 4vw, 2.8rem);
+        font-size: clamp(1.9rem, 4vw, 2.7rem);
         line-height: 1.05;
         letter-spacing: -0.03em;
-        margin: 0 0 12px;
+        margin: 0 0 10px;
         text-wrap: balance;
       }
-      .rm-intro p {
+      .rm-hero > p {
         margin: 0;
         color: var(--ink-soft);
-        max-width: 64ch;
+        max-width: 56ch;
       }
-      .meter {
-        margin-top: 22px;
+      .stats {
         display: flex;
         flex-wrap: wrap;
-        align-items: center;
-        gap: 10px 16px;
-        font-family: var(--mono);
-        font-size: 0.8rem;
-        color: var(--ink-soft);
-        font-variant-numeric: tabular-nums;
+        gap: 10px;
+        margin-top: 20px;
       }
-      .meter-track {
-        flex: 1 1 220px;
-        max-width: 420px;
-        height: 14px;
+      .stat {
+        display: grid;
+        padding: 8px 14px;
         border: 2px solid var(--line);
         background: var(--surface);
-        box-shadow: 2px 2px 0 var(--shadow);
-      }
-      .meter-fill {
-        height: 100%;
-        background: var(--accent);
-        transition: width 0.3s ease;
-      }
-      .next-up {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 16px;
-        padding: 6px 12px;
-        border: 2px solid var(--line);
-        background: var(--sw);
-        color: var(--chip-ink);
         box-shadow: 3px 3px 0 var(--shadow);
+      }
+      .stat b {
+        font-family: var(--display);
+        font-size: 1.4rem;
+        line-height: 1.1;
+        font-variant-numeric: tabular-nums;
+      }
+      .stat span {
         font-family: var(--mono);
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-decoration: none;
-      }
-      .next-up:active {
-        transform: translate(3px, 3px);
-        box-shadow: none;
-      }
-      .stage {
-        display: flex;
-        flex-direction: column;
-        gap: 22px;
-      }
-      .stage + .stage {
-        margin-top: 60px;
-      }
-      .stage-head {
-        display: grid;
-        gap: 4px;
-        padding-bottom: 14px;
-        border-bottom: 2px solid var(--line);
-      }
-      .stage-tag {
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.12em;
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
         color: var(--dim);
       }
-      .stage-head h2 {
-        font-family: var(--display);
-        font-weight: 700;
-        font-size: 1.8rem;
-        letter-spacing: -0.02em;
-        margin: 0;
-      }
-      .stage-head p {
-        margin: 0;
-        color: var(--ink-soft);
-        max-width: 70ch;
-      }
-      .week {
-        background: var(--surface);
-        border: 2px solid var(--line);
-        box-shadow: 4px 4px 0 var(--shadow);
-        scroll-margin-top: calc(var(--bar) + 20px);
-      }
-      .week-head {
+      .resume {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center;
         gap: 14px;
-        padding: 14px 18px;
+        width: 100%;
+        max-width: 620px;
+        margin-top: 20px;
+        padding: 14px 16px;
+        text-align: left;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+        box-shadow: 5px 5px 0 var(--shadow);
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+      .resume:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 7px 7px 0 var(--shadow);
+      }
+      .resume:active {
+        transform: translate(5px, 5px);
+        box-shadow: 0 0 0 var(--shadow);
+      }
+      .resume-no {
+        display: grid;
+        place-items: center;
+        width: 50px;
+        height: 50px;
+        border: 2px solid currentColor;
+        border-radius: 50%;
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.3rem;
+      }
+      .resume-kicker {
+        display: block;
+        font-family: var(--mono);
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .resume-title {
+        display: block;
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.2rem;
+        line-height: 1.2;
+      }
+      .resume-next {
+        display: block;
+        margin-top: 2px;
+        font-size: 0.85rem;
+      }
+      .resume-go {
+        padding: 6px 10px;
+        border: 2px solid currentColor;
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .rm-tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 16px;
+        margin-top: 14px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--dim);
+      }
+      .link-btn {
+        padding: 0;
+        border: 0;
+        background: none;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* the path */
+      .path {
+        --amp: 120px;
+        position: relative;
+        margin-top: 36px;
+        padding-bottom: 24px;
+      }
+      .path-svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+      }
+      .path-svg .base {
+        fill: none;
+        stroke: var(--hair);
+        stroke-width: 6;
+        stroke-linecap: round;
+        stroke-dasharray: 1 13;
+      }
+      .path-svg .fill {
+        fill: none;
+        stroke: var(--accent);
+        stroke-width: 6;
+        stroke-linecap: round;
+      }
+      .search-note {
+        margin: 24px 0 0;
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--ink-soft);
+      }
+      .checkpoint {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        justify-items: center;
+        gap: 2px;
+        width: fit-content;
+        max-width: 100%;
+        margin: 26px auto 34px;
+        padding: 10px 20px 12px;
+        text-align: center;
+        border: 2px solid var(--line);
+        background: var(--bg);
+        box-shadow: 3px 3px 0 var(--shadow);
+      }
+      .checkpoint .k {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .checkpoint b {
+        font-family: var(--display);
+        font-size: 1.15rem;
+        line-height: 1.2;
+      }
+      .checkpoint.done {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .checkpoint.done .k {
+        color: var(--bg);
+      }
+      .pips {
+        display: flex;
+        gap: 4px;
+        margin-top: 6px;
+      }
+      .pips i {
+        width: 22px;
+        height: 7px;
+        border: 1.5px solid currentColor;
+      }
+      .pips i.on {
+        background: var(--sw);
+      }
+      .stop-row {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        height: 134px;
+        align-items: center;
+      }
+      .stop {
+        position: relative;
+        display: block;
+        width: 78px;
+        height: 78px;
+        padding: 0;
+        border: 0;
+        background: none;
+        transform: translateX(calc(var(--amp) * var(--k)));
+        transition: opacity 0.2s ease;
+      }
+      .stop.dim {
+        opacity: 0.28;
+      }
+      .node {
+        display: grid;
+        place-items: center;
+        width: 78px;
+        height: 78px;
+        border-radius: 50%;
+        background: conic-gradient(var(--sw) calc(var(--p) * 1%), var(--hair) 0);
+        box-shadow: 0 5px 0 var(--shadow);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .stop:hover .node {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 0 var(--shadow);
+      }
+      .stop:active .node {
+        transform: translateY(4px);
+        box-shadow: 0 1px 0 var(--shadow);
+      }
+      .face {
+        display: grid;
+        place-items: center;
+        width: 64px;
+        height: 64px;
+        border: 2.5px solid var(--line);
+        border-radius: 50%;
+        background: var(--surface);
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.5rem;
+        color: var(--ink);
+      }
+      .face svg {
+        width: 28px;
+        height: 28px;
+      }
+      .stop.is-todo .face {
+        border-style: dashed;
+        color: var(--dim);
+      }
+      .stop.is-done .node {
+        background: var(--line);
+      }
+      .stop.is-done .face,
+      .stop.is-current .face {
+        background: var(--sw);
+        color: var(--chip-ink);
+      }
+      .stop.is-current .node::after {
+        content: "";
+        position: absolute;
+        inset: -9px;
+        border: 3px solid var(--sw);
+        border-radius: 50%;
+        animation: pulse 1.8s ease-out infinite;
+        pointer-events: none;
+      }
+      @keyframes pulse {
+        from { transform: scale(0.9); opacity: 1; }
+        to { transform: scale(1.3); opacity: 0; }
+      }
+      .stop:focus-visible {
+        outline: none;
+      }
+      .stop:focus-visible .node,
+      .stop[aria-pressed="true"] .node {
+        outline: 3px solid var(--accent);
+        outline-offset: 5px;
+      }
+      .here {
+        position: absolute;
+        bottom: calc(100% + 14px);
+        left: 50%;
+        padding: 3px 9px;
+        background: var(--ink);
+        color: var(--bg);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        transform: translateX(-50%);
+        animation: bob 1.8s ease-in-out infinite;
+      }
+      .here::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border: 5px solid transparent;
+        border-top-color: var(--ink);
+      }
+      @keyframes bob {
+        50% { transform: translate(-50%, -4px); }
+      }
+      .stop-label {
+        position: absolute;
+        top: 50%;
+        left: calc(100% + 18px);
+        display: grid;
+        gap: 1px;
+        width: 200px;
+        text-align: left;
+        transform: translateY(-50%);
+      }
+      .stop-label.left {
+        left: auto;
+        right: calc(100% + 18px);
+        text-align: right;
+      }
+      .stop-label .wk {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--dim);
+      }
+      .stop-label .t {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.05rem;
+        line-height: 1.2;
+        color: var(--ink);
+      }
+      .stop:hover .stop-label .t {
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+      .stop-label .m {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--ink-soft);
+      }
+
+      /* the week panel */
+      .panel {
+        position: sticky;
+        top: calc(var(--bar) + 20px);
+        max-height: calc(100vh - var(--bar) - 40px);
+        overflow: auto;
+        overscroll-behavior: contain;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        box-shadow: 6px 6px 0 var(--shadow);
+      }
+      .panel-head {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        padding: 14px 18px 16px;
         background: var(--sw);
         color: var(--chip-ink);
         border-bottom: 2px solid var(--line);
       }
-      .wk-no {
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        padding: 2px 8px;
-        border: 1.5px solid currentColor;
-        white-space: nowrap;
-      }
-      .week-head h3 {
-        margin: 0;
-        font-family: var(--display);
-        font-weight: 700;
-        font-size: 1.3rem;
-        line-height: 1.2;
-        letter-spacing: -0.01em;
-        text-wrap: balance;
-      }
-      .wk-prog {
-        font-family: var(--mono);
-        font-size: 0.8rem;
-        font-weight: 600;
-        font-variant-numeric: tabular-nums;
-        white-space: nowrap;
-      }
-      .week-body {
-        padding: 18px;
-        display: grid;
-        gap: 18px;
-      }
-      .wk-goal {
-        margin: 0;
-        font-size: 1.02rem;
-        max-width: 72ch;
-      }
-      .wk-label {
-        margin: 0 0 8px;
+      .panel-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
         font-family: var(--mono);
         font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      .arrows {
+        display: flex;
+        gap: 6px;
+      }
+      .icon-btn {
+        display: grid;
+        place-items: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        border: 2px solid currentColor;
+        background: transparent;
+        font-family: var(--mono);
+        font-weight: 700;
+      }
+      .icon-btn:hover:not(:disabled) {
+        background: var(--chip-ink);
+        color: var(--sw);
+      }
+      .icon-btn:disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+      .panel-head h2 {
+        margin: 10px 0 6px;
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.55rem;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+      .panel-head p {
+        margin: 0;
+        font-size: 0.95rem;
+      }
+      .wk-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 12px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .wk-bar .track {
+        flex: 1;
+        height: 10px;
+        border: 2px solid currentColor;
+      }
+      .wk-bar .fill {
+        height: 100%;
+        background: currentColor;
+        transition: width 0.3s ease;
+      }
+      .panel-body {
+        display: grid;
+        gap: 22px;
+        padding: 18px;
+      }
+      .sec-h {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 10px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
         font-weight: 400;
         letter-spacing: 0.12em;
         text-transform: uppercase;
         color: var(--dim);
+      }
+      .sec-h .num {
+        display: grid;
+        place-items: center;
+        width: 22px;
+        height: 22px;
+        border: 2px solid var(--line);
+        border-radius: 50%;
+        color: var(--ink);
+        font-weight: 700;
+        letter-spacing: 0;
       }
       .steps {
         list-style: none;
@@ -719,14 +1058,19 @@
         padding: 10px 12px;
         border: 1.5px solid var(--hair);
         background: var(--bg);
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      }
+      .step.is-next {
+        border: 2px solid var(--line);
+        box-shadow: 3px 3px 0 var(--sw);
       }
       .step.is-done {
         border-style: dashed;
+        opacity: 0.75;
       }
       .step.is-done .step-title {
         text-decoration: line-through;
         text-decoration-thickness: 1.5px;
-        color: var(--ink-soft);
       }
       .tick {
         appearance: none;
@@ -738,11 +1082,19 @@
         border: 2px solid var(--line);
         background: var(--surface);
         cursor: pointer;
+        transition: transform 0.12s ease;
+      }
+      .tick:hover {
+        background: var(--sunk);
       }
       .tick:checked {
         background: var(--sw)
           url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M2 7.5l3.2 3L12 3.5' fill='none' stroke='%2316181d' stroke-width='2.4'/%3E%3C/svg%3E")
           center / 14px no-repeat;
+        animation: pop 0.25s ease;
+      }
+      @keyframes pop {
+        50% { transform: scale(1.25); }
       }
       .step-body {
         min-width: 0;
@@ -757,75 +1109,142 @@
       .step-title {
         font-family: var(--display);
         font-weight: 600;
-        font-size: 1.05rem;
+        font-size: 1.02rem;
         line-height: 1.25;
       }
       .step-meta {
-        margin-top: 4px;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: 4px 10px;
-        font-size: 0.82rem;
+        margin-top: 4px;
+        font-size: 0.8rem;
         color: var(--ink-soft);
-      }
-      .step-meta .host {
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        color: var(--dim);
-        overflow-wrap: anywhere;
       }
       .step-meta .fmt {
-        font-size: 0.64rem;
         padding: 1px 6px;
+        font-size: 0.62rem;
       }
       .tag {
-        font-family: var(--mono);
-        font-size: 0.64rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
         padding: 1px 6px;
         border: 1.5px dashed var(--ink-soft);
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
         color: var(--ink-soft);
+      }
+      .tag.next {
+        border: 1.5px solid var(--ink);
+        background: var(--ink);
+        color: var(--bg);
       }
       .step-note {
         margin: 6px 0 0;
-        font-size: 0.85rem;
+        font-size: 0.84rem;
         color: var(--ink-soft);
       }
       .build-text {
         cursor: pointer;
       }
-      .wk-ready {
+      .ready-box {
         margin: 0;
-        padding-top: 14px;
-        border-top: 1.5px dashed var(--hair);
+        padding: 12px 14px;
+        border-left: 4px solid var(--sw);
+        background: var(--bg);
         font-size: 0.92rem;
         color: var(--ink-soft);
       }
-      .wk-ready b {
+      .ready-box b {
         color: var(--ink);
       }
-      .rail-stage {
+      .next-btn {
+        width: 100%;
+        padding: 12px 14px;
+        border: 2px solid var(--line);
+        background: var(--ink);
+        color: var(--bg);
         font-family: var(--mono);
-        font-size: 0.66rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--dim);
-        padding: 14px 20px 4px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        text-align: left;
+        box-shadow: 4px 4px 0 var(--sw);
       }
-      .rail-stage:first-child {
-        padding-top: 0;
+      .next-btn:active {
+        transform: translate(4px, 4px);
+        box-shadow: none;
       }
-      .rail-foot p {
-        margin: 0;
-        font-size: 0.8rem;
-        color: var(--dim);
+      .panel-close,
+      .sheet-backdrop {
+        display: none;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        z-index: 40;
+        max-width: calc(100vw - 32px);
+        padding: 12px 18px;
+        border: 2px solid var(--line);
+        background: var(--sw, var(--c-mcp));
+        color: var(--chip-ink);
+        font-weight: 700;
+        box-shadow: 4px 4px 0 var(--shadow);
+        transform: translate(-50%, calc(100% + 40px));
+        visibility: hidden;
+        transition: transform 0.3s ease, visibility 0s linear 0.3s;
+      }
+      .toast.show {
+        transform: translate(-50%, 0);
+        visibility: visible;
+        transition: transform 0.3s ease;
       }
       .wk-badge {
         font-family: var(--mono);
         font-size: 0.7rem;
         color: var(--dim);
+      }
+
+      @media (max-width: 1100px) {
+        .rm {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .panel {
+          position: fixed;
+          top: auto;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: 30;
+          max-height: 88vh;
+          border-width: 2px 0 0;
+          box-shadow: 0 -6px 0 var(--shadow);
+          transform: translateY(105%);
+          visibility: hidden;
+          transition: transform 0.28s ease, visibility 0s linear 0.28s;
+        }
+        .panel.open {
+          transform: none;
+          visibility: visible;
+          transition: transform 0.28s ease;
+        }
+        .panel-close {
+          display: grid;
+        }
+        .sheet-backdrop {
+          display: block;
+          position: fixed;
+          inset: 0;
+          z-index: 25;
+          background: rgba(22, 24, 29, 0.45);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.2s ease;
+        }
+        .sheet-backdrop.open {
+          opacity: 1;
+          pointer-events: auto;
+        }
       }
 
       /* ---------- narrow screens ---------- */
@@ -899,19 +1318,34 @@
         footer .keys {
           display: none;
         }
-        .rail-stage {
+        .path {
+          --amp: 54px;
+        }
+        .stop,
+        .node {
+          width: 66px;
+          height: 66px;
+        }
+        .face {
+          width: 54px;
+          height: 54px;
+          font-size: 1.3rem;
+        }
+        .stop-label {
+          width: 128px;
+          left: calc(100% + 12px);
+        }
+        .stop-label.left {
+          right: calc(100% + 12px);
+        }
+        .stop-label .t {
+          font-size: 0.95rem;
+        }
+        .resume {
+          grid-template-columns: auto minmax(0, 1fr);
+        }
+        .resume-go {
           display: none;
-        }
-        .week-head {
-          grid-template-columns: minmax(0, 1fr) auto;
-          padding: 12px 14px;
-        }
-        .wk-no {
-          grid-column: 1 / -1;
-          justify-self: start;
-        }
-        .week-body {
-          padding: 14px;
         }
       }
 
@@ -929,6 +1363,7 @@
         *::before,
         *::after {
           transition: none !important;
+          animation: none !important;
         }
       }
     </style>
@@ -975,17 +1410,17 @@
       <nav class="rail" aria-label="Topics">
         <div class="rail-label" id="rail-label">Topics</div>
         <div class="rail-nav" id="rail-nav"></div>
-        <div class="rail-foot" id="fmt-foot">
+        <div class="rail-foot">
           <div class="rail-label" style="padding: 0">Format</div>
           <div class="fmt-row" id="fmt-row"></div>
-        </div>
-        <div class="rail-foot" id="rm-foot" hidden>
-          <p>Progress is saved in this browser only.</p>
-          <div class="fmt-row"><button class="fmt-btn" type="button" id="rm-reset">reset progress</button></div>
         </div>
       </nav>
 
       <main id="main">
+        <div class="rm" id="roadmap" hidden>
+          <div class="rm-main" id="rm-main"></div>
+          <aside class="panel" id="panel" aria-labelledby="panel-title"></aside>
+        </div>
         <div class="shelves" id="shelves"></div>
 
         <footer>
@@ -993,11 +1428,15 @@
           <span class="keys">
             <span><kbd>/</kbd> search</span>
             <span><kbd>esc</kbd> clear</span>
+            <span><kbd>←</kbd><kbd>→</kbd> change week</span>
             <span><kbd>v</kbd> switch layout</span>
           </span>
         </footer>
       </main>
     </div>
+
+    <div class="sheet-backdrop" id="backdrop"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
       const TOPICS = [
@@ -1330,9 +1769,6 @@
       }
 
       function renderRail() {
-        $("#rail-label").textContent = "Topics";
-        $("#fmt-foot").hidden = false;
-        $("#rm-foot").hidden = true;
         const pool = RESOURCES.filter(matches);
         const items = [{ id: "all", name: "All topics" }, ...TOPICS];
         $("#rail-nav").innerHTML = items
@@ -1399,112 +1835,203 @@
         $("#q-clear").hidden = !state.q;
       }
 
-      function renderRoadmapRail() {
-        $("#rail-label").textContent = "Weeks";
-        $("#fmt-foot").hidden = true;
-        $("#rm-foot").hidden = false;
-        $("#rail-nav").innerHTML = STAGES.map(
-          (s, i) =>
-            `<div class="rail-stage">Stage ${i + 1} · ${esc(s.name)}</div>` +
-            ROADMAP.filter((w) => w.stage === s.id)
-              .map((w) => {
-                const full = weekComplete(w);
-                return `<button class="rail-item" type="button" data-week="${w.n}" style="--sw:${full ? `var(--c-${w.t})` : "var(--surface)"}">
-                  <span class="sw" aria-hidden="true"></span><span>${pad(w.n)} · ${esc(w.title)}</span><span class="n">${
-                    full ? "done" : weekDone(w) + "/" + required(w).length
-                  }</span></button>`;
-              })
-              .join("")
-        ).join("");
+      const weekByN = (n) => ROADMAP.find((w) => w.n === n);
+      const currentWeek = () => ROADMAP.find((w) => !weekComplete(w));
+      const nextKey = (w) => required(w).find((k) => !done.has(k));
+      const pctOf = (w) => Math.round((weekDone(w) / required(w).length) * 100);
+      const sheetMode = () => matchMedia("(max-width: 1100px)").matches;
+      const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="3.2"/></svg>';
+
+      function keyLabel(k) {
+        return k.startsWith("build:") ? "the build task" : byUrl[k] ? byUrl[k].title : "";
       }
 
-      function step(s) {
+      function renderHero() {
+        const total = ROADMAP.reduce((a, w) => a + required(w).length, 0);
+        const got = ROADMAP.reduce((a, w) => a + weekDone(w), 0);
+        const weeks = ROADMAP.filter(weekComplete).length;
+        const cur = currentWeek();
+        const stage = STAGES.find((s) => s.id === (cur || ROADMAP[ROADMAP.length - 1]).stage);
+        $("#count-shown").textContent = got;
+        $("#count-total").textContent = total;
+        $("#count-unit").textContent = "steps done";
+
+        const resume = cur
+          ? `<button class="resume" type="button" data-week="${cur.n}" data-focus="${esc(nextKey(cur))}" style="--sw:var(--c-${cur.t})">
+              <span class="resume-no">${cur.n}</span>
+              <span>
+                <span class="resume-kicker">${got ? "Continue" : "Start here"} · week ${cur.n} of ${ROADMAP.length}</span>
+                <span class="resume-title">${esc(cur.title)}</span>
+                <span class="resume-next">Next: ${esc(keyLabel(nextKey(cur)))}</span>
+              </span>
+              <span class="resume-go">${got ? "Resume" : "Begin"} →</span>
+            </button>`
+          : `<button class="resume" type="button" data-week="${ROADMAP.length}" style="--sw:var(--c-mcp)">
+              <span class="resume-no">${CHECK}</span>
+              <span><span class="resume-kicker">Roadmap complete</span><span class="resume-title">All ${ROADMAP.length} weeks done</span><span class="resume-next">Now teach it to someone else.</span></span>
+            </button>`;
+
+        return `<div class="rm-hero">
+          <h1>From your first API call to production agents</h1>
+          <p>A ${ROADMAP.length}-week path in three stages. Pick any stop on the path to see what to learn, what to build and how to know you're ready to move on.</p>
+          <div class="stats">
+            <div class="stat"><b>${weeks}/${ROADMAP.length}</b><span>weeks complete</span></div>
+            <div class="stat"><b>${got}/${total}</b><span>steps done</span></div>
+            <div class="stat"><b>${esc(stage.name)}</b><span>current stage</span></div>
+          </div>
+          ${resume}
+          <div class="rm-tools">
+            <span>Progress is saved in this browser only.</span>
+            ${got ? `<button class="link-btn" type="button" id="rm-reset">reset progress</button>` : ""}
+          </div>
+        </div>`;
+      }
+
+      function renderPath() {
+        const cur = currentWeek();
+        const anyDone = ROADMAP.some((w) => weekDone(w) > 0);
+        let i = 0;
+        const rows = STAGES.map((s, si) => {
+          const ws = ROADMAP.filter((w) => w.stage === s.id);
+          const full = ws.every(weekComplete);
+          const head = `<div class="checkpoint${full ? " done" : ""}">
+            <span class="k">Stage ${si + 1} · weeks ${ws[0].n}–${ws[ws.length - 1].n}${full ? " · complete" : ""}</span>
+            <b>${esc(s.name)}: ${esc(s.sub)}</b>
+            <span class="pips" aria-hidden="true">${ws.map((w) => `<i class="${weekComplete(w) ? "on" : ""}" style="--sw:var(--c-${w.t})"></i>`).join("")}</span>
+          </div>`;
+          const stops = ws
+            .map((w) => {
+              // a gentle wave: alternate stops swing left and right of centre
+              const k = Math.round(Math.sin(i++ * 1.05) * 100) / 100;
+              const complete = weekComplete(w);
+              const d = weekDone(w);
+              const n = required(w).length;
+              const cls = complete ? "is-done" : w === cur ? "is-current" : d ? "is-started" : "is-todo";
+              const dim = state.q && !weekMatches(w) ? " dim" : "";
+              const status = complete ? "complete" : w === cur ? (d ? `in progress · ${d}/${n}` : "up next") : d ? `${d}/${n} steps` : `${n} steps`;
+              return `<div class="stop-row">
+                <button class="stop ${cls}${dim}" type="button" data-week="${w.n}" aria-pressed="${state.sel === w.n}"
+                  aria-label="Week ${w.n}: ${esc(w.title)}, ${status}" style="--k:${k};--p:${complete ? 100 : pctOf(w)};--sw:var(--c-${w.t})">
+                  ${w === cur ? `<span class="here">${anyDone ? "You are here" : "Start here"}</span>` : ""}
+                  <span class="node"><span class="face">${complete ? CHECK : w.n}</span></span>
+                  <span class="stop-label${k > 0.3 ? " left" : ""}" aria-hidden="true">
+                    <span class="wk">Week ${pad(w.n)} · ${esc(topicOf(w.t).name)}</span>
+                    <span class="t">${esc(w.title)}</span>
+                    <span class="m">${status}</span>
+                  </span>
+                </button>
+              </div>`;
+            })
+            .join("");
+          return head + stops;
+        }).join("");
+
+        const hits = state.q ? ROADMAP.filter(weekMatches).length : 0;
+        const note = state.q
+          ? `<p class="search-note">${hits ? `${hits} of ${ROADMAP.length} weeks mention “${esc(state.q)}” and stay highlighted.` : `No week mentions “${esc(state.q)}”.`} <button class="link-btn" type="button" id="reset">clear search</button></p>`
+          : "";
+        return note + `<div class="path" id="path"><svg class="path-svg" aria-hidden="true"></svg>${rows}</div>`;
+      }
+
+      // connect the stops with a curve; the solid part runs up to where you are
+      function drawPath() {
+        const path = $("#path");
+        if (!path || state.mode !== "roadmap") return;
+        const box = path.getBoundingClientRect();
+        const pts = [...path.querySelectorAll(".node")].map((n) => {
+          const r = n.getBoundingClientRect();
+          return [r.left + r.width / 2 - box.left, r.top + r.height / 2 - box.top];
+        });
+        if (!pts.length) return;
+        const curve = (upto) => {
+          let d = `M ${pts[0][0]} ${pts[0][1]}`;
+          for (let j = 1; j <= upto; j++) {
+            const [a, b] = [pts[j - 1], pts[j]];
+            const my = (a[1] + b[1]) / 2;
+            d += ` C ${a[0]} ${my} ${b[0]} ${my} ${b[0]} ${b[1]}`;
+          }
+          return d;
+        };
+        let reach = ROADMAP.findIndex((w) => !weekComplete(w));
+        if (reach === -1) reach = pts.length - 1;
+        path.querySelector(".path-svg").innerHTML =
+          `<path class="base" d="${curve(pts.length - 1)}"/>` + (reach > 0 ? `<path class="fill" d="${curve(reach)}"/>` : "");
+      }
+
+      function step(s, nk) {
         const r = byUrl[s.url];
         if (!r) return "";
         const fmt = FORMATS[r.f];
         const on = done.has(r.url);
-        return `<li class="step${on ? " is-done" : ""}">
+        const next = r.url === nk;
+        return `<li class="step${on ? " is-done" : ""}${next ? " is-next" : ""}">
           <input class="tick" type="checkbox" data-key="${esc(r.url)}"${on ? " checked" : ""} aria-label="Mark ${esc(r.title)} as done" />
           <div class="step-body">
             <a class="step-link" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="step-title">${esc(r.title)}</span></a>
             <div class="step-meta">
               <span class="fmt"><svg viewBox="0 0 12 12" aria-hidden="true">${fmt.icon}</svg>${fmt.label}</span>
-              <span>${esc(r.by)}</span><span class="host">${host(r.url)}</span>${s.opt ? `<span class="tag">optional</span>` : ""}
+              <span>${esc(r.by)}</span>${s.opt ? `<span class="tag">optional</span>` : ""}${next ? `<span class="tag next">up next</span>` : ""}
             </div>
             ${s.note ? `<p class="step-note">${esc(s.note)}</p>` : ""}
           </div>
         </li>`;
       }
 
-      function week(w) {
-        const key = "build:" + w.n;
-        const built = done.has(key);
+      function renderPanel() {
+        const w = weekByN(state.sel) || ROADMAP[0];
+        const si = STAGES.findIndex((s) => s.id === w.stage);
         const d = weekDone(w);
         const n = required(w).length;
-        return `<article class="week" id="week-${w.n}" style="--sw:var(--c-${w.t})" aria-labelledby="wh-${w.n}">
-          <header class="week-head">
-            <span class="wk-no">Week ${pad(w.n)}</span>
-            <h3 id="wh-${w.n}">${esc(w.title)}</h3>
-            <span class="wk-prog">${d === n ? "✓ complete" : d + " / " + n}</span>
-          </header>
-          <div class="week-body">
-            <p class="wk-goal">${esc(w.goal)}</p>
-            <div>
-              <h4 class="wk-label">Learn</h4>
-              <ul class="steps">${w.learn.map(step).join("")}</ul>
+        const nk = nextKey(w);
+        const bkey = "build:" + w.n;
+        const built = done.has(bkey);
+        const nxt = weekByN(w.n + 1);
+        const panel = $("#panel");
+        panel.style.setProperty("--sw", `var(--c-${w.t})`);
+        panel.innerHTML = `<div class="panel-head">
+            <div class="panel-nav">
+              <span>Week ${pad(w.n)} · ${esc(STAGES[si].name)}</span>
+              <span class="arrows">
+                <button class="icon-btn" type="button" data-go="${w.n - 1}"${w.n === 1 ? " disabled" : ""} aria-label="Previous week">←</button>
+                <button class="icon-btn" type="button" data-go="${w.n + 1}"${nxt ? "" : " disabled"} aria-label="Next week">→</button>
+                <button class="icon-btn panel-close" type="button" data-close aria-label="Close week">✕</button>
+              </span>
             </div>
-            <div>
-              <h4 class="wk-label">Build</h4>
-              <div class="step${built ? " is-done" : ""}">
-                <input class="tick" type="checkbox" id="b-${w.n}" data-key="${key}"${built ? " checked" : ""} />
-                <label class="build-text" for="b-${w.n}">${esc(w.build)}</label>
-              </div>
-            </div>
-            <p class="wk-ready"><b>Ready to move on when</b> ${esc(w.ready)}</p>
+            <h2 id="panel-title">${esc(w.title)}</h2>
+            <p>${esc(w.goal)}</p>
+            <div class="wk-bar"><div class="track"><div class="fill" style="width:${pctOf(w)}%"></div></div><span>${d === n ? "complete ✓" : `${d} of ${n} done`}</span></div>
           </div>
-        </article>`;
+          <div class="panel-body">
+            <section>
+              <h3 class="sec-h"><span class="num">1</span>Learn</h3>
+              <ul class="steps">${w.learn.map((s) => step(s, nk)).join("")}</ul>
+            </section>
+            <section>
+              <h3 class="sec-h"><span class="num">2</span>Build</h3>
+              <div class="step${built ? " is-done" : ""}${nk === bkey ? " is-next" : ""}">
+                <input class="tick" type="checkbox" id="b-${w.n}" data-key="${bkey}"${built ? " checked" : ""} />
+                <div class="step-body">
+                  <label class="build-text" for="b-${w.n}">${esc(w.build)}</label>
+                  ${nk === bkey ? `<div class="step-meta"><span class="tag next">up next</span></div>` : ""}
+                </div>
+              </div>
+            </section>
+            <section>
+              <h3 class="sec-h"><span class="num">3</span>Check yourself</h3>
+              <p class="ready-box"><b>Ready to move on when</b> ${esc(w.ready)}</p>
+            </section>
+            ${
+              d === n && nxt
+                ? `<button class="next-btn" type="button" data-go="${nxt.n}">Week ${w.n} complete ✓ · On to week ${nxt.n}: ${esc(nxt.title)} →</button>`
+                : ""
+            }
+          </div>`;
       }
 
       function renderRoadmap() {
-        const total = ROADMAP.reduce((a, w) => a + required(w).length, 0);
-        const got = ROADMAP.reduce((a, w) => a + weekDone(w), 0);
-        const pct = Math.round((got / total) * 100);
-        const next = ROADMAP.find((w) => !weekComplete(w));
-        $("#count-shown").textContent = got;
-        $("#count-total").textContent = total;
-        $("#count-unit").textContent = "steps done";
-
-        const stages = STAGES.map((s, i) => {
-          const ws = ROADMAP.filter((w) => w.stage === s.id);
-          const shown = ws.filter(weekMatches);
-          if (!shown.length) return "";
-          return `<section class="stage" id="stage-${s.id}" aria-labelledby="sh-${s.id}">
-            <div class="stage-head">
-              <span class="stage-tag">Stage ${i + 1} · weeks ${ws[0].n}–${ws[ws.length - 1].n}</span>
-              <h2 id="sh-${s.id}">${esc(s.name)}: ${esc(s.sub)}</h2>
-              <p>${esc(s.blurb)}</p>
-            </div>
-            ${shown.map(week).join("")}
-          </section>`;
-        }).join("");
-
-        $("#shelves").classList.remove("grid-view");
-        $("#shelves").innerHTML =
-          `<div class="rm-intro">
-            <h1>From your first API call to production agents</h1>
-            <p>A 12-week path in three stages. Each week has a goal, a short list of things to read or watch, something to build, and a check for when you're ready to move on. Optional items go deeper but don't count toward progress. Tick things off as you go.</p>
-            <div class="meter">
-              <div class="meter-track" role="progressbar" aria-label="Roadmap progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}"><div class="meter-fill" style="width:${pct}%"></div></div>
-              <span>${got} of ${total} steps · ${pct}%</span>
-            </div>
-            ${
-              next
-                ? `<a class="next-up" href="#week-${next.n}" data-week="${next.n}" style="--sw:var(--c-${next.t})">${got ? "Continue" : "Start"}: week ${next.n} · ${esc(next.title)} →</a>`
-                : `<a class="next-up" href="#week-12" data-week="12" style="--sw:var(--c-mcp)">All 12 weeks complete. Time to teach it →</a>`
-            }
-          </div>` +
-          (stages ||
-            `<div class="empty"><strong>No week matches</strong>Nothing in the roadmap mentions “${esc(state.q)}”.<br /><button type="button" id="reset">Show all weeks</button></div>`);
+        $("#rm-main").innerHTML = renderHero() + renderPath();
+        renderPanel();
+        drawPath();
         $("#q-clear").hidden = !state.q;
       }
 
@@ -1513,25 +2040,61 @@
         $("#mode-roadmap").setAttribute("aria-pressed", road);
         $("#mode-library").setAttribute("aria-pressed", !road);
         $("#view-toggle").hidden = road;
+        $(".shell").classList.toggle("solo", road);
+        $("#roadmap").hidden = !road;
+        $("#shelves").hidden = road;
         if (road) {
-          renderRoadmapRail();
           renderRoadmap();
         } else {
+          closeSheet();
           renderRail();
           renderShelves();
         }
       }
 
-      function goWeek(n, smooth = true) {
-        if (state.q && !document.getElementById("week-" + n)) {
-          state.q = "";
-          $("#q").value = "";
-          render();
-        }
-        const el = document.getElementById("week-" + n);
-        if (!el) return;
-        el.scrollIntoView({ block: "start", behavior: smooth ? "smooth" : "auto" });
+      function openSheet() {
+        if (!sheetMode()) return;
+        $("#panel").classList.add("open");
+        $("#backdrop").classList.add("open");
+        const close = $("#panel [data-close]");
+        if (close) close.focus({ preventScroll: true });
+      }
+      function closeSheet() {
+        const wasOpen = $("#panel").classList.contains("open");
+        $("#panel").classList.remove("open");
+        $("#backdrop").classList.remove("open");
+        const stop = document.querySelector(`.stop[data-week="${state.sel}"]`);
+        if (wasOpen && stop) stop.focus({ preventScroll: true });
+      }
+
+      // select a week: highlight its stop, fill the panel, and on phones slide the sheet up
+      function selectWeek(n, opts = {}) {
+        if (!weekByN(n)) return;
+        state.sel = n;
         history.replaceState(null, "", "#week-" + n);
+        renderRoadmap();
+        $("#panel").scrollTop = 0;
+        if (opts.scroll) {
+          const stop = document.querySelector(`.stop[data-week="${n}"]`);
+          if (stop) stop.scrollIntoView({ block: "center", behavior: opts.instant ? "auto" : "smooth" });
+        }
+        if (opts.open) openSheet();
+        if (opts.focus) {
+          const t = [...document.querySelectorAll("#panel .tick")].find((x) => x.dataset.key === opts.focus);
+          if (t) {
+            t.focus({ preventScroll: true });
+            t.closest(".step").scrollIntoView({ block: "nearest" });
+          }
+        }
+      }
+
+      function toast(msg, t) {
+        const el = $("#toast");
+        el.textContent = msg;
+        el.style.setProperty("--sw", `var(--c-${t})`);
+        el.classList.add("show");
+        clearTimeout(toast.timer);
+        toast.timer = setTimeout(() => el.classList.remove("show"), 3200);
       }
 
       function setMode(m) {
@@ -1553,8 +2116,6 @@
       }
 
       $("#rail-nav").addEventListener("click", (e) => {
-        const wk = e.target.closest("[data-week]");
-        if (wk) return goWeek(+wk.dataset.week);
         const b = e.target.closest("[data-topic]");
         if (!b) return;
         state.topic = b.dataset.topic;
@@ -1569,39 +2130,52 @@
       });
       $("#shelves").addEventListener("click", (e) => {
         if (e.target.id === "reset") reset();
-        const wk = e.target.closest("a[data-week]");
-        if (wk) {
-          e.preventDefault();
-          goWeek(+wk.dataset.week);
+      });
+      $("#roadmap").addEventListener("click", (e) => {
+        if (e.target.id === "reset") return reset();
+        const wk = e.target.closest("[data-week]");
+        if (wk) return selectWeek(+wk.dataset.week, { open: true, focus: wk.dataset.focus });
+        const go = e.target.closest("[data-go]");
+        if (go) return selectWeek(+go.dataset.go, { open: true, scroll: !sheetMode() });
+        if (e.target.closest("[data-close]")) return closeSheet();
+        if (e.target.id === "rm-reset") {
+          const b = e.target;
+          if (b.dataset.armed) {
+            done.clear();
+            saveProgress();
+            state.sel = 1;
+            renderRoadmap();
+          } else {
+            b.dataset.armed = "1";
+            b.textContent = "click again to erase all ticks";
+            setTimeout(() => {
+              if (b.isConnected) {
+                delete b.dataset.armed;
+                b.textContent = "reset progress";
+              }
+            }, 4000);
+          }
         }
       });
-      $("#shelves").addEventListener("change", (e) => {
+      $("#roadmap").addEventListener("change", (e) => {
         const k = e.target.dataset.key;
         if (!k) return;
+        const w = weekByN(state.sel);
+        const before = weekComplete(w);
         if (e.target.checked) done.add(k);
         else done.delete(k);
         saveProgress();
-        render();
-        const again = [...document.querySelectorAll(".tick")].find((t) => t.dataset.key === k);
+        renderRoadmap();
+        if (!before && weekComplete(w)) {
+          const nxt = weekByN(w.n + 1);
+          toast(nxt ? `Week ${w.n} complete! Next up: ${nxt.title}` : "Roadmap complete! Time to teach it.", w.t);
+        }
+        const again = [...document.querySelectorAll("#panel .tick")].find((t) => t.dataset.key === k);
         if (again) again.focus({ preventScroll: true });
       });
-      $("#rm-reset").addEventListener("click", (e) => {
-        const b = e.currentTarget;
-        if (b.dataset.armed) {
-          done.clear();
-          saveProgress();
-          delete b.dataset.armed;
-          b.textContent = "reset progress";
-          render();
-        } else {
-          b.dataset.armed = "1";
-          b.textContent = "click again to reset";
-          setTimeout(() => {
-            delete b.dataset.armed;
-            b.textContent = "reset progress";
-          }, 4000);
-        }
-      });
+      $("#backdrop").addEventListener("click", closeSheet);
+      new ResizeObserver(() => drawPath()).observe($("#main"));
+      if (document.fonts) document.fonts.ready.then(drawPath);
       $("#q").addEventListener("input", (e) => {
         state.q = e.target.value.trim();
         render();
@@ -1651,8 +2225,13 @@
           e.preventDefault();
           $("#q").focus();
         } else if (e.key === "Escape") {
+          if ($("#panel").classList.contains("open")) return closeSheet();
           if (typing) $("#q").blur();
           reset();
+        } else if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && !typing && state.mode === "roadmap" && !e.metaKey && !e.altKey) {
+          e.preventDefault();
+          const open = $("#panel").classList.contains("open");
+          selectWeek(state.sel + (e.key === "ArrowRight" ? 1 : -1), { scroll: !open, open });
         } else if (e.key === "v" && !typing && !e.metaKey && !e.ctrlKey && state.mode === "library") {
           setView(state.view === "list" ? "grid" : "list");
         }
@@ -1662,18 +2241,21 @@
       // index.html#mcp opens the library on that topic
       const hash = location.hash.slice(1);
       const wkMatch = /^week-(\d+)$/.exec(hash);
-      if (wkMatch) state.mode = "roadmap";
-      else if (topicOf(hash)) {
+      state.sel = (currentWeek() || ROADMAP[ROADMAP.length - 1]).n;
+      if (wkMatch && weekByN(+wkMatch[1])) {
+        state.mode = "roadmap";
+        state.sel = +wkMatch[1];
+      } else if (topicOf(hash)) {
         state.mode = "library";
         state.topic = hash;
       }
       render();
-      if (wkMatch) goWeek(+wkMatch[1], false);
+      if (wkMatch) selectWeek(state.sel, { scroll: true, instant: true, open: true });
       window.addEventListener("hashchange", () => {
         const m = /^#week-(\d+)$/.exec(location.hash);
         if (!m) return;
         if (state.mode !== "roadmap") setMode("roadmap");
-        goWeek(+m[1]);
+        selectWeek(+m[1], { scroll: true, open: true });
       });
     </script>
   </body>
