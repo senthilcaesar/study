@@ -573,12 +573,6 @@
         justify-content: space-between;
         gap: 16px 32px;
       }
-      .rm-hero > p {
-        flex: 1 1 320px;
-        margin: 0;
-        color: var(--ink-soft);
-        max-width: 56ch;
-      }
       .stats {
         display: flex;
         flex-wrap: wrap;
@@ -1745,7 +1739,6 @@
         $("#count-unit").textContent = "items done";
 
         return `<div class="rm-hero">
-          <p>A ${ROADMAP.length}-week path in three stages. Pick any stop on the path to see what to learn that week.</p>
           <div class="stats">
             <div class="stat"><b>${weeks}/${ROADMAP.length}</b><span>weeks complete</span></div>
             <div class="stat"><b>${got}/${total}</b><span title="Core courses and articles ticked off; optional ones don't count">items done</span></div>
