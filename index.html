@@ -560,9 +560,7 @@
       }
       .rm {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(380px, 460px);
-        gap: 40px;
-        align-items: start;
+        grid-template-columns: minmax(0, 1fr);
       }
       .rm-main {
         min-width: 0;
@@ -596,79 +594,6 @@
         font-size: 0.66rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: var(--dim);
-      }
-      .resume {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        align-items: center;
-        gap: 14px;
-        width: 100%;
-        max-width: 620px;
-        margin-top: 20px;
-        padding: 14px 16px;
-        text-align: left;
-        border: 2px solid var(--line);
-        background: var(--sw);
-        color: var(--chip-ink);
-        box-shadow: 5px 5px 0 var(--shadow);
-        transition: transform 0.12s ease, box-shadow 0.12s ease;
-      }
-      .resume:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 7px 7px 0 var(--shadow);
-      }
-      .resume:active {
-        transform: translate(5px, 5px);
-        box-shadow: 0 0 0 var(--shadow);
-      }
-      .resume-no {
-        display: grid;
-        place-items: center;
-        width: 50px;
-        height: 50px;
-        border: 2px solid currentColor;
-        border-radius: 50%;
-        font-family: var(--display);
-        font-weight: 800;
-        font-size: 1.3rem;
-      }
-      .resume-kicker {
-        display: block;
-        font-family: var(--mono);
-        font-size: 0.68rem;
-        font-weight: 600;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-      }
-      .resume-title {
-        display: block;
-        font-family: var(--display);
-        font-weight: 700;
-        font-size: 1.2rem;
-        line-height: 1.2;
-      }
-      .resume-next {
-        display: block;
-        margin-top: 2px;
-        font-size: 0.85rem;
-      }
-      .resume-go {
-        padding: 6px 10px;
-        border: 2px solid currentColor;
-        font-family: var(--mono);
-        font-size: 0.8rem;
-        font-weight: 600;
-        white-space: nowrap;
-      }
-      .rm-tools {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 6px 16px;
-        margin-top: 14px;
-        font-family: var(--mono);
-        font-size: 0.75rem;
         color: var(--dim);
       }
       .link-btn {
@@ -920,16 +845,54 @@
         color: var(--ink-soft);
       }
 
-      /* the week panel */
+      /* the week panel: a drawer that slides in from the right */
       .panel {
-        position: sticky;
-        top: calc(var(--bar) + 20px);
-        max-height: calc(100vh - var(--bar) - 40px);
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 30;
+        width: min(480px, 100vw);
         overflow: auto;
         overscroll-behavior: contain;
-        border: 2px solid var(--line);
+        border-left: 2px solid var(--line);
         background: var(--surface);
-        box-shadow: 6px 6px 0 var(--shadow);
+        box-shadow: -6px 0 0 var(--shadow);
+        transform: translateX(105%);
+        visibility: hidden;
+        transition: transform 0.3s ease, visibility 0s linear 0.3s;
+      }
+      .panel.open {
+        transform: none;
+        visibility: visible;
+        transition: transform 0.3s ease;
+      }
+      .sheet-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 25;
+        background: rgba(22, 24, 29, 0.45);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      .sheet-backdrop.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      html.drawer-open {
+        overflow: hidden;
+      }
+      .panel-foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 14px;
+        padding-top: 14px;
+        border-top: 1.5px dashed var(--hair);
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--dim);
       }
       .panel-head {
         position: sticky;
@@ -1165,10 +1128,6 @@
         transform: translate(4px, 4px);
         box-shadow: none;
       }
-      .panel-close,
-      .sheet-backdrop {
-        display: none;
-      }
       .toast {
         position: fixed;
         left: 50%;
@@ -1194,48 +1153,6 @@
         font-family: var(--mono);
         font-size: 0.7rem;
         color: var(--dim);
-      }
-
-      @media (max-width: 1100px) {
-        .rm {
-          grid-template-columns: minmax(0, 1fr);
-        }
-        .panel {
-          position: fixed;
-          top: auto;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 30;
-          max-height: 88vh;
-          border-width: 2px 0 0;
-          box-shadow: 0 -6px 0 var(--shadow);
-          transform: translateY(105%);
-          visibility: hidden;
-          transition: transform 0.28s ease, visibility 0s linear 0.28s;
-        }
-        .panel.open {
-          transform: none;
-          visibility: visible;
-          transition: transform 0.28s ease;
-        }
-        .panel-close {
-          display: grid;
-        }
-        .sheet-backdrop {
-          display: block;
-          position: fixed;
-          inset: 0;
-          z-index: 25;
-          background: rgba(22, 24, 29, 0.45);
-          opacity: 0;
-          pointer-events: none;
-          transition: opacity 0.2s ease;
-        }
-        .sheet-backdrop.open {
-          opacity: 1;
-          pointer-events: auto;
-        }
       }
 
       /* ---------- narrow screens ---------- */
@@ -1331,12 +1248,6 @@
         }
         .stop-label .t {
           font-size: 0.95rem;
-        }
-        .resume {
-          grid-template-columns: auto minmax(0, 1fr);
-        }
-        .resume-go {
-          display: none;
         }
       }
 
@@ -1830,12 +1741,7 @@
       const currentWeek = () => ROADMAP.find((w) => !weekComplete(w));
       const nextKey = (w) => required(w).find((k) => !done.has(k));
       const pctOf = (w) => Math.round((weekDone(w) / required(w).length) * 100);
-      const sheetMode = () => matchMedia("(max-width: 1100px)").matches;
       const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6" fill="none" stroke="currentColor" stroke-width="3.2"/></svg>';
-
-      function keyLabel(k) {
-        return k.startsWith("build:") ? "the build task" : byUrl[k] ? byUrl[k].title : "";
-      }
 
       function renderHero() {
         const total = ROADMAP.reduce((a, w) => a + required(w).length, 0);
@@ -1847,32 +1753,12 @@
         $("#count-total").textContent = total;
         $("#count-unit").textContent = "steps done";
 
-        const resume = cur
-          ? `<button class="resume" type="button" data-week="${cur.n}" data-focus="${esc(nextKey(cur))}" style="--sw:var(--c-${cur.t})">
-              <span class="resume-no">${cur.n}</span>
-              <span>
-                <span class="resume-kicker">${got ? "Continue" : "Start here"} · week ${cur.n} of ${ROADMAP.length}</span>
-                <span class="resume-title">${esc(cur.title)}</span>
-                <span class="resume-next">Next: ${esc(keyLabel(nextKey(cur)))}</span>
-              </span>
-              <span class="resume-go">${got ? "Resume" : "Begin"} →</span>
-            </button>`
-          : `<button class="resume" type="button" data-week="${ROADMAP.length}" style="--sw:var(--c-mcp)">
-              <span class="resume-no">${CHECK}</span>
-              <span><span class="resume-kicker">Roadmap complete</span><span class="resume-title">All ${ROADMAP.length} weeks done</span><span class="resume-next">Now teach it to someone else.</span></span>
-            </button>`;
-
         return `<div class="rm-hero">
           <p>A ${ROADMAP.length}-week path in three stages. Pick any stop on the path to see what to learn, what to build and how to know you're ready to move on.</p>
           <div class="stats">
             <div class="stat"><b>${weeks}/${ROADMAP.length}</b><span>weeks complete</span></div>
             <div class="stat"><b>${got}/${total}</b><span>steps done</span></div>
             <div class="stat"><b>${esc(stage.name)}</b><span>current stage</span></div>
-          </div>
-          ${resume}
-          <div class="rm-tools">
-            <span>Progress is saved in this browser only.</span>
-            ${got ? `<button class="link-btn" type="button" id="rm-reset">reset progress</button>` : ""}
           </div>
         </div>`;
       }
@@ -1900,7 +1786,7 @@
               const dim = state.q && !weekMatches(w) ? " dim" : "";
               const status = complete ? "complete" : w === cur ? (d ? `in progress · ${d}/${n}` : "up next") : d ? `${d}/${n} steps` : `${n} steps`;
               return `<div class="stop-row">
-                <button class="stop ${cls}${dim}" type="button" data-week="${w.n}" aria-pressed="${state.sel === w.n}"
+                <button class="stop ${cls}${dim}" type="button" data-week="${w.n}" aria-pressed="${state.open && state.sel === w.n}"
                   aria-label="Week ${w.n}: ${esc(w.title)}, ${status}" style="--k:${k};--p:${complete ? 100 : pctOf(w)};--sw:var(--c-${w.t})">
                   ${w === cur ? `<span class="here">${anyDone ? "You are here" : "Start here"}</span>` : ""}
                   <span class="node"><span class="face">${complete ? CHECK : w.n}</span></span>
@@ -2015,6 +1901,10 @@
                 ? `<button class="next-btn" type="button" data-go="${nxt.n}">Week ${w.n} complete ✓ · On to week ${nxt.n}: ${esc(nxt.title)} →</button>`
                 : ""
             }
+            <div class="panel-foot">
+              <span>Progress is saved in this browser only.</span>
+              ${done.size ? `<button class="link-btn" type="button" id="rm-reset">reset all progress</button>` : ""}
+            </div>
           </div>`;
       }
 
@@ -2043,21 +1933,26 @@
       }
 
       function openSheet() {
-        if (!sheetMode()) return;
+        state.open = true;
         $("#panel").classList.add("open");
         $("#backdrop").classList.add("open");
+        document.documentElement.classList.add("drawer-open");
+        document.querySelectorAll(".stop").forEach((b) => b.setAttribute("aria-pressed", +b.dataset.week === state.sel));
         const close = $("#panel [data-close]");
         if (close) close.focus({ preventScroll: true });
       }
       function closeSheet() {
         const wasOpen = $("#panel").classList.contains("open");
+        state.open = false;
         $("#panel").classList.remove("open");
         $("#backdrop").classList.remove("open");
+        document.documentElement.classList.remove("drawer-open");
+        document.querySelectorAll(".stop").forEach((b) => b.setAttribute("aria-pressed", "false"));
         const stop = document.querySelector(`.stop[data-week="${state.sel}"]`);
         if (wasOpen && stop) stop.focus({ preventScroll: true });
       }
 
-      // select a week: highlight its stop, fill the panel, and on phones slide the sheet up
+      // select a week: fill the drawer and, when asked, slide it in
       function selectWeek(n, opts = {}) {
         if (!weekByN(n)) return;
         state.sel = n;
@@ -2126,14 +2021,13 @@
         const wk = e.target.closest("[data-week]");
         if (wk) return selectWeek(+wk.dataset.week, { open: true, focus: wk.dataset.focus });
         const go = e.target.closest("[data-go]");
-        if (go) return selectWeek(+go.dataset.go, { open: true, scroll: !sheetMode() });
+        if (go) return selectWeek(+go.dataset.go, { open: true });
         if (e.target.closest("[data-close]")) return closeSheet();
         if (e.target.id === "rm-reset") {
           const b = e.target;
           if (b.dataset.armed) {
             done.clear();
             saveProgress();
-            state.sel = 1;
             renderRoadmap();
           } else {
             b.dataset.armed = "1";
@@ -2218,10 +2112,9 @@
           if ($("#panel").classList.contains("open")) return closeSheet();
           if (typing) $("#q").blur();
           reset();
-        } else if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && !typing && state.mode === "roadmap" && !e.metaKey && !e.altKey) {
+        } else if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && state.open && !e.metaKey && !e.altKey) {
           e.preventDefault();
-          const open = $("#panel").classList.contains("open");
-          selectWeek(state.sel + (e.key === "ArrowRight" ? 1 : -1), { scroll: !open, open });
+          selectWeek(state.sel + (e.key === "ArrowRight" ? 1 : -1), { open: true });
         } else if (e.key === "v" && !typing && !e.metaKey && !e.ctrlKey && state.mode === "library") {
           setView(state.view === "list" ? "grid" : "list");
         }
