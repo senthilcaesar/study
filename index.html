@@ -1087,6 +1087,47 @@
         font-size: 0.84rem;
         color: var(--ink-soft);
       }
+      .complete-box,
+      .done-box {
+        display: grid;
+        gap: 10px;
+        font-size: 0.85rem;
+        color: var(--ink-soft);
+      }
+      .done-box > span {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+        font-size: 0.95rem;
+      }
+      .done-box .link-btn {
+        color: var(--chip-ink);
+        margin-left: auto;
+      }
+      .complete-btn {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+        font-family: var(--display);
+        font-size: 1.1rem;
+        font-weight: 700;
+        box-shadow: 5px 5px 0 var(--shadow);
+        transition: transform 0.12s ease, box-shadow 0.12s ease;
+      }
+      .complete-btn:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 7px 7px 0 var(--shadow);
+      }
+      .complete-btn:active {
+        transform: translate(5px, 5px);
+        box-shadow: 0 0 0 var(--shadow);
+      }
       .next-btn {
         width: 100%;
         padding: 12px 14px;
@@ -1567,7 +1608,7 @@
         } catch (e) {}
       }
 
-      // progress: the set of ticked resource urls
+      // progress: ticked resource urls, plus "week:<n>" once a week is marked complete
       let done = new Set();
       try {
         done = new Set(JSON.parse(localStorage.getItem("shelf-progress") || "[]"));
@@ -1597,7 +1638,8 @@
       // a week's required steps are its core (non-optional) resources
       const required = (w) => w.learn.filter((s) => !s.opt).map((s) => s.url);
       const weekDone = (w) => required(w).filter((k) => done.has(k)).length;
-      const weekComplete = (w) => weekDone(w) === required(w).length;
+      // a week only counts as complete when the learner presses its complete button
+      const weekComplete = (w) => done.has("week:" + w.n);
 
       function hits(parts) {
         if (!state.q) return true;
@@ -1735,7 +1777,7 @@
               const n = required(w).length;
               const cls = complete ? "is-done" : w === cur ? "is-current" : d ? "is-started" : "is-todo";
               const dim = state.q && !weekMatches(w) ? " dim" : "";
-              const status = complete ? "complete" : w === cur ? (d ? `in progress · ${d}/${n}` : "up next") : d ? `${d}/${n} done` : `${n} step${n === 1 ? "" : "s"}`;
+              const status = complete ? "complete" : d === n ? "ready to complete" : w === cur ? (d ? `in progress · ${d}/${n}` : "up next") : d ? `${d}/${n} done` : `${n} step${n === 1 ? "" : "s"}`;
               return `<div class="stop-row">
                 <button class="stop ${cls}${dim}" type="button" data-week="${w.n}" aria-pressed="${state.open && state.sel === w.n}"
                   aria-label="Week ${w.n}: ${esc(w.title)}, ${status}" style="--k:${k};--p:${complete ? 100 : pctOf(w)};--sw:var(--c-${w.t})">
@@ -1824,7 +1866,7 @@
             </div>
             <h2 id="panel-title">${esc(w.title)}</h2>
             <p>${esc(w.goal)}</p>
-            <div class="wk-bar"><div class="track"><div class="fill" style="width:${pctOf(w)}%"></div></div><span>${d === n ? "complete ✓" : `${d} of ${n} done`}</span></div>
+            <div class="wk-bar"><div class="track"><div class="fill" style="width:${pctOf(w)}%"></div></div><span>${weekComplete(w) ? "complete ✓" : `${d} of ${n} ticked`}</span></div>
           </div>
           <div class="panel-body">
             <section>
@@ -1832,9 +1874,15 @@
               <ul class="steps">${w.learn.map((s) => step(s, nk)).join("")}</ul>
             </section>
             ${
-              d === n && nxt
-                ? `<button class="next-btn" type="button" data-go="${nxt.n}">Week ${w.n} complete ✓ · On to week ${nxt.n}: ${esc(nxt.title)} →</button>`
-                : ""
+              weekComplete(w)
+                ? `<div class="done-box">
+                    <span><b>✓ Week ${w.n} complete</b><button class="link-btn" type="button" data-undo="${w.n}">undo</button></span>
+                    ${nxt ? `<button class="next-btn" type="button" data-go="${nxt.n}">On to week ${nxt.n}: ${esc(nxt.title)} →</button>` : ""}
+                  </div>`
+                : `<div class="complete-box">
+                    <button class="complete-btn" type="button" data-complete="${w.n}">Mark week ${w.n} complete</button>
+                    <span>${d === n ? "All core items ticked. Nice work." : `${d} of ${n} core items ticked so far.`}</span>
+                  </div>`
             }
             <div class="panel-foot">
               <span>Progress is saved in this browser only.</span>
@@ -1958,6 +2006,27 @@
         const go = e.target.closest("[data-go]");
         if (go) return selectWeek(+go.dataset.go, { open: true });
         if (e.target.closest("[data-close]")) return closeSheet();
+        const fin = e.target.closest("[data-complete]");
+        if (fin) {
+          const w = weekByN(+fin.dataset.complete);
+          done.add("week:" + w.n);
+          saveProgress();
+          renderRoadmap();
+          const nxt = weekByN(w.n + 1);
+          toast(nxt ? `Week ${w.n} complete! Next up: ${nxt.title}` : "Roadmap complete! Time to teach it.", w.t);
+          const go = $("#panel [data-go='" + (w.n + 1) + "'].next-btn");
+          if (go) go.focus({ preventScroll: true });
+          return;
+        }
+        const undo = e.target.closest("[data-undo]");
+        if (undo) {
+          done.delete("week:" + undo.dataset.undo);
+          saveProgress();
+          renderRoadmap();
+          const btn = $("#panel [data-complete]");
+          if (btn) btn.focus({ preventScroll: true });
+          return;
+        }
         if (e.target.id === "rm-reset") {
           const b = e.target;
           if (b.dataset.armed) {
@@ -1979,16 +2048,10 @@
       $("#roadmap").addEventListener("change", (e) => {
         const k = e.target.dataset.key;
         if (!k) return;
-        const w = weekByN(state.sel);
-        const before = weekComplete(w);
         if (e.target.checked) done.add(k);
         else done.delete(k);
         saveProgress();
         renderRoadmap();
-        if (!before && weekComplete(w)) {
-          const nxt = weekByN(w.n + 1);
-          toast(nxt ? `Week ${w.n} complete! Next up: ${nxt.title}` : "Roadmap complete! Time to teach it.", w.t);
-        }
         const again = [...document.querySelectorAll("#panel .tick")].find((t) => t.dataset.key === k);
         if (again) again.focus({ preventScroll: true });
       });
