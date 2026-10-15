@@ -1158,6 +1158,17 @@
         font-size: 0.9rem;
         color: var(--ink-soft);
       }
+      /* must-read items: a star before the title and a heavier number box */
+      .step.is-key .mark span {
+        border-width: 3px;
+      }
+      .star {
+        margin-right: 6px;
+        color: var(--ink);
+      }
+      .step-meta b {
+        color: var(--ink);
+      }
       .step-note {
         margin: 8px 0 0;
         max-width: 56ch;
@@ -1391,6 +1402,12 @@
         font-family: var(--mono);
         font-size: 0.7rem;
         color: var(--dim);
+      }
+      .key-badge {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--ink);
       }
 
       /* ---------- narrow screens ---------- */
@@ -1762,7 +1779,7 @@
           title: "How LLMs work",
           goal: "Understand what's inside the models you've been using: transformers, pre-training, fine-tuning and alignment, and when each is worth it.",
           learn: [
-            { url: "https://www.quantamagazine.org/is-attention-the-essence-of-intelligence-20261012/", note: "Essential reading: what the attention mechanism does and why it made transformers work. Read it before the course." },
+            { url: "https://www.quantamagazine.org/is-attention-the-essence-of-intelligence-20261012/", key: true, note: "Essential reading: what the attention mechanism does and why it made transformers work. Read it before the course." },
             { url: "https://www.coursera.org/learn/generative-ai-with-llms" },
           ],
         },
@@ -1918,10 +1935,12 @@
 
       const byUrl = Object.fromEntries(RESOURCES.map((r) => [r.url, r]));
       const weekOf = {};
+      const mustRead = new Set();
       ROADMAP.forEach((w) =>
         w.learn.forEach((s) => {
           if (!byUrl[s.url]) console.warn("Roadmap link missing from RESOURCES:", s.url);
           weekOf[s.url] = w.n;
+          if (s.key) mustRead.add(s.url);
         })
       );
 
@@ -1989,7 +2008,7 @@
             <p class="slip-title">${esc(r.title)}</p>
             <p class="slip-meta"><span>${esc(r.by)}</span><span class="host">${host(r.url)}</span>${
               weekOf[r.url] ? `<span class="wk-badge">week ${weekOf[r.url]}</span>` : ""
-            }</p>
+            }${mustRead.has(r.url) ? '<span class="key-badge">★ must read</span>' : ""}</p>
           </span>
         </a></li>`;
       }
@@ -2141,14 +2160,14 @@
         if (!r) return "";
         const on = done.has(r.url);
         const next = r.url === nk;
-        return `<li class="step${on ? " is-done" : ""}${next ? " is-next" : ""}">
+        return `<li class="step${on ? " is-done" : ""}${next ? " is-next" : ""}${s.key ? " is-key" : ""}">
           <label class="mark">
             <input class="tick" type="checkbox" data-key="${esc(r.url)}"${on ? " checked" : ""} aria-label="Mark ${esc(r.title)} as done" />
             <span aria-hidden="true"><b>${num || ""}</b>${ICON.check}</span>
           </label>
           <div class="step-body">
-            <a class="step-link" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="step-title">${esc(r.title)}</span></a>
-            <p class="step-meta">${FORMATS[r.f].label} from ${esc(r.by)}${next ? ", start here" : ""}</p>
+            <a class="step-link" href="${esc(r.url)}" target="_blank" rel="noopener"><span class="step-title">${s.key ? '<span class="star" aria-hidden="true">★</span>' : ""}${esc(r.title)}</span></a>
+            <p class="step-meta">${s.key ? "<b>Must read.</b> " : ""}${FORMATS[r.f].label} from ${esc(r.by)}${next ? ", start here" : ""}</p>
             ${s.note ? `<p class="step-note">${esc(s.note)}</p>` : ""}
           </div>
         </li>`;
@@ -2288,7 +2307,7 @@
           const t = String(v ?? "");
           return /[",\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t;
         };
-        const rows = [["Week", "Stage", "Week title", "Week goal", "Order", "Required", "Material", "Format", "Provider", "Link", "Note", "Done", "Week complete"]];
+        const rows = [["Week", "Stage", "Week title", "Week goal", "Order", "Required", "Material", "Format", "Provider", "Link", "Must read", "Note", "Done", "Week complete"]];
         ROADMAP.forEach((w) => {
           const stage = STAGES.find((s) => s.id === w.stage).name;
           let order = 0;
@@ -2297,7 +2316,7 @@
             if (!r) return;
             rows.push([
               w.n, stage, w.title, w.goal, s.opt ? "" : ++order, s.opt ? "Optional" : "Core",
-              r.title, FORMATS[r.f].label, r.by, r.url, s.note || "",
+              r.title, FORMATS[r.f].label, r.by, r.url, s.key ? "Yes" : "", s.note || "",
               done.has(r.url) ? "Yes" : "No", weekComplete(w) ? "Yes" : "No",
             ]);
           });
@@ -2330,7 +2349,7 @@
           <ol>${core
             .map((s) => {
               const r = byUrl[s.url];
-              return `<li>${esc(r.title)} <small>${FORMATS[r.f].label.toLowerCase()}, ${esc(r.by)}</small></li>`;
+              return `<li>${s.key ? "★ " : ""}${esc(r.title)} <small>${s.key ? "must read, " : ""}${FORMATS[r.f].label.toLowerCase()}, ${esc(r.by)}</small></li>`;
             })
             .join("")}</ol>
           ${extras ? `<p class="peek-extra">Plus ${extras} optional extra${extras === 1 ? "" : "s"}.</p>` : ""}
