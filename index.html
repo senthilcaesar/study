@@ -1653,6 +1653,7 @@
         { t: "foundations", f: "course", title: "Generative AI with Large Language Models", by: "DeepLearning.AI and AWS on Coursera", url: "https://www.coursera.org/learn/generative-ai-with-llms" },
         { t: "foundations", f: "course", title: "Machine Learning Specialization", by: "Stanford and DeepLearning.AI on Coursera", url: "https://www.coursera.org/specializations/machine-learning-introduction" },
         { t: "foundations", f: "course", title: "Machine Learning Crash Course", by: "Google for Developers", url: "https://developers.google.com/machine-learning/crash-course" },
+        { t: "foundations", f: "article", title: "Is ‘Attention’ the Essence of Intelligence?", by: "Natalie Wolchover in Quanta Magazine", url: "https://www.quantamagazine.org/is-attention-the-essence-of-intelligence-20261012/" },
         { t: "foundations", f: "book", title: "Neural Networks and Deep Learning", by: "Michael Nielsen", url: "http://neuralnetworksanddeeplearning.com/index.html" },
 
         { t: "graphrag", f: "article", title: "GraphRAG: How AI answers questions hidden across many documents", by: "ByteByteGo", url: "https://blog.bytebytego.com/p/graphrag-how-ai-answers-questions" },
@@ -1760,7 +1761,10 @@
           id: "how-llms-work", stage: "intermediate", t: "foundations",
           title: "How LLMs work",
           goal: "Understand what's inside the models you've been using: transformers, pre-training, fine-tuning and alignment, and when each is worth it.",
-          learn: [{ url: "https://www.coursera.org/learn/generative-ai-with-llms" }],
+          learn: [
+            { url: "https://www.quantamagazine.org/is-attention-the-essence-of-intelligence-20261012/", note: "Essential reading: what the attention mechanism does and why it made transformers work. Read it before the course." },
+            { url: "https://www.coursera.org/learn/generative-ai-with-llms" },
+          ],
         },
         {
           id: "context", stage: "intermediate", t: "context",
