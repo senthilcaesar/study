@@ -1754,6 +1754,7 @@
           <div class="fmt-row" id="status-row"></div>
           <div class="rail-label" style="padding: 8px 0 0">Your progress</div>
           <div class="rail-progress" id="rail-progress"></div>
+          <div id="rail-reset"></div>
         </div>
       </nav>
 
@@ -2252,6 +2253,9 @@
           .map(([k, label]) => `<button class="fmt-btn" type="button" data-status="${k}" aria-pressed="${state.status === k}">${label}</button>`)
           .join("");
         const d = doneIn(RESOURCES);
+        $("#rail-reset").innerHTML = done.size
+          ? '<button class="link-btn" type="button" data-reset-all title="Untick every course in the library and roadmap and start from scratch">Reset all progress</button>'
+          : "";
         $("#rail-progress").innerHTML = `<span class="meter" style="--sw:var(--accent)" aria-hidden="true"><i style="width:${Math.round((d / RESOURCES.length) * 100)}%"></i></span><span>${d} of ${RESOURCES.length} done</span>`;
 
         const fmts = ["all", ...Object.keys(FORMATS).filter((f) => RESOURCES.some((r) => r.f === f))];
@@ -2312,6 +2316,7 @@
                 <div class="shelf-progress" style="--sw:var(--c-${t.id})">
                   <span class="meter" aria-hidden="true"><i style="width:${Math.round((d / all.length) * 100)}%"></i></span>
                   <span>${d === all.length ? `all ${d} done ✓` : `${d} of ${all.length} done`}</span>
+                  ${d ? `<button class="link-btn" type="button" data-reset-topic="${t.id}" title="Untick every course in ${esc(t.name)}">reset</button>` : ""}
                 </div>
               </div>
               <ul class="slips">${rs.map((r) => slip(r, next)).join("")}</ul>
@@ -2791,6 +2796,30 @@
         render();
       }
 
+      // resets ask for a second click before wiping anything, like the roadmap's
+      function armed(btn) {
+        if (btn.dataset.armed) return true;
+        const was = btn.textContent;
+        btn.dataset.armed = "1";
+        btn.textContent = "Click again to reset";
+        setTimeout(() => {
+          if (btn.isConnected) {
+            delete btn.dataset.armed;
+            btn.textContent = was;
+          }
+        }, 4000);
+        return false;
+      }
+      $(".rail-foot").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-reset-all]");
+        if (!b || !armed(b)) return;
+        done.clear();
+        saveProgress();
+        state.status = "all";
+        render();
+        toast("Progress cleared. Start again from scratch.", TOPICS[0].id);
+      });
+
       $("#rail-nav").addEventListener("click", (e) => {
         const b = e.target.closest("[data-topic]");
         if (!b) return;
@@ -2812,6 +2841,14 @@
       });
       $("#shelves").addEventListener("click", (e) => {
         if (e.target.id === "reset") reset();
+        const rt = e.target.closest("[data-reset-topic]");
+        if (rt && armed(rt)) {
+          const t = topicOf(rt.dataset.resetTopic);
+          topicRes(t.id).forEach((r) => done.delete(r.url));
+          saveProgress();
+          render();
+          toast(`${t.name} progress cleared. Start the module again from the top.`, t.id);
+        }
         const go = e.target.closest("[data-goto]");
         if (go) {
           state.topic = go.dataset.goto;
