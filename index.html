@@ -48,6 +48,7 @@
         --c-graphrag: #ffab91;
         --c-docs: #b5e3e0;
         --c-coding: #e6c9a8;
+        --c-claude-code: #e9b8a6;
         --c-foundations: #aab4ff;
 
         --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
@@ -81,6 +82,7 @@
         --c-graphrag: #ef9f76;  /* peach */
         --c-docs: #85c1dc;      /* sapphire */
         --c-coding: #eebebe;    /* flamingo */
+        --c-claude-code: #f2d5cf; /* rosewater */
         --c-foundations: #babbf1; /* lavender */
         color-scheme: dark;
       }
@@ -1552,8 +1554,8 @@
       <div class="bar-meta">
         <span class="counter"><b id="count-shown">0</b> / <span id="count-total">0</span> <span id="count-unit">resources</span></span>
         <div class="view-toggle" role="group" aria-label="Mode">
-          <button type="button" id="mode-roadmap" aria-pressed="true">roadmap</button>
-          <button type="button" id="mode-library" aria-pressed="false">library</button>
+          <button type="button" id="mode-roadmap" aria-pressed="false">roadmap</button>
+          <button type="button" id="mode-library" aria-pressed="true">library</button>
         </div>
         <div class="view-toggle" id="view-toggle" role="group" aria-label="Layout">
           <button type="button" id="view-list" aria-pressed="false">list</button>
@@ -1635,13 +1637,25 @@
           name: "Coding Agents",
         },
         {
+          id: "claude-code",
+          name: "Claude Code",
+          // shelf order, since two of these courses live in other topics' lists
+          order: [
+            "https://anthropic.skilljar.com/claude-code-101",
+            "https://anthropic.skilljar.com/claude-code-in-action",
+            "https://anthropic.skilljar.com/introduction-to-model-context-protocol",
+            "https://anthropic.skilljar.com/introduction-to-agent-skills",
+            "https://anthropic.skilljar.com/ai-fluency-for-builders",
+          ],
+        },
+        {
           id: "foundations",
           name: "Foundations",
         },
       ];
 
       const RESOURCES = [
-        { t: "skills", f: "course", title: "Introduction to Agent Skills", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-agent-skills" },
+        { t: "skills", also: ["claude-code"], f: "course", title: "Introduction to Agent Skills", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-agent-skills" },
         { t: "skills", f: "course", title: "Agent Skills with Anthropic", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/agent-skills-with-anthropic" },
         { t: "skills", f: "article", title: "Skills explained", by: "Claude blog", url: "https://claude.com/blog/skills-explained" },
         { t: "skills", f: "tutorial", title: "Writing your first SKILL.md file", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/writing-your-first-skill-md-file" },
@@ -1687,7 +1701,11 @@
 
         { t: "coding", f: "course", title: "Spec-Driven Development with Coding Agents", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents" },
 
-        { t: "mcp", f: "course", title: "Introduction to Model Context Protocol", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-model-context-protocol" },
+        { t: "claude-code", f: "course", title: "Claude Code 101", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/claude-code-101" },
+        { t: "claude-code", f: "course", title: "Claude Code in Action", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/claude-code-in-action" },
+        { t: "claude-code", f: "course", title: "AI Fluency for Builders", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/ai-fluency-for-builders" },
+
+        { t: "mcp", also: ["claude-code"], f: "course", title: "Introduction to Model Context Protocol", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-model-context-protocol" },
         { t: "mcp", f: "course", title: "MCP: Build Rich-Context AI Apps with Anthropic", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic" },
         { t: "mcp", f: "video", title: "How Model Context Protocol (MCP) actually works", by: "Google Cloud Tech", url: "https://youtu.be/cGuyrANVi4A" },
         { t: "mcp", f: "tutorial", title: "Build your first MCP server in Python", by: "Pamela Fox · PyCon US 2026", url: "https://pamelafox.github.io/pycon2026-mcp-tutorial/" },
@@ -1748,6 +1766,7 @@
           learn: [
             { url: "https://www.coursera.org/learn/prompt-engineering", note: "Prompt patterns explained with plenty of examples; no coding needed." },
             { url: "https://www.deeplearning.ai/courses/chatgpt-prompt-eng", note: "About an hour: the same ideas applied from Python, which sets up next week." },
+            { url: "https://anthropic.skilljar.com/ai-fluency-for-builders", opt: true, note: "How to work with AI well when you're building with it: what to hand over, how to describe it, how to check the result." },
           ],
         },
         {
@@ -1851,6 +1870,8 @@
           learn: [
             { url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
             { url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents" },
+            { url: "https://anthropic.skilljar.com/claude-code-101", note: "A real harness up close: how Claude Code reads, plans, edits and asks permission." },
+            { url: "https://anthropic.skilljar.com/claude-code-in-action", note: "Drive it on real work: context, custom commands, hooks and MCP servers." },
           ],
         },
         {
@@ -1906,17 +1927,8 @@
         profile: { label: "Profile", icon: '<path d="M6 5.5a2 2 0 100-4 2 2 0 000 4z M1.8 10.8c0-2.3 1.9-3.6 4.2-3.6s4.2 1.3 4.2 3.6" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
       };
 
-      // every visit opens on the roadmap; only a #topic link opens the library
-      const state = { mode: "roadmap", topic: "all", format: "all", q: "", view: "grid" };
-      try {
-        const saved = JSON.parse(localStorage.getItem("shelf-prefs") || "{}");
-        if (saved.view === "list") state.view = "list";
-      } catch (e) {}
-      function savePrefs() {
-        try {
-          localStorage.setItem("shelf-prefs", JSON.stringify({ view: state.view }));
-        } catch (e) {}
-      }
+      // every visit opens on the library in cards view; only a #week-N link opens the roadmap
+      const state = { mode: "library", topic: "all", format: "all", q: "", view: "grid" };
 
       // progress: ticked resource urls, plus "week:<id>" once a week is marked complete
       let done = new Set();
@@ -1969,9 +1981,12 @@
           .every((w) => hay.includes(w));
       }
 
+      // `also` puts a resource on more shelves than its home topic `t`
+      const onShelf = (r, id) => r.t === id || (r.also || []).includes(id);
+
       function matches(r) {
         if (state.format !== "all" && r.f !== state.format) return false;
-        return hits([r.title, r.by, host(r.url), topicOf(r.t).name, FORMATS[r.f].label]);
+        return hits([r.title, r.by, host(r.url), ...[r.t, ...(r.also || [])].map((id) => topicOf(id).name), FORMATS[r.f].label]);
       }
 
       function weekMatches(w) {
@@ -1987,7 +2002,7 @@
         const items = [{ id: "all", name: "All topics" }, ...TOPICS];
         $("#rail-nav").innerHTML = items
           .map((t) => {
-            const n = t.id === "all" ? pool.length : pool.filter((r) => r.t === t.id).length;
+            const n = t.id === "all" ? pool.length : pool.filter((r) => onShelf(r, t.id)).length;
             const sw = t.id === "all" ? "var(--surface)" : `var(--c-${t.id})`;
             return `<button class="rail-item" type="button" data-topic="${t.id}" aria-pressed="${state.topic === t.id}" style="--sw:${sw}">
               <span class="sw" aria-hidden="true"></span><span>${esc(t.name)}</span><span class="n">${n}</span></button>`;
@@ -2021,7 +2036,8 @@
         const topics = state.topic === "all" ? TOPICS : [topicOf(state.topic)];
         const html = topics
           .map((t) => {
-            const rs = visible.filter((r) => r.t === t.id);
+            const rs = visible.filter((r) => onShelf(r, t.id));
+            if (t.order) rs.sort((a, b) => t.order.indexOf(a.url) - t.order.indexOf(b.url));
             if (!rs.length) return "";
             return `<section class="shelf" id="${t.id}" aria-labelledby="h-${t.id}">
               <div class="shelf-head">
@@ -2032,7 +2048,7 @@
           })
           .join("");
 
-        const shown = topics.reduce((n, t) => n + visible.filter((r) => r.t === t.id).length, 0);
+        const shown = visible.filter((r) => topics.some((t) => onShelf(r, t.id))).length;
         $("#count-shown").textContent = shown;
         $("#count-total").textContent = RESOURCES.length;
         $("#count-unit").textContent = "resources";
@@ -2400,7 +2416,6 @@
 
       function setMode(m) {
         state.mode = m;
-        savePrefs();
         history.replaceState(null, "", location.pathname + location.search);
         render();
         window.scrollTo(0, 0);
@@ -2532,7 +2547,6 @@
 
       function setView(v) {
         state.view = v;
-        savePrefs();
         renderShelves();
       }
       $("#view-list").addEventListener("click", () => setView("list"));
