@@ -302,9 +302,14 @@
         background: none;
         text-align: left;
         font-size: 0.95rem;
+        /* progress through the topic, drawn as a bar along the bottom edge */
+        background-image: linear-gradient(var(--pc), var(--pc));
+        background-repeat: no-repeat;
+        background-position: left bottom;
+        background-size: var(--p, 0%) 3px;
       }
       .rail-item:hover {
-        background: var(--sunk);
+        background-color: var(--sunk);
       }
       .rail-item .sw {
         width: 14px;
@@ -319,7 +324,7 @@
         font-variant-numeric: tabular-nums;
       }
       .rail-item[aria-pressed="true"] {
-        background: var(--ink);
+        background-color: var(--ink);
         color: var(--bg);
       }
       .rail-item[aria-pressed="true"] .n {
@@ -347,6 +352,18 @@
         padding: 3px 8px;
         font-family: var(--mono);
         font-size: 0.72rem;
+      }
+      .rail-progress {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--ink-soft);
+        white-space: nowrap;
+      }
+      .rail-progress .meter {
+        width: 80px;
       }
       .fmt-btn[aria-pressed="true"] {
         background: var(--accent);
@@ -425,7 +442,7 @@
         grid-template-columns: 96px minmax(0, 1fr);
         align-items: center;
         gap: 18px;
-        padding: 14px 18px;
+        padding: 14px 18px 14px 60px;
         background: var(--surface);
         border: 2px solid var(--line);
         box-shadow: 4px 4px 0 var(--shadow);
@@ -503,13 +520,64 @@
       }
       .grid-view .fmt {
         grid-column: 1;
-        margin: 16px 0 0 16px;
+        margin: 16px 0 0 58px;
       }
       .grid-view .slip-body {
         align-self: end;
         padding: 18px 16px 16px;
         border-top: 2px dashed var(--hair);
         margin-top: 16px;
+      }
+
+      /* progress: a tick on every slip, sharing its record with the roadmap */
+      .slips > li {
+        position: relative;
+      }
+      .slips .mark {
+        position: absolute;
+        top: 50%;
+        left: 14px;
+        transform: translateY(-50%);
+      }
+      .grid-view .slips .mark {
+        top: 12px;
+        left: 12px;
+        transform: none;
+      }
+      .slips .is-done .slip {
+        background: var(--sunk);
+        box-shadow: 4px 4px 0 var(--hair);
+      }
+      .slips .is-done .slip-title {
+        color: var(--ink-soft);
+      }
+      .done-badge,
+      .next-badge {
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: var(--ink);
+      }
+      .shelf-progress {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+      }
+      .meter {
+        display: block;
+        flex: none;
+        width: 120px;
+        height: 10px;
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+      }
+      .meter i {
+        display: block;
+        height: 100%;
+        background: var(--sw);
       }
 
       .empty {
@@ -1377,6 +1445,66 @@
       .peek-foot b {
         color: var(--ink);
         font-weight: 700;
+        white-space: nowrap;
+      }
+      /* library peek: a compact card docked under the layout and theme buttons */
+      .peek.docked {
+        padding: 11px 13px 10px;
+        max-height: calc(100vh - var(--bar) - 26px);
+        overflow: hidden;
+      }
+      .peek.docked h4 {
+        font-size: 1rem;
+      }
+      .peek.docked .peek-goal {
+        font-size: 0.8rem;
+        line-height: 1.45;
+      }
+      .peek.docked .peek-tags {
+        margin-top: 8px;
+        gap: 4px;
+      }
+      .peek.docked .peek-tags span {
+        font-size: 0.66rem;
+      }
+      .peek.docked .peek-road {
+        margin-top: 8px;
+        font-size: 0.75rem;
+      }
+      .peek.docked .peek-foot {
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 8px;
+        padding-top: 7px;
+        font-size: 0.72rem;
+      }
+      /* library peek: level, time and cost under the description */
+      .peek-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+      .peek-tags span {
+        padding: 2px 7px;
+        border: 1.5px solid var(--line);
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        color: var(--ink);
+      }
+      .peek-tags .lvl {
+        background: var(--sw);
+        color: var(--chip-ink);
+        font-weight: 700;
+      }
+      .peek-road {
+        margin: 10px 0 0;
+        font-size: 0.8rem;
+        line-height: 1.45;
+        color: var(--ink-soft);
+      }
+      .peek-road b {
+        color: var(--ink);
       }
 
       .toast {
@@ -1394,6 +1522,25 @@
         transform: translate(-50%, calc(100% + 40px));
         visibility: hidden;
         transition: transform 0.3s ease, visibility 0s linear 0.3s;
+      }
+      /* celebration when a course is ticked: confetti bursts from the tick, balloons float up */
+      .fx {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .fx i {
+        position: absolute;
+        width: 8px;
+        height: 12px;
+        border: 1px solid var(--line);
+      }
+      .fx span {
+        position: absolute;
+        font-size: 1.9rem;
+        line-height: 1;
       }
       .toast.show {
         transform: translate(-50%, 0);
@@ -1466,7 +1613,7 @@
           gap: 8px;
           padding: 6px 12px;
           border: 2px solid var(--line);
-          background: var(--surface);
+          background-color: var(--surface);
           white-space: nowrap;
         }
         .rail-foot {
@@ -1558,8 +1705,8 @@
           <button type="button" id="mode-library" aria-pressed="true">library</button>
         </div>
         <div class="view-toggle" id="view-toggle" role="group" aria-label="Layout">
-          <button type="button" id="view-list" aria-pressed="false">list</button>
-          <button type="button" id="view-grid" aria-pressed="true">cards</button>
+          <button type="button" id="view-list" aria-pressed="true">list</button>
+          <button type="button" id="view-grid" aria-pressed="false">cards</button>
         </div>
         <button class="theme-btn" id="theme-btn" type="button">theme</button>
       </div>
@@ -1572,6 +1719,10 @@
         <div class="rail-foot">
           <div class="rail-label" style="padding: 0">Format</div>
           <div class="fmt-row" id="fmt-row"></div>
+          <div class="rail-label" style="padding: 8px 0 0">Status</div>
+          <div class="fmt-row" id="status-row"></div>
+          <div class="rail-label" style="padding: 8px 0 0">Your progress</div>
+          <div class="rail-progress" id="rail-progress"></div>
         </div>
       </nav>
 
@@ -1599,30 +1750,15 @@
     <div class="peek" id="peek" role="tooltip" hidden></div>
 
     <script>
+      // ordered as the roadmap teaches them, from beginner to advanced
       const TOPICS = [
         {
-          id: "skills",
-          name: "Agent Skills",
-        },
-        {
-          id: "mcp",
-          name: "MCP",
-        },
-        {
-          id: "agents",
-          name: "AI Agents",
-        },
-        {
-          id: "harness",
-          name: "Harness",
+          id: "foundations",
+          name: "Foundations",
         },
         {
           id: "context",
-          name: "Prompt & Context Engineering",
-        },
-        {
-          id: "evals",
-          name: "Evals",
+          name: "Prompt engineering",
         },
         {
           id: "graphrag",
@@ -1633,87 +1769,150 @@
           name: "Document Parsing",
         },
         {
-          id: "coding",
-          name: "Coding Agents",
+          id: "agents",
+          name: "AI Agents",
+        },
+        {
+          id: "mcp",
+          name: "MCP",
+        },
+        {
+          id: "skills",
+          name: "Agent Skills",
+        },
+        {
+          id: "evals",
+          name: "Evals",
         },
         {
           id: "claude-code",
           name: "Claude Code",
-          // shelf order, since two of these courses live in other topics' lists
-          order: [
-            "https://anthropic.skilljar.com/claude-code-101",
-            "https://anthropic.skilljar.com/claude-code-in-action",
-            "https://anthropic.skilljar.com/introduction-to-model-context-protocol",
-            "https://anthropic.skilljar.com/introduction-to-agent-skills",
-            "https://anthropic.skilljar.com/ai-fluency-for-builders",
-          ],
         },
         {
-          id: "foundations",
-          name: "Foundations",
+          id: "coding",
+          name: "Coding Agents",
+        },
+        {
+          id: "harness",
+          name: "Harness",
         },
       ];
 
       const RESOURCES = [
-        { t: "skills", also: ["claude-code"], f: "course", title: "Introduction to Agent Skills", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-agent-skills" },
-        { t: "skills", f: "course", title: "Agent Skills with Anthropic", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/agent-skills-with-anthropic" },
-        { t: "skills", f: "article", title: "Skills explained", by: "Claude blog", url: "https://claude.com/blog/skills-explained" },
-        { t: "skills", f: "tutorial", title: "Writing your first SKILL.md file", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/writing-your-first-skill-md-file" },
+        { t: "foundations", f: "course", title: "AI for Everyone", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/ai-for-everyone",
+          about: "Non-technical intro to core AI terms (machine learning, data science, neural networks), how AI projects run, spotting AI opportunities and building an AI strategy at work, and AI's effect on society.", level: "Beginner", time: "about 7 hr · 4 weeks", cost: "Paid" },
+        { t: "foundations", f: "course", title: "Generative AI for Everyone", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/generative-ai-for-everyone",
+          about: "How generative AI works, what it can and can't do, building apps beyond plain prompting, and its impact on business and society. Includes hands-on prompting, e.g. classifying and summarising reviews. No coding needed.", level: "Beginner", time: "about 5 hr · 3 weeks" },
+        { t: "foundations", f: "guide", title: "AI Engineer Roadmap", by: "roadmap.sh", url: "https://roadmap.sh/ai-engineer",
+          about: "A step-by-step map of skills for building products on pre-trained models: prompt engineering, embeddings, vector databases, RAG, AI agents, MCP, multimodal AI, fine-tuning and AI safety, with links per topic." },
+        { t: "foundations", f: "course", title: "Artificial intelligence courses and certifications", by: "IBM Training", url: "https://www.ibm.com/training/artificial-intelligence",
+          about: "IBM's catalogue of AI and watsonx training: courses, certifications, learning journeys and digital badges, plus learning subscriptions." },
+        { t: "foundations", f: "course", title: "AI Python for Beginners", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/ai-python-for-beginners",
+          about: "Learn Python basics (variables, loops, lists, dictionaries, functions, files, packages, APIs) with an AI chatbot as helper, building a recipe generator, AI to-do list, travel planner and live-data app.", level: "Beginner", time: "11.5 hr", cost: "Free" },
+        { t: "foundations", f: "article", title: "Is ‘Attention’ the Essence of Intelligence?", by: "Natalie Wolchover in Quanta Magazine", url: "https://www.quantamagazine.org/is-attention-the-essence-of-intelligence-20261012/",
+          about: "How Bahdanau's 2014 'attention' idea for translation led to transformers and today's LLMs, how attention weighs which words matter, and whether next-word prediction amounts to intelligence." },
+        { t: "foundations", f: "course", title: "Generative AI with Large Language Models", by: "DeepLearning.AI and AWS on Coursera", url: "https://www.coursera.org/learn/generative-ai-with-llms",
+          about: "How LLMs work and are built: transformers, pre-training and scaling laws, instruction fine-tuning, LoRA, evaluation, RLHF and app patterns like chain-of-thought and ReAct. Three labs, incl. fine-tuning FLAN-T5.", level: "Intermediate", time: "3 modules · about 17 hr", cost: "Paid" },
+        { t: "foundations", f: "course", title: "Machine Learning Crash Course", by: "Google for Developers", url: "https://developers.google.com/machine-learning/crash-course",
+          about: "Practical ML intro with Python exercises: linear and logistic regression, classification, preparing numerical and categorical data, overfitting, neural networks, embeddings, intro to LLMs, production ML, AutoML and fairness.", time: "about 13.5 hr" },
+        { t: "foundations", f: "course", title: "Machine Learning Specialization", by: "Stanford and DeepLearning.AI on Coursera", url: "https://www.coursera.org/specializations/machine-learning-introduction",
+          about: "Andrew Ng's foundations of ML in Python: regression, classification, neural networks, decision trees, clustering, anomaly detection, recommender systems and reinforcement learning, using NumPy, scikit-learn and TensorFlow.", level: "Beginner", time: "3 courses · about 2 months", cost: "Free to audit" },
+        { t: "foundations", f: "course", title: "Mathematics for Machine Learning and Data Science", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/specializations/mathematics-for-machine-learning-and-data-science",
+          about: "The maths behind ML with Python labs: linear algebra (vectors, matrices, eigenvalues), calculus (derivatives, gradient descent, optimisation) and probability and statistics (distributions, estimation, hypothesis tests).", level: "Beginner", time: "3 courses · 4, 3 and 4 weeks", cost: "Paid" },
+        { t: "foundations", f: "book", title: "Neural Networks and Deep Learning", by: "Michael Nielsen", url: "http://neuralnetworksanddeeplearning.com/index.html",
+          about: "Build a neural network that recognises handwritten digits, then learn backpropagation, cross-entropy, regularisation, weight initialisation, vanishing gradients and convolutional networks, with code.", cost: "Free" },
+        { t: "foundations", f: "profile", title: "Pavlos Protopapas — data science and machine learning courses", by: "Harvard IACS on edX", url: "https://www.edx.org/bio/pavlos-protopapas-3",
+          about: "Harvard IACS instructor page listing his edX courses: Intro to Data Science with Python, Machine Learning and AI with Python, Neural Networks and Deep Learning with Python, and two Python data science certificates." },
+        { t: "foundations", f: "course", title: "CS 2680: Modern AI Systems — Agents and System Optimizations", by: "Harvard University", url: "https://cs2680.com/",
+          about: "Harvard course following one agentic system from the agent loop down to LLM serving: agent design, batching, caching, quantisation, speculative decoding. Five linked assignments build and optimise a coding agent and serving stack.", level: "Advanced", time: "Fall 2026 · about 14 weeks" },
+        { t: "foundations", f: "course", title: "CS 336: Language Modeling from Scratch", by: "Stanford University", url: "https://cs336.stanford.edu/",
+          about: "Build a language model end to end: tokenizer, Transformer and optimizer, a FlashAttention-2 kernel in Triton, scaling-law fits, Common Crawl data filtering, and SFT/RL post-training for math reasoning.", level: "Advanced", time: "10 weeks of lectures", cost: "Free" },
 
-        { t: "harness", f: "article", title: "The engine behind autonomous AI agents: harnesses and autoresearch", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
-        { t: "context", f: "article", title: "Context engineering", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" },
-        { t: "context", f: "course", title: "ChatGPT Prompt Engineering for Developers", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/chatgpt-prompt-eng" },
-        { t: "context", f: "course", title: "Prompt Engineering for ChatGPT", by: "Vanderbilt University on Coursera", url: "https://www.coursera.org/learn/prompt-engineering" },
+        { t: "context", f: "course", title: "Google Prompting Essentials", by: "Google on Coursera", url: "https://www.coursera.org/specializations/prompting-essentials-google/",
+          about: "Learn a 5-step prompting framework and use it for emails, tables, document summaries, data analysis and charts, plus few-shot, chain-of-thought, multimodal and meta-prompting and responsible AI use.", level: "Beginner", time: "4 courses · under 10 hrs", cost: "Paid" },
+        { t: "context", f: "course", title: "Prompt Engineering for ChatGPT", by: "Vanderbilt University on Coursera", url: "https://www.coursera.org/learn/prompt-engineering",
+          about: "Learn reusable prompt patterns for ChatGPT and other LLMs, including few-shot examples, chain-of-thought and ReAct prompting, and build prompt-based apps in a final project. Only basic computer skills needed.", level: "Beginner", time: "2 weeks at 10 hrs a week" },
+        { t: "context", f: "course", title: "ChatGPT Prompt Engineering for Developers", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/chatgpt-prompt-eng",
+          about: "Use the OpenAI API from Python notebooks to summarize, infer, transform and expand text, learn two key principles for writing prompts, and build a custom chatbot. Taught by Isa Fulford and Andrew Ng.", level: "Beginner", time: "1 hr 40 min", cost: "Free" },
+        { t: "context", f: "article", title: "Context engineering", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering",
+          about: "A beginner's guide to what a model actually sees (system prompt, history, retrieved data, tool outputs), why more context can hurt (context rot), and seven traits of good context such as relevance, timing and compression.", level: "Beginner", cost: "Free" },
 
-        { t: "agents", f: "series", title: "Python + AI: Level Up", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/" },
-        { t: "agents", f: "series", title: "Python + Agents: Building AI agents and workflows with Agent Framework", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1631/" },
-        { t: "agents", f: "course", title: "CS 329Z: Engineering AI Agents", by: "Stanford University", url: "https://cs329z.stanford.edu/" },
-        { t: "agents", f: "course", title: "CS 329A: Self-Improving AI Agents", by: "Stanford University", url: "https://cs329a.stanford.edu/" },
-        { t: "agents", f: "course", title: "Introduction to Deep Agents", by: "LangChain Academy", url: "https://academy.langchain.com/courses/foundation-introduction-to-deepagents" },
-        { t: "agents", f: "course", title: "AI Agents and Agentic AI in Python", by: "Vanderbilt University on Coursera", url: "https://www.coursera.org/specializations/ai-agents-python" },
-        { t: "agents", f: "course", title: "AI Engineer Agentic Track: The Complete Agent & MCP Course", by: "Ed Donner on Udemy", url: "https://www.udemy.com/course/the-complete-agentic-ai-engineering-course" },
+        { t: "graphrag", f: "course", title: "Retrieval Augmented Generation (RAG)", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/retrieval-augmented-generation",
+          about: "Design and build RAG systems: keyword, semantic and hybrid search, chunking, vector databases, prompt design, evaluation and production deployment, using Weaviate and Arize Phoenix. Needs intermediate Python.", level: "Intermediate", time: "about 26 hrs · 5 modules", cost: "Free to audit" },
+        { t: "graphrag", f: "course", title: "IBM RAG and Agentic AI Professional Certificate", by: "IBM on Coursera", url: "https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai",
+          about: "Ten courses on LangChain, RAG with Chroma and FAISS, multimodal apps and agents with LangGraph, CrewAI, AG2, BeeAI and MCP; you build Gradio apps, MCP servers and a multi-agent capstone. Needs working Python.", level: "Advanced", time: "10 courses · 8 weeks at 3 hrs a week", cost: "Free to audit" },
+        { t: "graphrag", f: "article", title: "GraphRAG: How AI answers questions hidden across many documents", by: "ByteByteGo", url: "https://blog.bytebytego.com/p/graphrag-how-ai-answers-questions",
+          about: "Why vector RAG struggles with corpus-wide questions, and how Microsoft's GraphRAG fixes it: entity extraction, Leiden community clustering, local/global/DRIFT search, indexing costs and LazyGraphRAG.", cost: "Free" },
+        { t: "graphrag", f: "course", title: "Knowledge Graphs for RAG", by: "DeepLearning.AI", url: "https://learn.deeplearning.ai/courses/knowledge-graphs-rag",
+          about: "Learn knowledge-graph basics and querying, build a graph from SEC filings, retrieve from it with LangChain, then link a second set of filings for multi-document questions and chat with the graph.", time: "about 2 hrs", cost: "Free to audit" },
+        { t: "graphrag", f: "course", title: "Agentic Knowledge Graph Construction", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/agentic-knowledge-graph-construction",
+          about: "Build a multi-agent system with Google's ADK that proposes schemas for product/supplier CSVs and review text, then constructs and joins the graphs into one knowledge graph for root-cause analysis.", level: "Intermediate", time: "about 3 hrs", cost: "Free" },
+        { t: "graphrag", f: "course", title: "Generative AI courses", by: "Neo4j GraphAcademy", url: "https://graphacademy.neo4j.com/categories/generative-ai",
+          about: "Ten Neo4j courses on GraphRAG: vector indexes, building knowledge graphs with LLMs, the GraphRAG Python package, LangChain, agents and agent memory, and building MCP tools in Python and TypeScript.", time: "10 courses · 1–2.5 hrs each" },
+        { t: "graphrag", f: "course", title: "CS 224W: Machine Learning with Graphs", by: "Stanford University", url: "https://web.stanford.edu/class/cs224w/",
+          about: "Machine learning on graphs: graph neural networks, knowledge-graph reasoning, graph transformers, recommender systems and generative graph models, with Colab notebooks, three homeworks and a project.", level: "Advanced", time: "12 weeks of lectures", cost: "Free" },
 
-        { t: "foundations", f: "course", title: "CS 336: Language Modeling from Scratch", by: "Stanford University", url: "https://cs336.stanford.edu/" },
-        { t: "foundations", f: "course", title: "CS 2680: Modern AI Systems — Agents and System Optimizations", by: "Harvard University", url: "https://cs2680.com/" },
-        { t: "foundations", f: "profile", title: "Pavlos Protopapas — data science and machine learning courses", by: "Harvard IACS on edX", url: "https://www.edx.org/bio/pavlos-protopapas-3" },
-        { t: "foundations", f: "course", title: "Artificial intelligence courses and certifications", by: "IBM Training", url: "https://www.ibm.com/training/artificial-intelligence" },
-        { t: "foundations", f: "course", title: "AI Python for Beginners", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/ai-python-for-beginners" },
-        { t: "foundations", f: "course", title: "AI for Everyone", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/ai-for-everyone" },
-        { t: "foundations", f: "course", title: "Generative AI for Everyone", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/generative-ai-for-everyone" },
-        { t: "foundations", f: "course", title: "Mathematics for Machine Learning and Data Science", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/specializations/mathematics-for-machine-learning-and-data-science" },
-        { t: "foundations", f: "course", title: "Generative AI with Large Language Models", by: "DeepLearning.AI and AWS on Coursera", url: "https://www.coursera.org/learn/generative-ai-with-llms" },
-        { t: "foundations", f: "course", title: "Machine Learning Specialization", by: "Stanford and DeepLearning.AI on Coursera", url: "https://www.coursera.org/specializations/machine-learning-introduction" },
-        { t: "foundations", f: "course", title: "Machine Learning Crash Course", by: "Google for Developers", url: "https://developers.google.com/machine-learning/crash-course" },
-        { t: "foundations", f: "article", title: "Is ‘Attention’ the Essence of Intelligence?", by: "Natalie Wolchover in Quanta Magazine", url: "https://www.quantamagazine.org/is-attention-the-essence-of-intelligence-20261012/" },
-        { t: "foundations", f: "guide", title: "AI Engineer Roadmap", by: "roadmap.sh", url: "https://roadmap.sh/ai-engineer" },
-        { t: "foundations", f: "book", title: "Neural Networks and Deep Learning", by: "Michael Nielsen", url: "http://neuralnetworksanddeeplearning.com/index.html" },
+        { t: "docs", f: "video", title: "Building the document context layer for AI agents", by: "Jerry Liu, LlamaIndex · AI Engineer", url: "https://youtu.be/RQi7x-navxU",
+          about: "Jerry Liu explains why PDFs are hard for agents to read, how RAG becomes an agent harness plus a document context layer, hybrid parsing versus one-shot VLMs, and LlamaIndex's ParseBench benchmark and LightParse parser.", time: "21 min", cost: "Free" },
 
-        { t: "graphrag", f: "article", title: "GraphRAG: How AI answers questions hidden across many documents", by: "ByteByteGo", url: "https://blog.bytebytego.com/p/graphrag-how-ai-answers-questions" },
-        { t: "graphrag", f: "course", title: "Generative AI courses", by: "Neo4j GraphAcademy", url: "https://graphacademy.neo4j.com/categories/generative-ai" },
-        { t: "graphrag", f: "course", title: "Retrieval Augmented Generation (RAG)", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/retrieval-augmented-generation" },
-        { t: "graphrag", f: "course", title: "IBM RAG and Agentic AI Professional Certificate", by: "IBM on Coursera", url: "https://www.coursera.org/professional-certificates/ibm-rag-and-agentic-ai" },
-        { t: "graphrag", f: "course", title: "Knowledge Graphs for RAG", by: "DeepLearning.AI", url: "https://learn.deeplearning.ai/courses/knowledge-graphs-rag" },
-        { t: "graphrag", f: "course", title: "Agentic Knowledge Graph Construction", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/agentic-knowledge-graph-construction" },
-        { t: "graphrag", f: "course", title: "CS 224W: Machine Learning with Graphs", by: "Stanford University", url: "https://web.stanford.edu/class/cs224w/" },
-        { t: "evals", f: "article", title: "How evals are central to harness engineering", by: "Hugo Bowne-Anderson", url: "https://hugobowne.substack.com/p/how-evals-are-central-to-harness" },
-        { t: "evals", f: "course", title: "Evaluating AI Agents", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/evaluating-ai-agents" },
-        { t: "evals", f: "course", title: "Automated Testing for LLMOps", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/automated-testing-llmops" },
+        { t: "agents", f: "series", title: "Python + AI: Level Up", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/",
+          about: "Nine one-hour livestreams on generative AI apps in Python: LLMs, embeddings, RAG, vision models, structured outputs, safety and evaluation, tool calling, agents and MCP.", time: "9 one-hour live sessions" },
+        { t: "agents", f: "series", title: "Python + Agents: Building AI agents and workflows with Agent Framework", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1631/",
+          about: "Six livestreams with Pamela Fox on Microsoft Agent Framework in Python: tools and MCP, RAG and memory, tracing and evaluation, workflows, multi-agent orchestration and human-in-the-loop.", time: "6 one-hour live sessions" },
+        { t: "agents", f: "course", title: "Introduction to Deep Agents", by: "LangChain Academy", url: "https://academy.langchain.com/courses/foundation-introduction-to-deepagents",
+          about: "Build deep agents with LangChain: tools, MCP, checkpointers and human-in-the-loop, filesystem and sandbox backends, context and memory management, subagent teams, ending with a sales-assistant project.", time: "46 lessons, about 30 min of video", cost: "Free" },
+        { t: "agents", f: "course", title: "AI Agents and Agentic AI in Python", by: "Vanderbilt University on Coursera", url: "https://www.coursera.org/specializations/ai-agents-python",
+          about: "Three courses from Vanderbilt: build an agent framework from scratch with tool calling, learn prompt patterns, then design multi-agent systems with expert personas and safe agent design.", level: "Beginner", time: "About 4 weeks at 10 hrs/week", cost: "Paid" },
+        { t: "agents", f: "course", title: "AI Engineer Agentic Track: The Complete Agent & MCP Course", by: "Ed Donner on Udemy", url: "https://www.udemy.com/course/the-complete-agentic-ai-engineering-course",
+          about: "A six-week, hands-on course building 8 agent projects with OpenAI Agents SDK, CrewAI, LangGraph, AutoGen and MCP, ending in a trading-floor capstone run by 4 agents and 6 MCP servers.", time: "21 hrs of video", cost: "Paid" },
+        { t: "agents", f: "course", title: "CS 329Z: Engineering AI Agents", by: "Stanford University", url: "https://cs329z.stanford.edu/",
+          about: "Stanford course on building agentic systems, from LLM pipelines to autonomous agents: RAG, tool use, DSPy, design patterns, memory, multi-agent systems, evaluation, safety and coding agents.", level: "Advanced", time: "11 weeks, 19 lectures" },
+        { t: "agents", f: "course", title: "CS 329A: Self-Improving AI Agents", by: "Stanford University", url: "https://cs329a.stanford.edu/",
+          about: "Stanford course on how LLM agents improve themselves: verifiers, test-time compute, search, RL, tool use, memory, multi-step planning and evaluation, plus guest talks on coding and research agents.", level: "Advanced", time: "20 lectures over about 11 weeks" },
 
-        { t: "coding", f: "course", title: "Spec-Driven Development with Coding Agents", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents" },
+        { t: "mcp", f: "video", title: "How Model Context Protocol (MCP) actually works", by: "Google Cloud Tech", url: "https://youtu.be/cGuyrANVi4A",
+          about: "A short explainer on what MCP is, how clients and servers work, its tools, prompts and resources, how it differs from a regular API, and an example AI assistant built with it.", level: "Beginner", time: "8 min video", cost: "Free" },
+        { t: "mcp", f: "course", title: "MCP: Build Rich-Context AI Apps with Anthropic", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic",
+          about: "Learn MCP's client-server design by making a paper-search chatbot MCP-compatible, building a FastMCP server and client, connecting it to Claude Desktop, and deploying a remote server.", level: "Intermediate", time: "About 2 hrs, 11 video lessons", cost: "Free" },
+        { t: "mcp", f: "tutorial", title: "Build your first MCP server in Python", by: "Pamela Fox · PyCon US 2026", url: "https://pamelafox.github.io/pycon2026-mcp-tutorial/",
+          about: "Hands-on workshop: use existing MCP servers, build your own in Python with FastMCP, add a visual UI and elicitation-based confirmation, then secure it with OAuth via Keycloak.", time: "About 3.5 hr workshop", cost: "Free" },
+        { t: "mcp", f: "series", title: "Python + MCP: From local to production", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1614/",
+          about: "Three livestreams on MCP in Python: build a FastMCP server and clients, deploy it to Azure Container Apps or Functions, and add authentication with API keys or OAuth via Microsoft Entra.", time: "3 one-hour live sessions" },
+        { t: "mcp", f: "video", title: "MCP Live! playlist", by: "YouTube", url: "https://youtube.com/playlist?list=PLJ2a7YWJ3jxk&si=YUapAKeneZH5kzri",
+          about: "Recordings from Microsoft Developer's half-day MCP Live! event: state of MCP, building servers in VS Code and FastMCP, MCP apps, auth, event-driven agents and Foundry toolboxes.", time: "Half-day event, about 10 videos", cost: "Free" },
+        { t: "mcp", f: "notes", title: "Claude and MCP study notes", by: "Knowledge Lab", url: "https://senthilcaesar.github.io/knowledgelab/#claude-mcp",
+          about: "Step-by-step notes on adding MCP servers to Claude Code (21st.dev Magic, Supadata, Stitch, shadcn), with install commands, ~/.claude.json config, example prompts and a claude mcp command reference.", cost: "Free" },
 
-        { t: "claude-code", f: "course", title: "Claude Code 101", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/claude-code-101" },
-        { t: "claude-code", f: "course", title: "Claude Code in Action", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/claude-code-in-action" },
-        { t: "claude-code", f: "course", title: "AI Fluency for Builders", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/ai-fluency-for-builders" },
+        { t: "skills", f: "article", title: "Skills explained", by: "Claude blog", url: "https://claude.com/blog/skills-explained",
+          about: "Explains where Skills fit next to prompts, Projects, MCP and subagents, with a comparison table and a worked example of a research agent built from all of them.", time: "16 min read", cost: "Free" },
+        { t: "skills", f: "tutorial", title: "Writing your first SKILL.md file", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/writing-your-first-skill-md-file",
+          about: "Step-by-step tutorial: build a working /greet skill in VS Code from an empty folder, move the detail into a references/ file, and control when the agent may trigger it.", level: "Beginner", cost: "Free" },
+        { t: "skills", f: "course", title: "Agent Skills with Anthropic", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/agent-skills-with-anthropic",
+          about: "Covers the skill folder layout, SKILL.md and progressive disclosure. You build custom skills, Claude Code workflows with subagents, and a research agent with the Claude Agent SDK.", level: "Beginner", time: "2h 19m (10 video lessons)", cost: "Free" },
 
-        { t: "mcp", also: ["claude-code"], f: "course", title: "Introduction to Model Context Protocol", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-model-context-protocol" },
-        { t: "mcp", f: "course", title: "MCP: Build Rich-Context AI Apps with Anthropic", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/mcp-build-rich-context-ai-apps-with-anthropic" },
-        { t: "mcp", f: "video", title: "How Model Context Protocol (MCP) actually works", by: "Google Cloud Tech", url: "https://youtu.be/cGuyrANVi4A" },
-        { t: "mcp", f: "tutorial", title: "Build your first MCP server in Python", by: "Pamela Fox · PyCon US 2026", url: "https://pamelafox.github.io/pycon2026-mcp-tutorial/" },
-        { t: "mcp", f: "series", title: "Python + MCP: From local to production", by: "Microsoft Reactor", url: "https://developer.microsoft.com/en-us/reactor/series/S-1614/" },
-        { t: "mcp", f: "video", title: "MCP Live! playlist", by: "YouTube", url: "https://youtube.com/playlist?list=PLJ2a7YWJ3jxk&si=YUapAKeneZH5kzri" },
-        { t: "mcp", f: "notes", title: "Claude and MCP study notes", by: "Knowledge Lab", url: "https://senthilcaesar.github.io/knowledgelab/#claude-mcp" },
+        { t: "evals", f: "article", title: "How evals are central to harness engineering", by: "Hugo Bowne-Anderson", url: "https://hugobowne.substack.com/p/how-evals-are-central-to-harness",
+          about: "Argues that evals belong at the centre of agent harness engineering: what good harness evals measure, what doesn't count, and a seven-step workflow from reading traces to regression cases.", cost: "Free" },
+        { t: "evals", f: "course", title: "Evaluating AI Agents", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/evaluating-ai-agents",
+          about: "Build a simple agent with routers, skills and memory, then add tracing, evaluate its skills and routing with code, LLM-judge and human evaluators, and run structured experiments.", level: "Beginner", time: "2h 36m (15 video lessons)", cost: "Free" },
+        { t: "evals", f: "course", title: "Automated Testing for LLMOps", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/automated-testing-llmops",
+          about: "Write rules-based and model-graded evals for an LLM app and run them automatically on every change in a CircleCI continuous integration pipeline.", level: "Intermediate", time: "1h 12m (6 video lessons)", cost: "Free" },
 
-        { t: "docs", f: "video", title: "Building the document context layer for AI agents", by: "Jerry Liu, LlamaIndex · AI Engineer", url: "https://youtu.be/RQi7x-navxU" },
+        { t: "claude-code", f: "course", title: "Claude Code 101", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/claude-code-101",
+          about: "Install Claude Code and learn the core workflow: prompting and Plan Mode, explore-to-commit, context management, CLAUDE.md, subagents, skills, MCP servers and hooks.", cost: "Free" },
+        { t: "claude-code", f: "course", title: "Claude Code in Action", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/claude-code-in-action",
+          about: "For people already using Claude Code: steer and plan work, configure CLAUDE.md, skills, permissions and hooks, automate with headless mode and GitHub, and share setups as plugins.", level: "Intermediate", cost: "Free" },
+        { t: "claude-code", f: "course", title: "Introduction to Model Context Protocol", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-model-context-protocol",
+          about: "Build MCP servers and clients with the Python SDK using tools, resources and prompts, and test them with the MCP Server Inspector. Assumes working Python and basic JSON/HTTP.", cost: "Free" },
+        { t: "claude-code", f: "course", title: "Introduction to Agent Skills", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/introduction-to-agent-skills",
+          about: "Create, configure and share Claude Code Skills: frontmatter and descriptions, tool restrictions and scripts, sharing via plugins, using skills in subagents, and fixing skills that don't trigger.", cost: "Free" },
+        { t: "claude-code", f: "course", title: "AI Fluency for Builders", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/ai-fluency-for-builders",
+          about: "Applies the 4D AI Fluency framework (Delegation, Description, Discernment, Diligence) to building a product, from framing a customer problem to shipping it.", cost: "Free" },
+
+        { t: "coding", f: "course", title: "Spec-Driven Development with Coding Agents", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents",
+          about: "Replace vibe coding with specs: write a project constitution, plan and validate features in loops, build an MVP, and package the workflow as an agent skill.", level: "Beginner", time: "1h 16m (15 video lessons)", cost: "Free" },
+
+        { t: "harness", f: "article", title: "The engine behind autonomous AI agents: harnesses and autoresearch", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch",
+          about: "Plain-language intro to AI agents, the harness around them (planning, context, memory, tools, guardrails, loops, logging) and Karpathy-style autoresearch loops.", level: "Beginner", cost: "Free" },
       ];
 
       // The roadmap: three stages, twelve weeks. Each week points at RESOURCES by
@@ -1766,6 +1965,7 @@
           learn: [
             { url: "https://www.coursera.org/learn/prompt-engineering", note: "Prompt patterns explained with plenty of examples; no coding needed." },
             { url: "https://www.deeplearning.ai/courses/chatgpt-prompt-eng", note: "About an hour: the same ideas applied from Python, which sets up next week." },
+            { url: "https://www.coursera.org/specializations/prompting-essentials-google/", opt: true, note: "Google's short, no-code take on the same skills if you want more practice." },
             { url: "https://anthropic.skilljar.com/ai-fluency-for-builders", opt: true, note: "How to work with AI well when you're building with it: what to hand over, how to describe it, how to check the result." },
           ],
         },
@@ -1927,8 +2127,8 @@
         profile: { label: "Profile", icon: '<path d="M6 5.5a2 2 0 100-4 2 2 0 000 4z M1.8 10.8c0-2.3 1.9-3.6 4.2-3.6s4.2 1.3 4.2 3.6" fill="none" stroke="currentColor" stroke-width="1.3"/>' },
       };
 
-      // every visit opens on the library in cards view; only a #week-N link opens the roadmap
-      const state = { mode: "library", topic: "all", format: "all", q: "", view: "grid" };
+      // every visit opens on the library in list view; only a #week-N link opens the roadmap
+      const state = { mode: "library", topic: "all", format: "all", status: "all", q: "", view: "list" };
 
       // progress: ticked resource urls, plus "week:<id>" once a week is marked complete
       let done = new Set();
@@ -1981,12 +2181,10 @@
           .every((w) => hay.includes(w));
       }
 
-      // `also` puts a resource on more shelves than its home topic `t`
-      const onShelf = (r, id) => r.t === id || (r.also || []).includes(id);
-
       function matches(r) {
         if (state.format !== "all" && r.f !== state.format) return false;
-        return hits([r.title, r.by, host(r.url), ...[r.t, ...(r.also || [])].map((id) => topicOf(id).name), FORMATS[r.f].label]);
+        if (state.status !== "all" && done.has(r.url) !== (state.status === "done")) return false;
+        return hits([r.title, r.by, host(r.url), topicOf(r.t).name, FORMATS[r.f].label]);
       }
 
       function weekMatches(w) {
@@ -1997,17 +2195,33 @@
         ]);
       }
 
+      // library progress counts a topic's ticked resources, whatever the filters show
+      const topicRes = (id) => (id === "all" ? RESOURCES : RESOURCES.filter((r) => r.t === id));
+      const doneIn = (rs) => rs.filter((r) => done.has(r.url)).length;
+      const STATUSES = { all: "any", todo: "to do", done: "done" };
+
       function renderRail() {
         const pool = RESOURCES.filter(matches);
+        const filtered = state.q || state.format !== "all" || state.status !== "all";
         const items = [{ id: "all", name: "All topics" }, ...TOPICS];
         $("#rail-nav").innerHTML = items
           .map((t) => {
-            const n = t.id === "all" ? pool.length : pool.filter((r) => onShelf(r, t.id)).length;
+            const all = topicRes(t.id);
+            const d = doneIn(all);
+            // with filters on, the count is what's showing; otherwise it's done/total
+            const n = filtered ? pool.filter((r) => t.id === "all" || r.t === t.id).length : d ? `${d}/${all.length}` : all.length;
             const sw = t.id === "all" ? "var(--surface)" : `var(--c-${t.id})`;
-            return `<button class="rail-item" type="button" data-topic="${t.id}" aria-pressed="${state.topic === t.id}" style="--sw:${sw}">
+            const pc = t.id === "all" ? "var(--accent)" : sw;
+            return `<button class="rail-item" type="button" data-topic="${t.id}" aria-pressed="${state.topic === t.id}" title="${d} of ${all.length} done" style="--sw:${sw};--pc:${pc};--p:${Math.round((d / all.length) * 100)}%">
               <span class="sw" aria-hidden="true"></span><span>${esc(t.name)}</span><span class="n">${n}</span></button>`;
           })
           .join("");
+
+        $("#status-row").innerHTML = Object.entries(STATUSES)
+          .map(([k, label]) => `<button class="fmt-btn" type="button" data-status="${k}" aria-pressed="${state.status === k}">${label}</button>`)
+          .join("");
+        const d = doneIn(RESOURCES);
+        $("#rail-progress").innerHTML = `<span class="meter" style="--sw:var(--accent)" aria-hidden="true"><i style="width:${Math.round((d / RESOURCES.length) * 100)}%"></i></span><span>${d} of ${RESOURCES.length} done</span>`;
 
         const fmts = ["all", ...Object.keys(FORMATS).filter((f) => RESOURCES.some((r) => r.f === f))];
         $("#fmt-row").innerHTML = fmts
@@ -2018,46 +2232,62 @@
           .join("");
       }
 
-      function slip(r) {
+      function slip(r, next) {
         const fmt = FORMATS[r.f];
-        return `<li><a class="slip" href="${esc(r.url)}" target="_blank" rel="noopener" style="--sw:var(--c-${r.t})">
+        const on = done.has(r.url);
+        const isNext = r.url === next;
+        return `<li class="${on ? "is-done" : ""}${isNext ? "is-next" : ""}" data-url="${esc(r.url)}"><a class="slip" href="${esc(r.url)}" target="_blank" rel="noopener" style="--sw:var(--c-${r.t})">
           <span class="fmt"><svg viewBox="0 0 12 12" aria-hidden="true">${fmt.icon}</svg>${fmt.label}</span>
           <span class="slip-body">
             <p class="slip-title">${esc(r.title)}</p>
             <p class="slip-meta"><span>${esc(r.by)}</span><span class="host">${host(r.url)}</span>${
               weekOf[r.url] ? `<span class="wk-badge">week ${weekOf[r.url]}</span>` : ""
-            }${mustRead.has(r.url) ? '<span class="key-badge">★ must read</span>' : ""}</p>
+            }${mustRead.has(r.url) ? '<span class="key-badge">★ must read</span>' : ""}${
+              on ? '<span class="done-badge">✓ done</span>' : isNext ? '<span class="next-badge">→ up next</span>' : ""
+            }</p>
           </span>
-        </a></li>`;
+        </a>
+        <label class="mark">
+          <input class="tick" type="checkbox" data-key="${esc(r.url)}"${on ? " checked" : ""} aria-label="Mark ${esc(r.title)} as done" />
+          <span aria-hidden="true"><b></b>${ICON.check}</span>
+        </label></li>`;
       }
 
       function renderShelves() {
+        hidePeek();
         const visible = RESOURCES.filter(matches);
         const topics = state.topic === "all" ? TOPICS : [topicOf(state.topic)];
         const html = topics
           .map((t) => {
-            const rs = visible.filter((r) => onShelf(r, t.id));
-            if (t.order) rs.sort((a, b) => t.order.indexOf(a.url) - t.order.indexOf(b.url));
+            const rs = visible.filter((r) => r.t === t.id);
             if (!rs.length) return "";
+            const all = topicRes(t.id);
+            const d = doneIn(all);
+            // tabs run beginner to advanced, so the first unticked resource is the next one to take
+            const next = (all.find((r) => !done.has(r.url)) || {}).url;
             return `<section class="shelf" id="${t.id}" aria-labelledby="h-${t.id}">
               <div class="shelf-head">
                 <h2 id="h-${t.id}"><span class="tab" style="--sw:var(--c-${t.id})" aria-hidden="true"></span>${esc(t.name)}</h2>
+                <div class="shelf-progress" style="--sw:var(--c-${t.id})">
+                  <span class="meter" aria-hidden="true"><i style="width:${Math.round((d / all.length) * 100)}%"></i></span>
+                  <span>${d === all.length ? `all ${d} done ✓` : `${d} of ${all.length} done`}</span>
+                </div>
               </div>
-              <ul class="slips">${rs.map(slip).join("")}</ul>
+              <ul class="slips">${rs.map((r) => slip(r, next)).join("")}</ul>
             </section>`;
           })
           .join("");
 
-        const shown = visible.filter((r) => topics.some((t) => onShelf(r, t.id))).length;
+        const shown = topics.reduce((n, t) => n + visible.filter((r) => r.t === t.id).length, 0);
         $("#count-shown").textContent = shown;
         $("#count-total").textContent = RESOURCES.length;
         $("#count-unit").textContent = "resources";
 
         $("#shelves").innerHTML =
           html ||
-          `<div class="empty"><strong>Nothing on this shelf</strong>No resources match “${esc(state.q || "")}”${
+          `<div class="empty"><strong>Nothing on this shelf</strong>No ${state.status === "all" ? "" : STATUSES[state.status] + " "}resources${state.q ? ` match “${esc(state.q)}”` : ""}${
             state.format !== "all" ? " in " + FORMATS[state.format].label.toLowerCase() + "s" : ""
-          }. Try a broader word or another format.<br /><button type="button" id="reset">Show everything</button></div>`;
+          }. Try a broader word, another format or another status.<br /><button type="button" id="reset">Show everything</button></div>`;
 
         $("#shelves").classList.toggle("grid-view", state.view === "grid");
         $("#view-list").setAttribute("aria-pressed", state.view === "list");
@@ -2400,9 +2630,46 @@
       }
       function hidePeek() {
         clearTimeout(peekTimer);
-        peekEl.classList.remove("show");
+        peekEl.classList.remove("show", "docked");
+        peekEl.style.width = "";
         peekEl.hidden = true;
-        document.querySelectorAll(".stop[aria-describedby]").forEach((b) => b.removeAttribute("aria-describedby"));
+        document.querySelectorAll('[aria-describedby="peek"]').forEach((b) => b.removeAttribute("aria-describedby"));
+      }
+
+      // library peek: what a resource covers (`about`, plus `level`, `time` and `cost` where the publisher states them), how long it takes and where it sits in the roadmap
+      const weekNote = {};
+      ROADMAP.forEach((w) => w.learn.forEach((s) => s.note && (weekNote[s.url] = s.note)));
+      function slipPeekHTML(r) {
+        const w = weekOf[r.url] && weekByN(weekOf[r.url]);
+        const all = topicRes(r.t);
+        const next = (all.find((x) => !done.has(x.url)) || {}).url;
+        const status = done.has(r.url) ? "✓ Done" : r.url === next ? "→ Up next" : "Not started";
+        const tags = [r.level && `<span class="lvl">${esc(r.level)}</span>`, r.time && `<span>${esc(r.time)}</span>`, r.cost && `<span>${esc(r.cost)}</span>`]
+          .filter(Boolean)
+          .join("");
+        return `<p class="peek-kicker">${FORMATS[r.f].label} · ${esc(r.by)}</p>
+          <h4>${esc(r.title)}</h4>
+          <p class="peek-goal">${esc(r.about)}</p>
+          ${tags ? `<div class="peek-tags">${tags}</div>` : ""}
+          ${w ? `<p class="peek-road"><b>Roadmap week ${w.n}:</b> ${esc(w.title)}${weekNote[r.url] ? `. ${esc(weekNote[r.url])}` : ""}</p>` : ""}
+          <div class="peek-foot"><b>${status}</b><span>Click to open on ${host(r.url)}</span></div>`;
+      }
+      function showSlipPeek(li) {
+        const r = byUrl[li.dataset.url];
+        if (!r || !r.about) return;
+        peekEl.style.setProperty("--sw", `var(--c-${r.t})`);
+        peekEl.innerHTML = slipPeekHTML(r);
+        peekEl.hidden = false;
+        // docked in one fixed spot: just under the layout and theme buttons, spanning their width
+        const from = $("#view-toggle").getBoundingClientRect();
+        const to = $("#theme-btn").getBoundingClientRect();
+        const pw = Math.min(Math.max(260, to.right - from.left), innerWidth - 32);
+        peekEl.classList.add("docked");
+        peekEl.style.width = pw + "px";
+        peekEl.style.left = Math.max(16, to.right - pw) + "px";
+        peekEl.style.top = $(".bar").getBoundingClientRect().bottom + 10 + "px";
+        li.querySelector(".slip").setAttribute("aria-describedby", "peek");
+        requestAnimationFrame(() => peekEl.classList.add("show"));
       }
 
       function toast(msg, t) {
@@ -2412,6 +2679,56 @@
         el.classList.add("show");
         clearTimeout(toast.timer);
         toast.timer = setTimeout(() => el.classList.remove("show"), 3200);
+      }
+
+      // confetti and balloons from the tick; a bigger burst with champagne when a topic or week is finished
+      const FX_COLORS = [...TOPICS.map((t) => `var(--c-${t.id})`), "var(--accent)"];
+      function celebrate(rect, big) {
+        if (!rect || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        const x = rect.left + rect.width / 2;
+        const y = rect.top + rect.height / 2;
+        const layer = document.createElement("div");
+        layer.className = "fx";
+        layer.setAttribute("aria-hidden", "true");
+        document.body.append(layer);
+        const anims = [];
+        for (let i = 0; i < (big ? 70 : 34); i++) {
+          const c = document.createElement("i");
+          c.style.cssText = `left:${x}px;top:${y}px;background:${FX_COLORS[i % FX_COLORS.length]}${i % 3 ? "" : ";border-radius:50%"}`;
+          layer.append(c);
+          const a = Math.random() * Math.PI * 2;
+          const v = (big ? 160 : 90) + Math.random() * (big ? 220 : 130);
+          const dx = Math.cos(a) * v;
+          const dy = Math.sin(a) * v - 80;
+          anims.push(
+            c.animate(
+              [
+                { transform: "translate(-50%, -50%) rotate(0deg)", opacity: 1 },
+                { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${Math.random() * 540}deg)`, opacity: 1, offset: 0.6 },
+                { transform: `translate(calc(-50% + ${dx * 1.1}px), calc(-50% + ${dy + 160}px)) rotate(${Math.random() * 720}deg)`, opacity: 0 },
+              ],
+              { duration: 1200 + Math.random() * 500, easing: "cubic-bezier(.2,.7,.3,1)", fill: "forwards" }
+            )
+          );
+        }
+        const floats = big ? ["🎈", "🍾", "🎈", "🥂", "🎈", "🎉"] : ["🎈", "🎉", "🎈"];
+        floats.forEach((e, i) => {
+          const b = document.createElement("span");
+          b.textContent = e;
+          b.style.cssText = `left:${x + (i - (floats.length - 1) / 2) * 38}px;top:${y}px`;
+          layer.append(b);
+          anims.push(
+            b.animate(
+              [
+                { transform: "translate(-50%, 0) scale(.4)", opacity: 0 },
+                { transform: "translate(-50%, -30px) scale(1)", opacity: 1, offset: 0.15 },
+                { transform: `translate(calc(-50% + ${(Math.random() - 0.5) * 70}px), -${big ? 420 : 260}px) scale(1)`, opacity: 0 },
+              ],
+              { duration: 2200 + i * 150, delay: i * 80, easing: "ease-out", fill: "forwards" }
+            )
+          );
+        });
+        Promise.all(anims.map((a) => a.finished)).then(() => layer.remove());
       }
 
       function setMode(m) {
@@ -2426,6 +2743,7 @@
       function reset() {
         state.topic = "all";
         state.format = "all";
+        state.status = "all";
         state.q = "";
         $("#q").value = "";
         render();
@@ -2444,8 +2762,40 @@
         state.format = b.dataset.format;
         render();
       });
+      $("#status-row").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-status]");
+        if (!b) return;
+        state.status = b.dataset.status;
+        render();
+      });
       $("#shelves").addEventListener("click", (e) => {
         if (e.target.id === "reset") reset();
+      });
+      // ticks here and on the roadmap share one record, so a course done in one shows in both
+      $("#shelves").addEventListener("change", (e) => {
+        const k = e.target.dataset.key;
+        if (!k) return;
+        if (e.target.checked) done.add(k);
+        else done.delete(k);
+        saveProgress();
+        const rect = e.target.closest(".mark").getBoundingClientRect();
+        renderRail();
+        renderShelves();
+        const again = [...document.querySelectorAll("#shelves .tick")].find((x) => x.dataset.key === k);
+        if (again) again.focus({ preventScroll: true });
+        if (!e.target.checked) return;
+        const t = topicOf(byUrl[k].t);
+        const all = topicRes(t.id);
+        const d = doneIn(all);
+        const nxt = TOPICS[TOPICS.indexOf(t) + 1];
+        const finished = d === all.length;
+        celebrate(rect, finished);
+        toast(
+          finished
+            ? `🍾 Congratulations! You finished every course in ${t.name}.${nxt ? " Next topic: " + nxt.name : ""}`
+            : `🎉 Congratulations! You completed ${byUrl[k].title} · ${d} of ${all.length} done in ${t.name}`,
+          t.id
+        );
       });
       $("#roadmap").addEventListener("click", (e) => {
         if (e.target.id === "reset") return reset();
@@ -2457,6 +2807,7 @@
         const fin = e.target.closest("[data-complete]");
         if (fin) {
           const w = weekByN(+fin.dataset.complete);
+          celebrate(fin.getBoundingClientRect(), true);
           done.add("week:" + w.id);
           required(w).forEach((k) => done.add(k));
           saveProgress();
@@ -2508,9 +2859,13 @@
         if (e.target.checked) done.add(k);
         else done.delete(k);
         saveProgress();
+        const rect = e.target.closest(".mark").getBoundingClientRect();
         renderRoadmap();
         const again = [...document.querySelectorAll("#panel .tick")].find((t) => t.dataset.key === k);
         if (again) again.focus({ preventScroll: true });
+        if (!e.target.checked) return;
+        celebrate(rect);
+        toast(`🎉 Congratulations! You completed ${byUrl[k].title}`, byUrl[k].t);
       });
       $("#backdrop").addEventListener("click", closeSheet);
       if (matchMedia("(hover: hover)").matches) {
@@ -2525,6 +2880,23 @@
           if (stop && !stop.contains(e.relatedTarget)) hidePeek();
         });
       }
+      if (matchMedia("(hover: hover)").matches) {
+        $("#shelves").addEventListener("mouseover", (e) => {
+          const li = e.target.closest(".slips > li");
+          if (!li || li.contains(e.relatedTarget)) return;
+          clearTimeout(peekTimer);
+          peekTimer = setTimeout(() => showSlipPeek(li), 250);
+        });
+        $("#shelves").addEventListener("mouseout", (e) => {
+          const li = e.target.closest(".slips > li");
+          if (li && !li.contains(e.relatedTarget)) hidePeek();
+        });
+      }
+      $("#shelves").addEventListener("focusin", (e) => {
+        const a = e.target.closest(".slip");
+        if (a && a.matches(":focus-visible")) showSlipPeek(a.parentElement);
+      });
+      $("#shelves").addEventListener("focusout", hidePeek);
       $("#rm-main").addEventListener("focusin", (e) => {
         const stop = e.target.closest(".stop");
         if (stop && stop.matches(":focus-visible")) showPeek(stop);
