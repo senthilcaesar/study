@@ -551,6 +551,37 @@
       .slips .is-done .slip-title {
         color: var(--ink-soft);
       }
+      .shelf-done {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px 14px;
+        margin-top: 18px;
+        padding: 14px 18px;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+        box-shadow: 4px 4px 0 var(--shadow);
+      }
+      .shelf-done > span {
+        font-size: 1.6rem;
+        line-height: 1;
+      }
+      .shelf-done p {
+        flex: 1 1 280px;
+        margin: 0;
+        font-weight: 700;
+        line-height: 1.4;
+      }
+      .shelf-done button {
+        border: 2px solid var(--line);
+        background: var(--surface);
+        color: var(--ink);
+        padding: 6px 12px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
       .done-badge,
       .next-badge {
         font-family: var(--mono);
@@ -2253,6 +2284,16 @@
         </label></li>`;
       }
 
+      // stays under a finished tab, with a way on to the next module
+      function doneBanner(t) {
+        const nxt = TOPICS[TOPICS.indexOf(t) + 1];
+        return `<div class="shelf-done" style="--sw:var(--c-${t.id})" role="status">
+          <span aria-hidden="true">🍾</span><p>${esc(doneMsg(t))}</p>
+          ${nxt ? `<button type="button" data-goto="${nxt.id}">Next module: ${esc(nxt.name)} →</button>` : ""}
+        </div>`;
+      }
+      const doneMsg = (t) => `Congrats on completing the ${t.name} module! You've done great work. Keep the momentum going.`;
+
       function renderShelves() {
         hidePeek();
         const visible = RESOURCES.filter(matches);
@@ -2274,6 +2315,7 @@
                 </div>
               </div>
               <ul class="slips">${rs.map((r) => slip(r, next)).join("")}</ul>
+              ${d === all.length ? doneBanner(t) : ""}
             </section>`;
           })
           .join("");
@@ -2672,13 +2714,13 @@
         requestAnimationFrame(() => peekEl.classList.add("show"));
       }
 
-      function toast(msg, t) {
+      function toast(msg, t, ms = 3200) {
         const el = $("#toast");
         el.textContent = msg;
         el.style.setProperty("--sw", `var(--c-${t})`);
         el.classList.add("show");
         clearTimeout(toast.timer);
-        toast.timer = setTimeout(() => el.classList.remove("show"), 3200);
+        toast.timer = setTimeout(() => el.classList.remove("show"), ms);
       }
 
       // confetti and balloons from the tick; a bigger burst with champagne when a topic or week is finished
@@ -2770,6 +2812,12 @@
       });
       $("#shelves").addEventListener("click", (e) => {
         if (e.target.id === "reset") reset();
+        const go = e.target.closest("[data-goto]");
+        if (go) {
+          state.topic = go.dataset.goto;
+          render();
+          $("#main").scrollIntoView({ block: "start", behavior: "smooth" });
+        }
       });
       // ticks here and on the roadmap share one record, so a course done in one shows in both
       $("#shelves").addEventListener("change", (e) => {
@@ -2792,9 +2840,10 @@
         celebrate(rect, finished);
         toast(
           finished
-            ? `🍾 Congratulations! You finished every course in ${t.name}.${nxt ? " Next topic: " + nxt.name : ""}`
+            ? `🍾 ${doneMsg(t)}`
             : `🎉 Congratulations! You completed ${byUrl[k].title} · ${d} of ${all.length} done in ${t.name}`,
-          t.id
+          t.id,
+          finished ? 7000 : 3200
         );
       });
       $("#roadmap").addEventListener("click", (e) => {
