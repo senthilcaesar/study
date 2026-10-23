@@ -47,7 +47,6 @@
         --c-evals: #ffb3d9;
         --c-graphrag: #ffab91;
         --c-docs: #b5e3e0;
-        --c-coding: #e6c9a8;
         --c-claude-code: #e9b8a6;
         --c-foundations: #aab4ff;
 
@@ -81,7 +80,6 @@
         --c-evals: #f4b8e4;     /* pink */
         --c-graphrag: #ef9f76;  /* peach */
         --c-docs: #85c1dc;      /* sapphire */
-        --c-coding: #eebebe;    /* flamingo */
         --c-claude-code: #f2d5cf; /* rosewater */
         --c-foundations: #babbf1; /* lavender */
         color-scheme: dark;
@@ -1821,10 +1819,6 @@
           name: "Claude Code",
         },
         {
-          id: "coding",
-          name: "Coding Agents",
-        },
-        {
           id: "harness",
           name: "Harness",
         },
@@ -1939,9 +1933,6 @@
           about: "Create, configure and share Claude Code Skills: frontmatter and descriptions, tool restrictions and scripts, sharing via plugins, using skills in subagents, and fixing skills that don't trigger.", cost: "Free" },
         { t: "claude-code", f: "course", title: "AI Fluency for Builders", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/ai-fluency-for-builders",
           about: "Applies the 4D AI Fluency framework (Delegation, Description, Discernment, Diligence) to building a product, from framing a customer problem to shipping it.", cost: "Free" },
-
-        { t: "coding", f: "course", title: "Spec-Driven Development with Coding Agents", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents",
-          about: "Replace vibe coding with specs: write a project constitution, plan and validate features in loops, build an MVP, and package the workflow as an agent skill.", level: "Beginner", time: "1h 16m (15 video lessons)", cost: "Free" },
 
         { t: "harness", f: "article", title: "The engine behind autonomous AI agents: harnesses and autoresearch", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch",
           about: "Plain-language intro to AI agents, the harness around them (planning, context, memory, tools, guardrails, loops, logging) and Karpathy-style autoresearch loops.", level: "Beginner", cost: "Free" },
@@ -2098,10 +2089,9 @@
         {
           id: "harness", stage: "advanced", t: "harness",
           title: "Harnesses and coding agents",
-          goal: "Understand the harness around the model (tools, memory, permissions, the loop itself) and drive coding agents with clear specs.",
+          goal: "Understand the harness around the model (tools, memory, permissions, the loop itself) and drive a coding agent on real work.",
           learn: [
             { url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
-            { url: "https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents" },
             { url: "https://anthropic.skilljar.com/claude-code-101", note: "A real harness up close: how Claude Code reads, plans, edits and asks permission." },
             { url: "https://anthropic.skilljar.com/claude-code-in-action", note: "Drive it on real work: context, custom commands, hooks and MCP servers." },
           ],
