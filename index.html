@@ -1862,6 +1862,8 @@
           about: "Use the OpenAI API from Python notebooks to summarize, infer, transform and expand text, learn two key principles for writing prompts, and build a custom chatbot. Taught by Isa Fulford and Andrew Ng.", level: "Beginner", time: "1 hr 40 min", cost: "Free" },
         { t: "context", f: "article", title: "Context engineering", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering",
           about: "A beginner's guide to what a model actually sees (system prompt, history, retrieved data, tool outputs), why more context can hurt (context rot), and seven traits of good context such as relevance, timing and compression.", level: "Beginner", cost: "Free" },
+        { t: "context", f: "article", title: "Context Engineering Starts with Retrieval", by: "Jess Weng at LangChain", url: "https://www.langchain.com/blog/context-engineering-starts-with-retrieval",
+          about: "How agents find and load only what they need: cheap glob and grep first, semantic and agentic retrieval, skills, paging and offloading large results, subagents that summarise, and treating retrieved text as untrusted.", time: "11 min read", cost: "Free" },
 
         { t: "graphrag", f: "course", title: "Retrieval Augmented Generation (RAG)", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/retrieval-augmented-generation",
           about: "Design and build RAG systems: keyword, semantic and hybrid search, chunking, vector databases, prompt design, evaluation and production deployment, using Weaviate and Arize Phoenix. Needs intermediate Python.", level: "Intermediate", time: "about 26 hrs · 5 modules", cost: "Free to audit" },
@@ -1920,6 +1922,8 @@
 
         { t: "evals", f: "article", title: "How evals are central to harness engineering", by: "Hugo Bowne-Anderson", url: "https://hugobowne.substack.com/p/how-evals-are-central-to-harness",
           about: "Argues that evals belong at the centre of agent harness engineering: what good harness evals measure, what doesn't count, and a seven-step workflow from reading traces to regression cases.", cost: "Free" },
+        { t: "evals", f: "article", title: "The Most Common Questions About Agent Evals, Answered", by: "Divya Santhanam at LangChain", url: "https://www.langchain.com/blog/common-questions-about-agent-evals",
+          about: "A practical FAQ on agent evals in LangSmith: starting from 10–20 real traces, offline vs online evals, code, LLM-judge, human and pairwise evaluators, trusting judges, cost control and multi-turn evals.", cost: "Free" },
         { t: "evals", f: "course", title: "Evaluating AI Agents", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/evaluating-ai-agents",
           about: "Build a simple agent with routers, skills and memory, then add tracing, evaluate its skills and routing with code, LLM-judge and human evaluators, and run structured experiments.", level: "Beginner", time: "2h 36m (15 video lessons)", cost: "Free" },
         { t: "evals", f: "course", title: "Automated Testing for LLMOps", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/automated-testing-llmops",
@@ -1938,6 +1942,8 @@
 
         { t: "harness", f: "article", title: "The engine behind autonomous AI agents: harnesses and autoresearch", by: "Senthil Caesar", url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch",
           about: "Plain-language intro to AI agents, the harness around them (planning, context, memory, tools, guardrails, loops, logging) and Karpathy-style autoresearch loops.", level: "Beginner", cost: "Free" },
+        { t: "harness", f: "article", title: "The Anatomy of an Agent Harness", by: "Vivek Trivedy at LangChain", url: "https://www.langchain.com/blog/the-anatomy-of-an-agent-harness",
+          about: "Agent = Model + Harness: works back from what agents need to the harness parts that provide it (filesystems, bash, sandboxes, memory, context management, long-horizon loops) and where harnesses are heading.", time: "12 min read", cost: "Free" },
       ];
 
       // The roadmap: three stages, twelve weeks. Each week points at RESOURCES by
@@ -2034,7 +2040,10 @@
           id: "context", stage: "intermediate", t: "context",
           title: "Context engineering",
           goal: "Treat the context window as a budget: what goes in, in what order, and what gets left out as your agents take on longer tasks.",
-          learn: [{ url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" }],
+          learn: [
+            { url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" },
+            { url: "https://www.langchain.com/blog/context-engineering-starts-with-retrieval", note: "Getting the right context in: search cheaply, load only what's needed, and offload the rest." },
+          ],
         },
         {
           id: "mcp", stage: "intermediate", t: "mcp",
@@ -2074,6 +2083,7 @@
           goal: "Replace “it seems better” with numbers: test sets, code-based checks, LLM judges and automated runs on every change.",
           learn: [
             { url: "https://hugobowne.substack.com/p/how-evals-are-central-to-harness" },
+            { url: "https://www.langchain.com/blog/common-questions-about-agent-evals", note: "Quick answers to the questions you'll hit first: where to start, which evaluator to use, and when to trust an LLM judge." },
             { url: "https://www.deeplearning.ai/courses/evaluating-ai-agents" },
             { url: "https://www.deeplearning.ai/courses/automated-testing-llmops" },
           ],
@@ -2095,6 +2105,7 @@
           goal: "Understand the harness around the model (tools, memory, permissions, the loop itself) and drive a coding agent on real work.",
           learn: [
             { url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
+            { url: "https://www.langchain.com/blog/the-anatomy-of-an-agent-harness", note: "Each harness part traced back to the agent behaviour it makes possible." },
             { url: "https://anthropic.skilljar.com/claude-code-101", note: "A real harness up close: how Claude Code reads, plans, edits and asks permission." },
             { url: "https://anthropic.skilljar.com/claude-code-in-action", note: "Drive it on real work: context, custom commands, hooks and MCP servers." },
           ],
