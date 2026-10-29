@@ -66,7 +66,7 @@
         --bg: #0b0e1f;
         --surface: #151a33;
         --sunk: #0f1328;
-        --ink: #e7e8ff;
+        --ink: #d6d8f2;
         --ink-soft: #bcbfe3;
         --dim: #8f93bd;
         --line: #7f86c6;
@@ -2475,6 +2475,33 @@
         --edge-hi: color-mix(in srgb, var(--ink) 30%, transparent);
         --lift: 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 26px -12px rgba(0, 0, 0, 0.7);
         --lift-hi: 0 2px 4px rgba(0, 0, 0, 0.4), 0 20px 38px -14px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(182, 163, 255, 0.12);
+      }
+      /* at night, a selection glows softly instead of turning into a pale block */
+      :root[data-theme="dark"] .rail-item[aria-pressed="true"] {
+        background-color: rgba(182, 163, 255, 0.14);
+        color: var(--ink);
+        box-shadow: inset 0 0 0 1px rgba(182, 163, 255, 0.32), 0 0 18px -8px rgba(182, 163, 255, 0.6);
+      }
+      :root[data-theme="dark"] .rail-item[aria-pressed="true"] .n {
+        color: var(--accent);
+      }
+      :root[data-theme="dark"] .fmt-btn[aria-pressed="true"] {
+        background: rgba(182, 163, 255, 0.26);
+        border-color: rgba(182, 163, 255, 0.7);
+        color: #efeaff;
+      }
+      :root[data-theme="dark"] .resume-btn {
+        background: linear-gradient(160deg, rgba(182, 163, 255, 0.24), rgba(120, 100, 230, 0.12));
+        color: var(--ink);
+        box-shadow: inset 0 -1px 0 rgba(182, 163, 255, 0.25);
+      }
+      :root[data-theme="dark"] .resume-btn span {
+        color: var(--accent);
+        opacity: 1;
+      }
+      :root[data-theme="dark"] .resume-btn:hover {
+        filter: none;
+        background: linear-gradient(160deg, rgba(182, 163, 255, 0.32), rgba(120, 100, 230, 0.18));
       }
 
       /* the daylight sky: light mode's counterpart to the Milky Way, a pale
