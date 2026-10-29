@@ -682,6 +682,76 @@
       .shell.solo {
         grid-template-columns: minmax(0, 1fr);
       }
+
+      /* ---------- intro: where first-time visitors land ---------- */
+      .intro {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 56px 20px 40px;
+      }
+      .intro h1 {
+        margin: 0 0 18px;
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: clamp(2rem, 5vw, 3rem);
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+      }
+      .intro p {
+        margin: 0 0 14px;
+        font-size: 1.08rem;
+        color: var(--ink-soft);
+      }
+      .intro-ways {
+        display: grid;
+        gap: 14px;
+        margin: 26px 0 22px;
+      }
+      .way {
+        display: block;
+        width: 100%;
+        text-align: left;
+        text-decoration: none;
+        padding: 16px 20px;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        box-shadow: 3px 3px 0 var(--shadow);
+        transition: transform 0.12s, box-shadow 0.12s;
+      }
+      .way:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 5px 5px 0 var(--shadow);
+      }
+      .way:active {
+        transform: translate(3px, 3px);
+        box-shadow: none;
+      }
+      .way-k {
+        display: block;
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--dim);
+      }
+      .way b {
+        display: block;
+        margin: 4px 0 4px;
+        font-family: var(--display);
+        font-size: 1.3rem;
+        font-weight: 750;
+        letter-spacing: -0.01em;
+      }
+      .way-d {
+        display: block;
+        color: var(--ink-soft);
+        font-size: 0.95rem;
+      }
+      .intro .intro-note {
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        color: var(--dim);
+      }
       .shell.solo .rail {
         display: none;
       }
@@ -1735,7 +1805,7 @@
   </head>
   <body>
     <header class="bar">
-      <a class="brand" href="#top" aria-label="AI Learning Shelf, back to top">
+      <a class="brand" href="#top" aria-label="AI Learning Shelf, back to the intro">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
         AI Learning Shelf
       </a>
@@ -1790,6 +1860,7 @@
       </nav>
 
       <main id="main">
+        <div class="intro" id="intro" hidden></div>
         <div class="rm" id="roadmap" hidden>
           <div class="rm-main" id="rm-main"></div>
           <aside class="panel" id="panel" aria-labelledby="panel-title"></aside>
@@ -2198,7 +2269,7 @@
       };
 
       // every visit opens on the library in list view; only a #week-N link opens the roadmap
-      const state = { mode: "library", topic: "all", format: "all", status: "all", q: "", view: "list" };
+      const state = { mode: "intro", topic: "all", format: "all", status: "all", q: "", view: "list" };
 
       // progress: ticked resource urls, plus "week:<id>" once a week is marked complete
       let done = new Set();
@@ -2576,15 +2647,56 @@
         $("#q-clear").hidden = !state.q;
       }
 
+      // the intro: three ways in, so nobody starts on the full shelf
+      function renderIntro() {
+        const cur = currentWeek();
+        const road = !done.size
+          ? "Follow the roadmap"
+          : cur
+            ? `Continue week ${cur.n}: ${esc(cur.title)}`
+            : "Review the roadmap";
+        $("#intro").innerHTML = `
+          <h1>Learn to build with AI, one step at a time</h1>
+          <p>AI Learning Shelf is a free reading list for AI engineering. It has ${RESOURCES.length} courses, videos and
+            articles, and a roadmap of ${ROADMAP.length} weeks that puts them in order.</p>
+          <p>You don't need to look at everything. Pick one way in:</p>
+          <div class="intro-ways">
+            <a class="way" href="start.html">
+              <span class="way-k">New to AI engineering?</span>
+              <b>Read the short guide</b>
+              <span class="way-d">The five parts of the field and the order to learn them in. About ten minutes.</span>
+            </a>
+            <button class="way" type="button" data-mode="roadmap">
+              <span class="way-k">Want a plan?</span>
+              <b>${road}</b>
+              <span class="way-d">${ROADMAP.length} weeks, from beginner to advanced. Tick things off as you go.</span>
+            </button>
+            <button class="way" type="button" data-mode="library">
+              <span class="way-k">Know what you need?</span>
+              <b>Browse the library</b>
+              <span class="way-d">Every resource, sorted by topic, with search and filters.</span>
+            </button>
+          </div>
+          <p class="intro-note">Your progress is saved in this browser only.</p>`;
+        $("#count-shown").textContent = RESOURCES.length;
+        $("#count-total").textContent = RESOURCES.length;
+        $("#count-unit").textContent = "resources";
+      }
+
       function render() {
         const road = state.mode === "roadmap";
+        const intro = state.mode === "intro";
         $("#mode-roadmap").setAttribute("aria-pressed", road);
-        $("#mode-library").setAttribute("aria-pressed", !road);
-        $("#view-toggle").hidden = road;
-        $(".shell").classList.toggle("solo", road);
+        $("#mode-library").setAttribute("aria-pressed", state.mode === "library");
+        $("#view-toggle").hidden = road || intro;
+        $(".shell").classList.toggle("solo", road || intro);
+        $("#intro").hidden = !intro;
         $("#roadmap").hidden = !road;
-        $("#shelves").hidden = road;
-        if (road) {
+        $("#shelves").hidden = road || intro;
+        if (intro) {
+          closeSheet();
+          renderIntro();
+        } else if (road) {
           renderRoadmap();
         } else {
           closeSheet();
@@ -2824,6 +2936,15 @@
       }
       $("#mode-roadmap").addEventListener("click", () => setMode("roadmap"));
       $("#mode-library").addEventListener("click", () => setMode("library"));
+      $("#intro").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-mode]");
+        if (b) setMode(b.dataset.mode);
+      });
+      // the brand takes you back to the intro
+      $(".brand").addEventListener("click", (e) => {
+        e.preventDefault();
+        setMode("intro");
+      });
 
       function reset() {
         state.topic = "all";
@@ -3031,6 +3152,7 @@
       if (document.fonts) document.fonts.ready.then(drawPath);
       $("#q").addEventListener("input", (e) => {
         state.q = e.target.value.trim();
+        if (state.q && state.mode === "intro") state.mode = "library";
         render();
       });
       $("#q-clear").addEventListener("click", (e) => {
@@ -3089,7 +3211,7 @@
       });
 
       // deep links: index.html#week-5 opens the roadmap at that week,
-      // index.html#mcp opens the library on that topic
+      // index.html#mcp opens the library on that topic; no hash opens the intro
       const hash = location.hash.slice(1);
       const wkMatch = /^week-(\d+)$/.exec(hash);
       state.sel = (currentWeek() || ROADMAP[ROADMAP.length - 1]).n;
