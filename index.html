@@ -2388,6 +2388,174 @@
         }
       }
 
+      /* ---------- soft shapes, matching the header ----------
+         Cards, chips and panels drop the hard black boxes and offset shadows for
+         rounded corners, a thin soft outline and a soft shadow; hover lifts a
+         card a little instead of jumping it diagonally. Kept last so it wins. */
+      :root {
+        --edge: color-mix(in srgb, var(--ink) 15%, transparent);
+        --edge-hi: color-mix(in srgb, var(--ink) 28%, transparent);
+        --lift: 0 1px 2px rgba(24, 26, 70, 0.06), 0 8px 22px -10px rgba(24, 26, 70, 0.18);
+        --lift-hi: 0 2px 4px rgba(24, 26, 70, 0.08), 0 18px 34px -14px rgba(24, 26, 70, 0.28);
+        --r-card: 16px;
+      }
+      :root[data-theme="dark"] {
+        --edge: color-mix(in srgb, var(--ink) 16%, transparent);
+        --edge-hi: color-mix(in srgb, var(--ink) 30%, transparent);
+        --lift: 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 26px -12px rgba(0, 0, 0, 0.7);
+        --lift-hi: 0 2px 4px rgba(0, 0, 0, 0.4), 0 20px 38px -14px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(182, 163, 255, 0.12);
+      }
+
+      /* the daylight sky: light mode's counterpart to the Milky Way, a pale
+         lavender-to-blue haze, three faint orbit rings round an unseen sun in the
+         top right corner, and a few soft stars, fixed behind every page */
+      :root:not([data-theme="dark"]) body::before,
+      :root:not([data-theme="dark"]) body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+      }
+      :root:not([data-theme="dark"]) body::before {
+        background:
+          radial-gradient(circle at 104% -6%, rgba(90, 78, 220, 0) 0 calc(34vmax - 1px), rgba(90, 78, 220, 0.09) calc(34vmax - 1px) 34vmax, rgba(90, 78, 220, 0) calc(34vmax + 1px)),
+          radial-gradient(circle at 104% -6%, rgba(90, 78, 220, 0) 0 calc(56vmax - 1px), rgba(90, 78, 220, 0.07) calc(56vmax - 1px) 56vmax, rgba(90, 78, 220, 0) calc(56vmax + 1px)),
+          radial-gradient(circle at 104% -6%, rgba(90, 78, 220, 0) 0 calc(80vmax - 1px), rgba(90, 78, 220, 0.05) calc(80vmax - 1px) 80vmax, rgba(90, 78, 220, 0) calc(80vmax + 1px)),
+          radial-gradient(ellipse 55% 45% at 92% 0%, rgba(201, 184, 255, 0.32), rgba(201, 184, 255, 0) 70%),
+          radial-gradient(ellipse 50% 40% at 0% 100%, rgba(143, 211, 255, 0.22), rgba(143, 211, 255, 0) 70%),
+          radial-gradient(ellipse 40% 30% at 45% 55%, rgba(255, 214, 230, 0.12), rgba(255, 214, 230, 0) 70%);
+      }
+      :root:not([data-theme="dark"]) body::after {
+        background:
+          radial-gradient(1.6px 1.6px at 40px 60px, rgba(110, 96, 220, 0.35), rgba(110, 96, 220, 0)),
+          radial-gradient(1.2px 1.2px at 230px 140px, rgba(110, 96, 220, 0.28), rgba(110, 96, 220, 0)),
+          radial-gradient(1.4px 1.4px at 380px 40px, rgba(90, 140, 230, 0.3), rgba(90, 140, 230, 0)),
+          radial-gradient(1.2px 1.2px at 120px 300px, rgba(110, 96, 220, 0.25), rgba(110, 96, 220, 0)),
+          radial-gradient(1.6px 1.6px at 470px 250px, rgba(90, 140, 230, 0.28), rgba(90, 140, 230, 0));
+        background-size: 540px 380px;
+      }
+      /* the night-sky home view keeps its own sky, so the daylight one stays out */
+      :root.on-intro:not([data-theme="dark"]) body::before,
+      :root.on-intro:not([data-theme="dark"]) body::after {
+        display: none;
+      }
+      .slip,
+      .way,
+      .shelf-done,
+      .checkpoint,
+      .peek,
+      .toast,
+      .stats {
+        border: 1px solid var(--edge);
+        border-radius: var(--r-card);
+        box-shadow: var(--lift);
+        overflow: hidden;
+      }
+      .toast,
+      .peek {
+        overflow: visible;
+      }
+      .slip:hover {
+        transform: translateY(-3px);
+        border-color: color-mix(in srgb, var(--sw) 70%, var(--edge-hi));
+        box-shadow: var(--lift-hi), 0 0 0 1px color-mix(in srgb, var(--sw) 45%, transparent);
+      }
+      .slip:active,
+      .way:active {
+        transform: translateY(1px);
+        box-shadow: var(--lift);
+      }
+      .way:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--lift-hi);
+      }
+      /* on the night sky, a soft glow edges the cards instead of a dark shadow */
+      .intro .way {
+        border-color: rgba(214, 207, 255, 0.35);
+        box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(214, 207, 255, 0.12);
+      }
+      .intro .way:hover {
+        box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.8), 0 0 24px -6px rgba(214, 207, 255, 0.45);
+      }
+      .way-icon,
+      .wk-num {
+        border: 1px solid var(--edge);
+        border-radius: 12px;
+      }
+      .fmt-btn,
+      .fmt,
+      .peek-tags span,
+      .shelf-head h2 .tab,
+      .shelf-done button,
+      .empty button,
+      .next-btn,
+      .complete-btn,
+      .search-clear {
+        border-width: 1px;
+        border-radius: 999px;
+        box-shadow: none;
+      }
+      .fmt-btn,
+      .fmt,
+      .peek-tags span,
+      .shelf-done button,
+      .empty button,
+      .next-btn,
+      .search-clear {
+        border-color: var(--edge-hi);
+      }
+      .fmt-btn,
+      .shelf-done button,
+      .empty button,
+      .next-btn {
+        padding-inline: 12px;
+      }
+      .search-clear:hover,
+      .search-clear:focus-visible,
+      .search-clear:active {
+        transform: none;
+        box-shadow: none;
+      }
+      .rail-item {
+        border-radius: 10px;
+      }
+      .rail-item .sw,
+      .done-line .swatch {
+        border: 1px solid var(--edge-hi);
+        border-radius: 4px;
+      }
+      .meter {
+        border: 1px solid var(--edge-hi);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      .mark span {
+        border: 1.5px solid var(--edge-hi);
+        border-radius: 7px;
+      }
+      .list-head {
+        border-bottom: 1px solid var(--edge-hi);
+      }
+      .face {
+        border: 2px solid var(--edge-hi);
+      }
+      .node {
+        box-shadow: var(--lift);
+      }
+      .stop:hover .node {
+        box-shadow: var(--lift-hi);
+      }
+      .stop:active .node {
+        box-shadow: var(--lift);
+      }
+      .panel {
+        border-left: 1px solid var(--edge);
+      }
+      .fx i {
+        border: 0;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         *,
         *::before,
