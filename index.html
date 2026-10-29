@@ -169,6 +169,7 @@
         align-items: center;
         gap: 10px;
         margin-inline: 20px;
+        max-width: 320px; /* kept small so the view buttons lead the header */
         padding: 0 12px;
         height: 42px;
         border: 2px solid var(--line);
@@ -259,13 +260,8 @@
         transform: translate(2px, 2px);
         box-shadow: none;
       }
-      /* give the search box room once the bar gets tight: drop the counter,
-         then (until phones move search to its own row) the brand's name */
-      @media (max-width: 1100px) {
-        .bar-meta .counter {
-          display: none;
-        }
-      }
+      /* give the search box room once the bar gets tight: drop the brand's
+         name until phones move search to its own row */
       @media (min-width: 861px) and (max-width: 1100px) {
         .bar {
           grid-template-columns: auto minmax(0, 1fr) auto;
@@ -402,26 +398,20 @@
       .view-toggle > a {
         border: 0;
         background: var(--surface);
-        padding: 6px 10px;
+        padding: 9px 16px;
         font-family: var(--mono);
-        font-size: 0.75rem;
+        font-size: 0.85rem;
+        font-weight: 600;
         line-height: normal;
         text-decoration: none;
       }
       .view-toggle > :is(button, a) + :is(button, a) {
         border-left: 2px solid var(--line);
       }
-      .view-toggle button[aria-pressed="true"] {
+      .view-toggle button[aria-pressed="true"],
+      .view-toggle a[aria-current="page"] {
         background: var(--ink);
         color: var(--bg);
-      }
-      .view-toggle.is-off {
-        visibility: hidden;
-      }
-      @media (max-width: 860px) {
-        .view-toggle.is-off {
-          display: none;
-        }
       }
 
       /* header buttons lift off the bar on hover, their hard shadow growing;
@@ -440,7 +430,7 @@
           transform: translate(-2px, -2px);
           box-shadow: 4px 4px 0 var(--shadow);
         }
-        .view-toggle > :not([aria-pressed="true"]):hover {
+        .view-toggle > :not([aria-pressed="true"], [aria-current="page"]):hover {
           background: var(--c-skills);
           color: var(--chip-ink);
         }
@@ -1912,13 +1902,11 @@
         .bar-meta {
           padding-inline: 0;
         }
-        .bar-meta .counter {
-          display: none;
-        }
         .search {
           grid-column: 1 / -1;
           grid-row: 2;
           margin-inline: 0;
+          max-width: none;
         }
         .search kbd {
           display: none;
@@ -2039,16 +2027,11 @@
       </label>
 
       <div class="bar-meta">
-        <span class="counter"><b id="count-shown">0</b> / <span id="count-total">0</span> <span id="count-unit">resources</span></span>
         <div class="view-toggle" role="group" aria-label="Go to">
           <button type="button" id="mode-intro" aria-pressed="true">home</button>
           <a href="start.html" title="The five layers of AI engineering and the order to learn them">guide</a>
           <button type="button" id="mode-roadmap" aria-pressed="false">roadmap</button>
           <button type="button" id="mode-library" aria-pressed="true">library</button>
-        </div>
-        <div class="view-toggle" id="view-toggle" role="group" aria-label="Layout">
-          <button type="button" id="view-list" aria-pressed="true">list</button>
-          <button type="button" id="view-grid" aria-pressed="false">cards</button>
         </div>
         <button class="theme-btn" id="theme-btn" type="button">theme</button>
       </div>
@@ -2063,6 +2046,11 @@
           <div class="fmt-row" id="fmt-row"></div>
           <div class="rail-label" style="padding: 8px 0 0">Status</div>
           <div class="fmt-row" id="status-row"></div>
+          <div class="rail-label" style="padding: 8px 0 0">Layout</div>
+          <div class="fmt-row" role="group" aria-label="Layout">
+            <button class="fmt-btn" type="button" id="view-list" aria-pressed="true">list</button>
+            <button class="fmt-btn" type="button" id="view-grid" aria-pressed="false">cards</button>
+          </div>
           <div class="rail-label" style="padding: 8px 0 0">Your progress</div>
           <div class="rail-progress" id="rail-progress"></div>
           <div id="rail-reset"></div>
@@ -2645,9 +2633,6 @@
           .join("");
 
         const shown = topics.reduce((n, t) => n + visible.filter((r) => r.t === t.id).length, 0);
-        $("#count-shown").textContent = shown;
-        $("#count-total").textContent = RESOURCES.length;
-        $("#count-unit").textContent = "resources";
 
         $("#shelves").innerHTML =
           html ||
@@ -2673,9 +2658,6 @@
         const weeks = ROADMAP.filter(weekComplete).length;
         const cur = currentWeek();
         const stage = STAGES.find((s) => s.id === (cur || ROADMAP[ROADMAP.length - 1]).stage);
-        $("#count-shown").textContent = got;
-        $("#count-total").textContent = total;
-        $("#count-unit").textContent = "items done";
 
         return `<div class="rm-hero">
           <div class="stats">
@@ -2911,9 +2893,6 @@
               <p class="shelf-caption">Five layers of AI engineering. Pick one to read about it.</p>
             </div>
           </div>`;
-        $("#count-shown").textContent = RESOURCES.length;
-        $("#count-total").textContent = RESOURCES.length;
-        $("#count-unit").textContent = "resources";
       }
 
       function render() {
@@ -2922,8 +2901,6 @@
         $("#mode-intro").setAttribute("aria-pressed", intro);
         $("#mode-roadmap").setAttribute("aria-pressed", road);
         $("#mode-library").setAttribute("aria-pressed", state.mode === "library");
-        // keeps its space when unused, so the buttons beside it don't jump between views
-        $("#view-toggle").classList.toggle("is-off", road || intro);
         $(".shell").classList.toggle("solo", road || intro);
         $("#intro").hidden = !intro;
         $("#roadmap").hidden = !road;
@@ -3105,8 +3082,8 @@
         peekEl.style.setProperty("--sw", `var(--c-${r.t})`);
         peekEl.innerHTML = slipPeekHTML(r);
         peekEl.hidden = false;
-        // docked in one fixed spot: just under the layout and theme buttons, spanning their width
-        const from = $("#view-toggle").getBoundingClientRect();
+        // docked in one fixed spot: just under the navigation and theme buttons, spanning their width
+        const from = $(".bar-meta .view-toggle").getBoundingClientRect();
         const to = $("#theme-btn").getBoundingClientRect();
         const pw = Math.min(Math.max(260, to.right - from.left), innerWidth - 32);
         peekEl.classList.add("docked");

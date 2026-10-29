@@ -113,17 +113,18 @@
       }
 
       /* ---------- top bar ---------- */
-      /* the same header as index.html: brand, search, the navigation group, theme */
+      /* the header is a copy of index.html's (same sizes, same breakpoints), so
+         home | guide | roadmap | library sit in exactly the same place on every page */
       .bar {
+        --rail: 248px;
+        line-height: 1.55; /* the shelf's body line height, so rows come out the same height */
         position: sticky;
-        top: 0;
+        top: env(safe-area-inset-top, 0px);
         z-index: 10;
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-columns: var(--rail) minmax(0, 1fr) auto;
         align-items: center;
-        gap: 10px 20px;
         min-height: 64px;
-        padding: 10px 20px;
         background: var(--bg);
         border-bottom: 1px solid var(--hair);
       }
@@ -131,6 +132,9 @@
         display: flex;
         align-items: center;
         gap: 10px;
+        padding-inline: 20px;
+        height: 100%;
+        border-right: 1px solid var(--hair);
         font-family: var(--display);
         font-weight: 800;
         font-size: 1.15rem;
@@ -151,16 +155,12 @@
       .brand-mark i:nth-child(1) { height: 20px; background: var(--c-skills); }
       .brand-mark i:nth-child(2) { height: 15px; background: var(--c-mcp); }
       .brand-mark i:nth-child(3) { height: 22px; background: var(--c-agents); transform: rotate(9deg); transform-origin: bottom left; }
-      .bar-meta {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
       .search {
         display: flex;
         align-items: center;
         gap: 10px;
-        max-width: 560px;
+        margin: 0 20px;
+        max-width: 320px; /* kept small so the view buttons lead the header */
         padding: 0 12px;
         height: 42px;
         border: 2px solid var(--line);
@@ -183,50 +183,94 @@
         outline: none;
         height: 100%;
         font: inherit;
+        font-size: 16px;
         color: inherit;
       }
       .search input::placeholder {
         color: var(--dim);
       }
-      .nav {
+      .search input::-webkit-search-cancel-button,
+      .search input::-webkit-search-decoration {
+        -webkit-appearance: none;
+        appearance: none;
+        display: none;
+      }
+      kbd {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        padding: 1px 6px;
+        border: 1.5px solid var(--hair);
+        background: var(--sunk);
+        color: var(--ink-soft);
+      }
+      .bar-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding-inline: 0 20px;
+        white-space: nowrap;
+      }
+      .view-toggle {
         display: flex;
         border: 2px solid var(--line);
         box-shadow: 2px 2px 0 var(--shadow);
       }
-      .nav a {
+      .view-toggle > a {
+        border: 0;
+        background: var(--surface);
+        padding: 9px 16px;
+        font-family: var(--mono);
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: normal;
+        text-decoration: none;
+      }
+      .view-toggle > a + a {
+        border-left: 2px solid var(--line);
+      }
+      .view-toggle a[aria-current="page"] {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      .theme-btn {
+        border: 2px solid var(--line);
         background: var(--surface);
         padding: 6px 10px;
         font-family: var(--mono);
         font-size: 0.75rem;
-        text-decoration: none;
+        line-height: 1.55; /* the shelf's body line height, which its buttons inherit */
+        box-shadow: 2px 2px 0 var(--shadow);
       }
-      .nav a + a {
-        border-left: 2px solid var(--line);
-      }
-      .nav a[aria-current="page"] {
-        background: var(--ink);
-        color: var(--bg);
-      }
-      /* same hover as the shelf's header: lift, and colour the option under the pointer */
-      .nav,
-      .btn {
+      /* same hover as the shelf: lift, and colour the option under the pointer */
+      .theme-btn,
+      .view-toggle {
         transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
       }
-      .nav a {
+      .view-toggle > a {
         transition: background-color 0.15s, color 0.15s;
       }
       @media (hover: hover) {
-        .nav:hover,
-        .btn:hover {
+        .theme-btn:hover,
+        .view-toggle:hover {
           transform: translate(-2px, -2px);
           box-shadow: 4px 4px 0 var(--shadow);
         }
-        .nav a:not([aria-current="page"]):hover {
+        .view-toggle > a:not([aria-current="page"]):hover {
           background: var(--c-skills);
           color: var(--chip-ink);
         }
       }
+      .theme-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
       @media (min-width: 861px) and (max-width: 1100px) {
+        .bar {
+          grid-template-columns: auto minmax(0, 1fr) auto;
+        }
+        .brand {
+          border-right: 0;
+        }
         .brand-text {
           display: none;
         }
@@ -234,12 +278,25 @@
       @media (max-width: 860px) {
         .bar {
           grid-template-columns: minmax(0, 1fr) auto;
+          padding-block: 10px;
           padding-inline: 16px;
+          row-gap: 10px;
+        }
+        .brand {
+          border-right: 0;
+          padding-inline: 0;
+        }
+        .bar-meta {
+          padding-inline: 0;
         }
         .search {
           grid-column: 1 / -1;
           grid-row: 2;
+          margin-inline: 0;
           max-width: none;
+        }
+        .search kbd {
+          display: none;
         }
       }
       @media (max-width: 480px) {
@@ -249,22 +306,8 @@
         .bar-meta {
           grid-row: 3;
           flex-wrap: wrap;
+          row-gap: 10px;
         }
-      }
-      .btn {
-        display: inline-block;
-        border: 2px solid var(--line);
-        background: var(--surface);
-        padding: 6px 10px;
-        font-family: var(--mono);
-        font-size: 0.75rem;
-        text-decoration: none;
-        white-space: nowrap;
-        box-shadow: 2px 2px 0 var(--shadow);
-      }
-      .btn:active {
-        transform: translate(2px, 2px);
-        box-shadow: none;
       }
 
       /* ---------- article ---------- */
@@ -484,16 +527,17 @@
           <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="2" />
           <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="2" />
         </svg>
-        <input name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search the library" aria-label="Search resources" />
+        <input id="q" name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search the library" aria-label="Search resources" />
+        <kbd>/</kbd>
       </form>
       <div class="bar-meta">
-        <nav class="nav" aria-label="Go to">
+        <nav class="view-toggle" aria-label="Go to">
           <a href="index.html">home</a>
           <a href="start.html" aria-current="page">guide</a>
           <a href="index.html#roadmap">roadmap</a>
           <a href="index.html#library">library</a>
         </nav>
-        <button class="btn" id="theme-btn" type="button">theme</button>
+        <button class="theme-btn" id="theme-btn" type="button">theme</button>
       </div>
     </header>
 
@@ -615,6 +659,13 @@
         });
         li.tabIndex = 0;
         li.appendChild(pop);
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "/" && !e.target.matches("input")) {
+          e.preventDefault();
+          document.getElementById("q").focus();
+        }
       });
 
       const root = document.documentElement;
