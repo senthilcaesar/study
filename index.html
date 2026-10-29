@@ -709,6 +709,26 @@
         flex-wrap: wrap;
       }
 
+      /* on the home view the header, footer and page behind them take the night
+         sky's colours, so the galaxy isn't framed by pale strips; layout is unchanged */
+      :root.on-intro body {
+        background: #05060f;
+      }
+      :root.on-intro .bar,
+      :root.on-intro footer {
+        --bg: #070915;
+        --surface: #12162e;
+        --sunk: #0c0f22;
+        --ink: #ecebff;
+        --ink-soft: #c3c1e6;
+        --dim: #9896c2;
+        --line: #8d91c9;
+        --hair: #23284a;
+        --shadow: #d6cfff;
+        color: var(--ink);
+        color-scheme: dark;
+      }
+
       /* ---------- roadmap ----------
          Overview first, details on demand: a winding path of week stops
          (done / current / upcoming) on the left, and the selected week's
@@ -731,6 +751,16 @@
         background: #05060f;
         /* hard shadows in starlight, since black ones vanish against the sky */
         --shadow: #d6cfff;
+      }
+      /* fade the sky's foot into the footer's night colour, so there's no seam */
+      .intro::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 0;
+        height: 160px;
+        z-index: -1;
+        background: linear-gradient(to bottom, rgba(5, 6, 15, 0), #05060f);
+        pointer-events: none;
       }
       .sky,
       .sky-twinkle {
@@ -3099,6 +3129,7 @@
       function render() {
         const road = state.mode === "roadmap";
         const intro = state.mode === "intro";
+        document.documentElement.classList.toggle("on-intro", intro);
         $("#mode-intro").setAttribute("aria-pressed", intro);
         $("#mode-roadmap").setAttribute("aria-pressed", road);
         $("#mode-library").setAttribute("aria-pressed", state.mode === "library");
