@@ -732,21 +732,24 @@
       .intro-inner {
         display: grid;
         grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-        gap: 56px;
+        gap: 32px 56px;
         align-items: center;
         max-width: 1160px;
         margin: 0 auto;
         padding: 64px 32px 56px;
       }
+      /* one line at every width: the text is about 10.2em wide, so size it
+         to the room available and cap it on wide screens */
       .intro h1 {
-        margin: 0 0 20px;
+        grid-column: 1 / -1;
+        margin: 0;
+        white-space: nowrap;
         font-family: var(--display);
         font-weight: 800;
         font-variation-settings: "wdth" 92;
-        font-size: clamp(2.4rem, 5.2vw, 4.2rem);
+        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 10.8));
         line-height: 1.02;
         letter-spacing: -0.025em;
-        max-width: 13ch;
       }
       .intro-lede {
         margin: 0 0 30px;
@@ -911,9 +914,12 @@
         }
       }
       @media (max-width: 960px) {
+        .intro h1 {
+          font-size: calc((100vw - 32px) / 11.6);
+        }
         .intro-inner {
           grid-template-columns: minmax(0, 1fr);
-          gap: 36px;
+          gap: 28px;
           padding: 36px 16px 48px;
         }
         .intro-art {
@@ -2852,8 +2858,8 @@
         $("#intro").innerHTML = `
           <div class="intro-glow" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
           <div class="intro-inner">
+            <h1>Learn AI, one step at a time</h1>
             <div class="intro-text">
-              <h1>Learn AI, one step at a time</h1>
               <p class="intro-lede">A free reading list for AI engineering: ${RESOURCES.length} courses, videos and articles,
                 and a roadmap of ${ROADMAP.length} weeks that puts them in order. You don't need all of it. Pick one way in.</p>
               <div class="intro-ways">
