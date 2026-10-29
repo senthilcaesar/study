@@ -6,7 +6,7 @@
     <title>Where to Start</title>
     <meta
       name="description"
-      content="New to AI engineering? The five layers of the field, the order to learn them in, the habits to start on day one and one project to carry through the whole roadmap."
+      content="New to AI engineering? The five layers of the field, the order to learn them in and one small agent to build along the way."
     />
     <link
       rel="icon"
@@ -305,12 +305,12 @@
         }
       }
 
-      /* the learning steps */
+      /* the learning priority list */
       .steps {
         list-style: none;
         margin: 24px 0;
         padding: 0;
-        counter-reset: step -1; /* basics is step 0, so each step number matches its layer */
+        counter-reset: step;
       }
       .steps > li {
         position: relative;
@@ -345,121 +345,20 @@
         display: none;
       }
       .steps p {
-        margin: 0 0 10px;
-      }
-      .step-layer {
-        display: block;
-        margin-bottom: 2px;
-        font-family: var(--mono);
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        color: var(--dim);
-      }
-      .weeks {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
         margin: 0;
-        padding: 0;
-        list-style: none;
+        padding-top: 8px;
       }
-      .weeks a {
-        display: inline-block;
-        border: 1.5px solid var(--line);
-        background: var(--surface);
-        padding: 3px 8px;
-        font-family: var(--mono);
-        font-size: 0.75rem;
-        text-decoration: none;
-      }
-      .weeks a:hover {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: var(--on-accent);
-      }
-
-      /* callout for the day-one habits */
-      .habits {
-        display: grid;
-        gap: 12px;
-        margin: 24px 0;
-      }
-      .habit {
+      /* the recommendation under the priority list */
+      .callout {
+        margin: 8px 0 0;
         border: 2px solid var(--line);
-        border-left-width: 8px;
-        border-left-color: var(--sw);
+        border-left: 8px solid var(--accent);
         background: var(--surface);
-        padding: 14px 18px;
+        padding: 16px 20px;
+        box-shadow: 3px 3px 0 var(--shadow);
       }
-      .habit p {
+      .callout p {
         margin: 0;
-        color: var(--ink-soft);
-        font-size: 0.95rem;
-      }
-
-      /* the project milestones */
-      .table-wrap {
-        overflow-x: auto;
-        margin: 24px 0;
-        border: 2px solid var(--line);
-        box-shadow: 3px 3px 0 var(--shadow);
-        background: var(--surface);
-      }
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.92rem;
-      }
-      th,
-      td {
-        text-align: left;
-        vertical-align: top;
-        padding: 10px 14px;
-        border-bottom: 1px solid var(--hair);
-      }
-      th {
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.06em;
-        color: var(--dim);
-        background: var(--sunk);
-      }
-      tr:last-child td {
-        border-bottom: 0;
-      }
-      td:first-child {
-        font-family: var(--mono);
-        font-size: 0.8rem;
-        white-space: nowrap;
-      }
-
-      .cta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 32px;
-      }
-      .cta a {
-        display: inline-block;
-        border: 2px solid var(--line);
-        padding: 12px 18px;
-        font-family: var(--display);
-        font-weight: 750;
-        font-size: 1.05rem;
-        text-decoration: none;
-        box-shadow: 3px 3px 0 var(--shadow);
-        background: var(--surface);
-      }
-      .cta a.primary {
-        background: var(--accent);
-        color: var(--on-accent);
-        border-color: var(--accent);
-      }
-      .cta a:active {
-        transform: translate(3px, 3px);
-        box-shadow: none;
       }
 
       @media (max-width: 480px) {
@@ -569,197 +468,33 @@
         </li>
       </ol>
 
-      <h2>In what order should I learn it?</h2>
-      <p>
-        After four weeks of basics, the roadmap climbs the five layers from the bottom up, one layer at a time. Each
-        step below names its layer and links to the roadmap weeks that teach it.
-      </p>
+      <h2>Recommended learning priority</h2>
+      <p>If your goal is to become proficient in AI Engineering, I would prioritize the concepts in this order:</p>
       <ol class="steps">
         <li style="--sw: var(--c-foundations)">
-          <span class="step-layer">Basics</span>
-          <h3>Learn what a model is, and call one from code</h3>
-          <p>
-            Start with what AI can and can't do, enough Python to write a short script, and how to prompt well. Then
-            call a model from code and ask for <strong>structured output</strong>, meaning a reply in a fixed format
-            such as JSON (a standard text format for data) that your program can read without guessing. Along the
-            way, learn what a <strong>token</strong> is (a chunk of text, roughly three-quarters of a word, that
-            models read and charge by).
-          </p>
-          <ul class="weeks">
-            <li><a href="index.html#week-1">week 1 · what AI can do</a></li>
-            <li><a href="index.html#week-2">week 2 · Python</a></li>
-            <li><a href="index.html#week-3">week 3 · prompting</a></li>
-            <li><a href="index.html#week-4">week 4 · build with LLMs</a></li>
-          </ul>
+          <p><strong>Start with the fundamentals:</strong> LLM APIs, tool calling, structured outputs, prompt engineering, and tokens.</p>
         </li>
         <li style="--sw: var(--c-skills)">
-          <span class="step-layer">Layer 1 · Capabilities</span>
-          <h3>Let it act, then give it tools and know-how</h3>
-          <p>
-            Build an agent by hand: call the model, run the tool it asks for, give it the result, and repeat until
-            it's done. That loop is all an agent is. Many tasks don't even need an agent, just a fixed
-            <strong>workflow</strong> (step A, then step B). Then look inside the model you've been calling, and
-            learn two ways to hand an agent more abilities. The <strong>Model Context Protocol (MCP)</strong> is a
-            standard plug for tools: write a tool once as an MCP server and any compatible agent can use it.
-            <strong>Agent Skills</strong> are folders of instructions and scripts an agent loads only when a task
-            needs them.
-          </p>
-          <ul class="weeks">
-            <li><a href="index.html#week-5">week 5 · your first agent</a></li>
-            <li><a href="index.html#week-6">week 6 · how LLMs work</a></li>
-            <li><a href="index.html#week-7">week 7 · MCP fundamentals</a></li>
-            <li><a href="index.html#week-8">week 8 · build an MCP server</a></li>
-            <li><a href="index.html#week-9">week 9 · Agent Skills</a></li>
-          </ul>
+          <p><strong>Learn how agents work:</strong> Skills, MCP, context engineering, memory, orchestration, and state management.</p>
         </li>
         <li style="--sw: var(--c-context)">
-          <span class="step-layer">Layer 2 · Knowledge and context</span>
-          <h3>Give it knowledge, and choose what it sees</h3>
-          <p>
-            <strong>Retrieval-augmented generation (RAG)</strong> means looking up the relevant passages in your own
-            documents and handing them to the model with the question, like letting someone check their notes before
-            they answer. It uses <strong>embeddings</strong>, which turn text into lists of numbers so that passages
-            with similar meanings can be found by meaning, not just by matching words. <strong>Context
-            engineering</strong> is deciding what goes into the model's limited working space and what stays out.
-            Knowledge graphs help when the answer only appears once you connect facts across many documents.
-          </p>
-          <ul class="weeks">
-            <li><a href="index.html#week-10">week 10 · RAG</a></li>
-            <li><a href="index.html#week-11">week 11 · context engineering</a></li>
-            <li><a href="index.html#week-12">week 12 · knowledge graphs</a></li>
-          </ul>
-        </li>
-        <li style="--sw: var(--c-agents)">
-          <span class="step-layer">Layer 3 · Execution and control</span>
-          <h3>Build the harness around the model</h3>
-          <p>
-            The <strong>harness</strong> is everything around the model: the loop, the tools, the memory, the sandbox
-            that limits what commands can do, and the rules for retrying, stopping and asking a human. Tune the
-            harness and you change how good the agent is, often more than switching models would. You'll see a real
-            one up close by driving a coding agent.
-          </p>
-          <ul class="weeks">
-            <li><a href="index.html#week-13">week 13 · harnesses</a></li>
-          </ul>
+          <p><strong>Learn how agents use knowledge:</strong> RAG, embeddings, semantic search, reranking, and knowledge graphs.</p>
         </li>
         <li style="--sw: var(--c-evals)">
-          <span class="step-layer">Layer 4 · Quality and trust</span>
-          <h3>Prove that it works</h3>
-          <p>
-            <strong>Evals</strong> are tests for AI systems: a set of inputs, plus a way to score the outputs. The
-            score can come from exact checks, a rubric, or another model acting as judge. Run them on every change,
-            so "it seems better" becomes a number.
-          </p>
-          <ul class="weeks">
-            <li><a href="index.html#week-14">week 14 · evaluating agents</a></li>
-          </ul>
+          <p><strong>Learn how to make agents dependable:</strong> Harness engineering, guardrails, human approval, evals, and observability.</p>
         </li>
         <li style="--sw: var(--c-harness)">
-          <span class="step-layer">Layer 5 · Production</span>
-          <h3>Run it for real, then go deeper if you want</h3>
-          <p>
-            Learn how real agent systems are kept reliable, fast and cheap: caching, cost and latency, retries,
-            monitoring. Machine learning theory, the maths and the research frontier are worth it eventually, but
-            they're optional. You can build good systems without them first.
-          </p>
-          <ul class="weeks">
-            <li><a href="index.html#week-15">week 15 · production</a></li>
-            <li><a href="index.html#week-16">weeks 16–18 · going deeper</a></li>
-          </ul>
+          <p><strong>Learn production engineering:</strong> LLMOps, security, reliability, latency, caching, and cost optimization.</p>
         </li>
       </ol>
 
-      <h2>Which habits should I start in week one?</h2>
-      <p>
-        Two topics sit late in most courses but pay off from the first week. Start them early, even in a rough form.
-      </p>
-      <div class="habits">
-        <div class="habit" style="--sw: var(--c-evals)">
-          <h3>Keep a small test set from your first prompt</h3>
-          <p>
-            Write down 20 to 30 inputs and what a good answer looks like, and rerun them after every change. Without
-            them, "it works now" means "it worked on the one thing I tried". A spreadsheet is enough to start. Week 14
-            turns it into proper evals.
-          </p>
-        </div>
-        <div class="habit" style="--sw: var(--c-graphrag)">
-          <h3>Treat everything the agent reads as untrusted</h3>
-          <p>
-            Once an agent can call tools, a web page or document it reads can contain text that tries to give it new
-            orders. This is called <strong>prompt injection</strong>. Give each tool only the permissions it needs,
-            and ask a human before anything that deletes, sends or pays.
-          </p>
-        </div>
-        <div class="habit" style="--sw: var(--c-agents)">
-          <h3>Record every run</h3>
-          <p>
-            Log each prompt, tool call and result. This kind of record is called a <strong>trace</strong>. When an
-            agent goes wrong on step seven of twelve, the trace is the only way to see why.
-          </p>
-        </div>
-      </div>
-
-      <h2>What should I build?</h2>
-      <p>
-        Don't treat these as buzzwords to memorise. Build one small agent and let it grow as you go, so each new
-        idea solves a problem you've already hit. Here's one example: an agent that writes and runs software tests.
-        Any project you care about works the same way.
-      </p>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>After</th>
-              <th>Your testing agent can…</th>
-              <th>And you can measure…</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>weeks 1–4</td>
-              <td>turn a written requirement into test cases, returned as JSON</td>
-              <td>how many of your 20 sample requirements get sensible cases</td>
-            </tr>
-            <tr>
-              <td>weeks 5–9</td>
-              <td>run the tests itself, read failures and try again, using your tools through MCP and your team's testing procedures as Skills</td>
-              <td>how often it finishes a task without help</td>
-            </tr>
-            <tr>
-              <td>weeks 10–12</td>
-              <td>find similar past test cases and reuse their patterns</td>
-              <td>whether retrieval raised the score from the step before</td>
-            </tr>
-            <tr>
-              <td>week 13</td>
-              <td>ask before anything destructive, with every run traced</td>
-              <td>where in a run each failure starts</td>
-            </tr>
-            <tr>
-              <td>week 14</td>
-              <td>be scored on a proper eval set after every change</td>
-              <td>pass rate, and whether each change moved it</td>
-            </tr>
-            <tr>
-              <td>week 15</td>
-              <td>run on a schedule for real users</td>
-              <td>cost per run and time to finish</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p>
-        The last column matters most. A sentence like "the pass rate went from 60% to 78% after I added
-        retrieval" means you understood what retrieval was for, which is worth more than having read about it.
-      </p>
-      <p>
-        You won't feel ready, and that's fine. Nobody does when the field changes this quickly. Open week 1 and write
-        your first five test cases.
-      </p>
-
-      <div class="cta">
-        <a class="primary" href="index.html#week-1">Start week 1 →</a>
-        <a href="index.html">Browse the library</a>
+      <div class="callout">
+        <p>
+          <strong>My recommendation:</strong> Don't treat these as isolated buzzwords to memorize. Build one small agent
+          and use it to understand how the concepts interact. For example, an AI testing agent could use Skills to load
+          testing procedures, MCP to access tools, RAG to retrieve previous test cases, orchestration to execute the
+          workflow, evals to measure quality, and observability to diagnose failures.
+        </p>
       </div>
     </main>
 
