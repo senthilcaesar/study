@@ -738,9 +738,9 @@
       }
 
       /* ---------- intro: where first-time visitors land ----------
-         One loud thing: a shelf of five book spines (library topics) that drop
-         in on load and lift on hover, set against a night sky with the Milky
-         Way drawn on a canvas. Reduced motion is handled by the global rule. */
+         One loud thing: five planets (library topics) that arrive on load and
+         grow on hover, set against a night sky with the Milky Way drawn on a
+         canvas. Reduced motion is handled by the global rule. */
       .intro {
         position: relative;
         isolation: isolate;
@@ -919,83 +919,129 @@
         color: #b8b4dc;
       }
 
-      /* the shelf of layer spines (not .shelf, which is a library topic section) */
-      .intro-shelf {
+      /* five planets, one per library topic, in that topic's colour: lit from
+         the upper left, glowing softly, each with its own surface. They arrive
+         one by one, then drift; the orb grows under the pointer. Arrival uses
+         opacity/scale on the link, drift uses translate and hover uses scale on
+         the orb, so the three motions never fight over one property. */
+      .planets {
+        --k: 1; /* size scale; smaller on phones */
         position: relative;
-        display: flex;
-        align-items: flex-end;
-        justify-content: center;
-        gap: 12px;
-        height: 420px;
-        padding: 0 28px;
+        height: 440px;
       }
-      .intro-shelf::after {
-        content: "";
+      .planet {
         position: absolute;
-        left: 0;
-        right: 0;
-        bottom: -14px;
-        height: 14px;
-        border: 2px solid var(--line);
-        background: var(--surface);
-        box-shadow: 4px 4px 0 var(--shadow);
-      }
-      .spine {
-        position: relative;
+        left: var(--x);
+        top: var(--y);
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        width: var(--w);
-        height: var(--h);
-        border: 2px solid var(--line);
-        background: var(--sw);
-        color: var(--chip-ink);
-        box-shadow: 4px 4px 0 var(--shadow);
+        gap: 12px;
         text-decoration: none;
-        transform-origin: bottom center;
-        transform: rotate(var(--r, 0deg));
-        transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
-        animation: land 0.75s cubic-bezier(0.25, 1.5, 0.45, 1) backwards;
-        animation-delay: calc(var(--i) * 110ms + 150ms);
+        color: #ecebff;
+        animation: arrive 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.25) backwards;
+        animation-delay: calc(var(--i) * 140ms + 250ms);
       }
-      /* the bands near the top and bottom of a book spine */
-      .spine::before,
-      .spine::after {
+      .planet:focus-visible {
+        outline: none;
+      }
+      .planet:focus-visible .orb {
+        outline: 3px solid #ecebff;
+        outline-offset: 6px;
+      }
+      .orb {
+        position: relative;
+        width: calc(var(--s) * var(--k));
+        height: calc(var(--s) * var(--k));
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.75) 0 3%, rgba(255, 255, 255, 0) 32%),
+          radial-gradient(circle at 36% 32%, var(--c) 0 42%, color-mix(in srgb, var(--c) 55%, #05060f) 72%, #05060f 100%);
+        box-shadow:
+          0 0 calc(34px * var(--k)) -6px var(--c),
+          inset calc(-10px * var(--k)) calc(-12px * var(--k)) calc(26px * var(--k)) rgba(0, 0, 0, 0.45);
+        animation: drift var(--f) ease-in-out var(--fd) infinite alternate;
+        transition: scale 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+      }
+      .orb::before,
+      .orb::after {
         content: "";
         position: absolute;
-        left: 0;
-        right: 0;
-        height: 7px;
-        border-block: 2px solid var(--line);
+        pointer-events: none;
       }
-      .spine::before { top: 18px; }
-      .spine::after { bottom: 18px; }
-      .spine span {
-        writing-mode: vertical-rl;
-        transform: rotate(180deg);
+      .planet:hover .orb,
+      .planet:focus-visible .orb {
+        scale: 1.1;
+      }
+      .pname {
         font-family: var(--display);
         font-weight: 750;
-        font-size: 1.15rem;
+        font-size: calc(1.05rem * (0.55 + 0.45 * var(--k)));
         letter-spacing: -0.01em;
-        white-space: nowrap;
+        text-shadow: 0 1px 10px rgba(5, 6, 15, 0.9);
       }
-      .spine:hover,
-      .spine:focus-visible {
-        transform: translateY(-22px) rotate(var(--r, 0deg));
+      .planet:hover .pname {
+        text-decoration: underline;
+        text-underline-offset: 4px;
       }
-      /* each spine's colour is its library topic's, set inline from SHELF */
-      .spine:nth-child(1) { --i: 0; --w: 64px; --h: 330px; }
-      .spine:nth-child(2) { --i: 1; --w: 72px; --h: 380px; }
-      .spine:nth-child(3) { --i: 2; --w: 58px; --h: 300px; }
-      .spine:nth-child(4) { --i: 3; --w: 68px; --h: 352px; }
-      .spine:nth-child(5) { --i: 4; --w: 62px; --h: 286px; --r: 9deg; transform-origin: bottom left; }
-      @keyframes land {
+      /* Agents: the big blue world, with a pale band of cloud */
+      .p-agents { --i: 0; --s: 150px; --x: 3%; --y: 24%; --f: 7s; --fd: -2s; }
+      .p-agents .orb::before {
+        inset: 0;
+        border-radius: 50%;
+        background:
+          radial-gradient(ellipse 60% 18% at 46% 58%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0)),
+          radial-gradient(ellipse 40% 12% at 58% 36%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+      }
+      /* Skills: a banded gas giant */
+      .p-skills { --i: 1; --s: 118px; --x: 44%; --y: 0%; --f: 9s; --fd: -5s; }
+      .p-skills .orb::before {
+        inset: 0;
+        border-radius: 50%;
+        background: repeating-linear-gradient(-16deg, rgba(255, 255, 255, 0) 0 9%, rgba(255, 255, 255, 0.14) 9% 15%, rgba(5, 6, 15, 0.12) 15% 21%);
+      }
+      /* Evals: a small pink world with its own moon */
+      .p-evals { --i: 2; --s: 66px; --x: 82%; --y: 12%; --f: 6s; --fd: -1s; }
+      .p-evals .orb::after {
+        width: 30%;
+        height: 30%;
+        top: -14%;
+        right: -34%;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #f4f2ff, #8b88a8 75%);
+      }
+      /* Harness: ringed, the ring tilted across the planet */
+      .p-harness { --i: 3; --s: 104px; --x: 40%; --y: 56%; --f: 8s; --fd: -3s; }
+      .p-harness .orb::after {
+        left: -38%;
+        right: -38%;
+        top: 41%;
+        height: 18%;
+        border: calc(3px * var(--k) + 1px) solid color-mix(in srgb, var(--c) 70%, #fff);
+        border-radius: 50%;
+        rotate: -16deg;
+        opacity: 0.85;
+      }
+      /* MCP: a small cratered world */
+      .p-mcp { --i: 4; --s: 84px; --x: 76%; --y: 54%; --f: 10s; --fd: -6s; }
+      .p-mcp .orb::before {
+        inset: 0;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 62% 40%, rgba(5, 6, 15, 0.22) 0 8%, rgba(5, 6, 15, 0) 9%),
+          radial-gradient(circle at 40% 68%, rgba(5, 6, 15, 0.18) 0 6%, rgba(5, 6, 15, 0) 7%),
+          radial-gradient(circle at 70% 70%, rgba(5, 6, 15, 0.16) 0 5%, rgba(5, 6, 15, 0) 6%),
+          radial-gradient(circle at 30% 45%, rgba(5, 6, 15, 0.14) 0 4%, rgba(5, 6, 15, 0) 5%);
+      }
+      @keyframes arrive {
         from {
           opacity: 0;
-          transform: translateY(-460px) rotate(-6deg);
+          scale: 0.3;
         }
-        60% {
-          opacity: 1;
+      }
+      @keyframes drift {
+        to {
+          translate: 0 -10px;
         }
       }
       .shelf-caption {
@@ -1023,22 +1069,12 @@
         .intro-art {
           order: -1;
         }
-        .intro-shelf {
-          height: 200px;
-          gap: 8px;
-          max-width: 400px;
+        .planets {
+          --k: 0.6;
+          height: 270px;
+          max-width: 420px;
           margin: 0 auto;
-          padding: 0 8px;
         }
-        .spine {
-          width: calc(var(--w) * 0.7);
-          height: calc(var(--h) * 0.5);
-        }
-        .spine span {
-          font-size: 0.82rem;
-        }
-        .spine::before { top: 10px; }
-        .spine::after { bottom: 10px; }
         .shelf-caption {
           margin-top: 26px;
           font-size: 0.8rem;
@@ -2938,8 +2974,8 @@
         road: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="6" r="2.2"/><path d="M7 18h6a3 3 0 0 0 0-6h-2a3 3 0 0 1 0-6h6"/></svg>',
         library: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg>',
       };
-      // the shelf's spines: five library topics, each opening that topic
-      const SHELF = [
+      // the planets: five library topics, each opening that topic
+      const PLANETS = [
         { id: "agents", name: "Agents" },
         { id: "skills", name: "Skills" },
         { id: "mcp", name: "MCP" },
@@ -2988,10 +3024,10 @@
               <p class="intro-note">Your progress is saved in this browser only.</p>
             </div>
             <div class="intro-art">
-              <div class="intro-shelf">
-                ${SHELF.map((t) => `<a class="spine" href="#${t.id}" style="--sw:var(--c-${t.id})" aria-label="${t.name}: open this topic in the library"><span>${t.name}</span></a>`).join("")}
+              <div class="planets">
+                ${PLANETS.map((t) => `<a class="planet p-${t.id}" href="#${t.id}" style="--c:var(--c-${t.id})" aria-label="${t.name}: open this topic in the library"><span class="orb" aria-hidden="true"></span><span class="pname">${t.name}</span></a>`).join("")}
               </div>
-              <p class="shelf-caption">Five topics to start with. Pick one to open it in the library.</p>
+              <p class="shelf-caption">Five topics to start with. Pick a planet to open it in the library.</p>
             </div>
           </div>`;
         typeHeadline();
