@@ -948,6 +948,27 @@
         -webkit-mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
         mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
       }
+      /* the 3D planets' canvas sits over the rings and under the names and links;
+         once it's drawing, the CSS planets underneath turn into plain hit areas */
+      .planets3d {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+      .solar .planet {
+        z-index: 2;
+      }
+      .solar.gl .orb {
+        background: none;
+        box-shadow: none;
+      }
+      .solar.gl .orb::before,
+      .solar.gl .orb::after {
+        display: none;
+      }
       .orbit {
         position: absolute;
         border: 1px solid rgba(200, 205, 255, 0.14);
@@ -3144,6 +3165,7 @@
         typeHeadline();
         drawGalaxy();
         layoutSolar();
+        startPlanets3D();
       }
 
       // place the Sun, its orbit rings and the planets to fit the band: the Sun
@@ -3186,6 +3208,211 @@
           Object.assign(ring.style, { left: cx - radius + "px", top: cy - radius + "px", width: radius * 2 + "px", height: radius * 2 + "px" });
           rings.append(ring);
         });
+        syncPlanets3D();
+      }
+
+      // 3D planets. Once the intro shows, three.js (loaded only then, from a CDN)
+      // draws each planet as a textured sphere spinning on its tilted axis and lit
+      // by the Sun, in one transparent canvas over the band. The CSS planets stay
+      // as the fallback if WebGL or the library can't load, and the links, names,
+      // hover and keyboard focus are still the HTML ones on top. Maps: Solar System
+      // Scope, CC BY 4.0 (see textures/CREDITS.md); Pluto is drawn here.
+      const THREE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+      // axial tilt in degrees (past 90, the planet spins backwards) and spin in turns a minute, for show
+      const BODY3D = {
+        mercury: { tilt: 0, spin: 1.5 },
+        venus: { tilt: 177, spin: 1 },
+        earth: { tilt: 23, spin: 6 },
+        mars: { tilt: 25, spin: 5.8 },
+        jupiter: { tilt: 3, spin: 10 },
+        saturn: { tilt: 27, spin: 9 },
+        uranus: { tilt: 98, spin: 7 },
+        neptune: { tilt: 28, spin: 6.5 },
+        pluto: { tilt: 120, spin: 1 },
+      };
+      let space3d; // undefined until tried, false if unavailable, then the running scene
+      async function startPlanets3D() {
+        if (space3d === false) return;
+        if (!space3d) {
+          if (startPlanets3D.loading) return;
+          startPlanets3D.loading = true;
+          try {
+            const THREE = await import(THREE_URL);
+            space3d = buildSpace3D(THREE, new THREE.WebGLRenderer({ antialias: true, alpha: true }));
+          } catch (e) {
+            space3d = false; // no WebGL or no network: keep the CSS planets
+            return;
+          }
+        }
+        attachPlanets3D();
+      }
+
+      function buildSpace3D(THREE, renderer) {
+        renderer.setClearColor(0x000000, 0);
+        const scene = new THREE.Scene();
+        // pixel units with y downwards turned upwards: a planet at (px, py) sits at (px, -py)
+        const camera = new THREE.OrthographicCamera(0, 1, 0, -1, -2000, 2000);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+        const sunLight = new THREE.PointLight(0xfff1dc, 3.4, 0, 0);
+        scene.add(sunLight);
+        const manager = new THREE.LoadingManager(() => kick3D()); // redraw once the maps arrive
+        const loader = new THREE.TextureLoader(manager);
+        const texture = (file) => {
+          const t = loader.load("textures/" + file);
+          t.colorSpace = THREE.SRGBColorSpace;
+          t.anisotropy = 4;
+          return t;
+        };
+        const ball = new THREE.SphereGeometry(1, 48, 32);
+        const bodies = {};
+        for (const p of PLANETS) {
+          const holder = new THREE.Group(); // position and size
+          const axis = new THREE.Group(); // the tilted axis, seen a little from above
+          axis.rotation.z = THREE.MathUtils.degToRad(-BODY3D[p.body].tilt);
+          axis.rotation.x = 0.35;
+          const map = p.body === "pluto" ? plutoTexture(THREE) : texture(p.body + ".jpg");
+          const globe = new THREE.Mesh(ball, new THREE.MeshStandardMaterial({ map, roughness: 1, metalness: 0 }));
+          axis.add(globe);
+          holder.add(axis);
+          scene.add(holder);
+          bodies[p.body] = { holder, axis, globe, h: 0, hover: false };
+        }
+        // Saturn's ring: the ring map runs from the inner edge to the outer one
+        const ringGeo = new THREE.RingGeometry(1.25, 2.3, 96, 1);
+        const pos = ringGeo.attributes.position, uv = ringGeo.attributes.uv;
+        for (let i = 0; i < pos.count; i++) {
+          const d = Math.hypot(pos.getX(i), pos.getY(i));
+          uv.setXY(i, (d - 1.25) / (2.3 - 1.25), 0.5);
+        }
+        const ring = new THREE.Mesh(
+          ringGeo,
+          // unlit, since the Sun meets it almost edge on and would leave it dark
+          new THREE.MeshBasicMaterial({ map: texture("saturn-ring.png"), color: 0xe6dcc8, transparent: true, side: THREE.DoubleSide })
+        );
+        ring.rotation.x = -Math.PI / 2; // into the equator's plane
+        bodies.saturn.axis.add(ring);
+        // Uranus's faint ring, upright because the planet lies on its side
+        const uRing = new THREE.Mesh(
+          new THREE.RingGeometry(1.55, 1.62, 96, 1),
+          new THREE.MeshBasicMaterial({ color: 0xcfeff3, transparent: true, opacity: 0.35, side: THREE.DoubleSide })
+        );
+        uRing.rotation.x = -Math.PI / 2;
+        bodies.uranus.axis.add(uRing);
+        // Triton, circling Neptune
+        const pivot = new THREE.Group();
+        const triton = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 16), new THREE.MeshStandardMaterial({ map: texture("triton.jpg"), roughness: 1 }));
+        triton.position.set(1.9, 0.25, 0);
+        pivot.rotation.x = 0.35;
+        pivot.add(triton);
+        bodies.neptune.holder.add(pivot);
+        bodies.neptune.moon = pivot;
+        return { renderer, scene, camera, sunLight, bodies, links: {}, running: false, born: 0 };
+      }
+
+      // Pluto has no map in the set, so paint one: tan ground, darker patches and its pale heart
+      function plutoTexture(THREE) {
+        const c = document.createElement("canvas");
+        c.width = 256;
+        c.height = 128;
+        const x = c.getContext("2d");
+        const r = seeded(5);
+        x.fillStyle = "#b99a7a";
+        x.fillRect(0, 0, 256, 128);
+        for (let i = 0; i < 60; i++) {
+          x.fillStyle = `rgba(${(90 + r() * 40) | 0},${(60 + r() * 30) | 0},${(40 + r() * 20) | 0},${(0.15 + r() * 0.25).toFixed(2)})`;
+          x.beginPath();
+          x.ellipse(r() * 256, 20 + r() * 88, 6 + r() * 22, 4 + r() * 12, 0, 0, 7);
+          x.fill();
+        }
+        x.fillStyle = "rgba(245, 236, 222, 0.92)";
+        x.beginPath();
+        x.arc(140, 62, 14, 0, 7);
+        x.arc(164, 62, 14, 0, 7);
+        x.fill();
+        x.beginPath();
+        x.moveTo(127, 68);
+        x.lineTo(177, 68);
+        x.lineTo(152, 94);
+        x.fill();
+        const t = new THREE.CanvasTexture(c);
+        t.colorSpace = THREE.SRGBColorSpace;
+        return t;
+      }
+
+      // put the canvas into the (freshly rendered) band and wire hover and focus to the 3D planets
+      function attachPlanets3D() {
+        const box = $("#intro .solar");
+        if (!box || !space3d) return;
+        const cv = space3d.renderer.domElement;
+        cv.className = "planets3d";
+        cv.setAttribute("aria-hidden", "true");
+        box.querySelector(".orbits").after(cv);
+        box.classList.add("gl");
+        space3d.links = {};
+        box.querySelectorAll(".planet").forEach((a) => {
+          const body = /pl-(\w+)/.exec(a.className)[1];
+          const b = space3d.bodies[body];
+          space3d.links[body] = a;
+          const on = () => (b.hover = true), off = () => (b.hover = false);
+          a.addEventListener("pointerenter", on);
+          a.addEventListener("pointerleave", off);
+          a.addEventListener("focus", on);
+          a.addEventListener("blur", off);
+        });
+        space3d.born = performance.now();
+        syncPlanets3D();
+      }
+
+      // match the 3D scene to the band: its size, each planet's place and size, the Sun's light
+      function syncPlanets3D() {
+        const box = $("#intro .solar");
+        if (!space3d || !box || !box.contains(space3d.renderer.domElement)) return;
+        const W = box.clientWidth, H = box.clientHeight;
+        const k = parseFloat(box.style.getPropertyValue("--k")) || 1;
+        space3d.renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
+        space3d.renderer.setSize(W, H, false);
+        Object.assign(space3d.camera, { left: 0, right: W, top: 0, bottom: -H });
+        space3d.camera.updateProjectionMatrix();
+        for (const [body, a] of Object.entries(space3d.links)) {
+          const b = space3d.bodies[body];
+          b.x = parseFloat(a.style.getPropertyValue("--px"));
+          b.y = parseFloat(a.style.getPropertyValue("--py"));
+          b.r = (parseFloat(a.style.getPropertyValue("--s")) * k) / 2;
+        }
+        const sun = box.querySelector(".sun");
+        const R = parseFloat(sun.style.width) / 2;
+        space3d.sunLight.position.set(parseFloat(sun.style.left) + R, -(parseFloat(sun.style.top) + R), 320);
+        kick3D();
+      }
+      function kick3D() {
+        if (!space3d || space3d.running) return;
+        space3d.running = true;
+        requestAnimationFrame(spinFrame);
+      }
+      function spinFrame(now) {
+        const s3 = space3d;
+        const box = $("#intro .solar");
+        if (!box || $("#intro").hidden || !box.contains(s3.renderer.domElement)) return (s3.running = false);
+        const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const dt = Math.min(0.05, (now - (s3.last || now)) / 1000);
+        s3.last = now;
+        const age = now - s3.born;
+        PLANETS.forEach((p, i) => {
+          const b = s3.bodies[p.body];
+          if (b.x === undefined) return;
+          // grow in one after another with a little overshoot, then bob; a bit bigger under the pointer
+          const t = still ? 1 : Math.min(1, Math.max(0, (age - (i * 110 + 350)) / 900));
+          const arrive = t === 0 ? 0 : 1 + 2.70158 * Math.pow(t - 1, 3) + 1.70158 * Math.pow(t - 1, 2);
+          b.h += ((b.hover ? 1 : 0) - b.h) * Math.min(1, dt * 10);
+          const bob = still ? 0 : 5 * Math.cos(((now / 1000) * Math.PI * 2) / (16 + i)) - 5;
+          b.holder.position.set(b.x, -(b.y + bob), 0);
+          b.holder.scale.setScalar(Math.max(0.0001, b.r * arrive * (1 + 0.2 * b.h)));
+          if (!still) b.globe.rotation.y += dt * (BODY3D[p.body].spin / 60) * Math.PI * 2;
+          if (b.moon && !still) b.moon.rotation.y += dt * 0.5;
+        });
+        s3.renderer.render(s3.scene, s3.camera);
+        if (still) return (s3.running = false); // one still frame, redrawn when maps load or the band resizes
+        requestAnimationFrame(spinFrame);
       }
 
       // the intro's night sky. A seeded random keeps it the same on every visit:
