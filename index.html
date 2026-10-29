@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kode+Mono:wght@700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Special+Elite&display=swap"
       rel="stylesheet"
     />
 
@@ -774,44 +774,56 @@
         grid-column: 1 / -1;
         margin: 0;
         white-space: nowrap;
-        font-family: "Kode Mono", var(--mono);
-        font-weight: 700;
-        /* Kode Mono is monospaced: the line is about 16.2em wide, so divide the room by 17 */
-        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 17));
-        line-height: 1.05;
-        letter-spacing: -0.02em;
+        /* the typewriter style from senthilcaesar.github.io's greeting */
+        font-family: "Special Elite", "Courier New", monospace;
+        font-weight: 400;
+        word-spacing: 0.2em; /* Special Elite has a narrow space */
+        /* the line is about 15.1em wide, so divide the room by 16 */
+        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 16));
+        line-height: 1.15;
       }
 
-      /* typewriter: each struck key lands with a small jolt, a little off the
-         line and with uneven ink; a cursor runs ahead and fades once the line is done */
-      .intro h1 .key {
+      /* Typewriter (as on senthilcaesar.github.io): characters keep their space
+         while hidden, so nothing shifts. Each key strike lands with its own slight
+         tilt, offset and ink density, set per character from JS, like type from a
+         worn ribbon. */
+      .tw-char {
         display: inline-block;
-        opacity: var(--ink);
-        transform: translateY(var(--y)) rotate(var(--r));
-        animation: strike 0.13s ease-out;
+        white-space: pre;
       }
-      @keyframes strike {
-        from {
-          opacity: 0;
-          transform: translateY(calc(var(--y) - 0.12em)) scale(1.12) rotate(var(--r));
+      .tw-char.tw-hidden {
+        visibility: hidden;
+      }
+      .tw-char.tw-struck {
+        transform: translateY(var(--tw-y, 0)) rotate(var(--tw-r, 0deg));
+        opacity: var(--tw-ink, 1);
+        animation: tw-strike 0.16s cubic-bezier(0.2, 0.9, 0.3, 1);
+      }
+      @keyframes tw-strike {
+        0% {
+          transform: translateY(-0.18em) scale(1.12);
+          opacity: 0.2;
+          text-shadow: 0 0 0.04em currentColor;
+        }
+        60% {
+          transform: translateY(0.03em) scale(0.97);
+          opacity: 1;
+          text-shadow: 0 0 0.06em currentColor;
         }
       }
-      .intro h1 .caret {
+      /* the type guide: an underline that sits where the next letter will land */
+      .tw-caret {
         display: inline-block;
-        width: 0.09em;
-        height: 0.85em;
-        margin-left: 0.05em;
-        vertical-align: -0.06em;
-        background: var(--accent);
-        animation: blink 0.9s steps(1) infinite;
-        transition: opacity 0.5s;
+        width: 0.6em;
+        height: 1em;
+        margin-right: -0.6em;
+        border-bottom: 2px solid var(--ink);
+        vertical-align: text-bottom;
+        animation: tw-blink 0.9s step-end infinite;
       }
-      .intro h1 .caret.gone {
-        opacity: 0;
-      }
-      @keyframes blink {
+      @keyframes tw-blink {
         50% {
-          background: transparent;
+          border-color: transparent;
         }
       }
 
@@ -971,7 +983,7 @@
       }
       @media (max-width: 960px) {
         .intro h1 {
-          font-size: calc((100vw - 32px) / 17.6);
+          font-size: calc((100vw - 32px) / 16.6);
         }
         .intro-inner {
           grid-template-columns: minmax(0, 1fr);
@@ -2947,39 +2959,54 @@
         typeHeadline();
       }
 
-      // the headline types itself out once per visit, like a 1950s typewriter:
-      // an uneven key rhythm, longer pauses at spaces and the comma, and each
-      // letter struck a little off the line with a little more or less ink
+      // Types the headline one key strike at a time, like an old manual typewriter
+      // (the same as senthilcaesar.github.io's greeting): uneven rhythm, a pause
+      // after words, and slightly misaligned letters. Once per visit.
       let headlineTyped = false;
       function typeHeadline() {
         const h = $("#intro h1");
         if (headlineTyped || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         headlineTyped = true;
-        const chars = [...h.textContent];
+
+        // wrap every character in a hidden span, so the line is laid out in full from the start
+        const chars = [...h.textContent].map((ch) => {
+          const span = document.createElement("span");
+          span.className = "tw-char tw-hidden";
+          span.setAttribute("aria-hidden", "true");
+          span.textContent = ch;
+          span.style.setProperty("--tw-r", `${(Math.random() - 0.5) * 3}deg`);
+          span.style.setProperty("--tw-y", `${(Math.random() - 0.5) * 0.06}em`);
+          span.style.setProperty("--tw-ink", (0.82 + Math.random() * 0.18).toFixed(2));
+          return span;
+        });
         h.setAttribute("aria-label", h.textContent);
-        h.textContent = "";
+        h.replaceChildren(...chars);
+
         const caret = document.createElement("span");
-        caret.className = "caret";
+        caret.className = "tw-caret";
         caret.setAttribute("aria-hidden", "true");
-        h.append(caret);
-        const jitter = (n) => (Math.random() * 2 - 1) * n;
+
         let i = 0;
-        const strike = () => {
+        function typeNext() {
           if (!h.isConnected) return; // left the intro mid-line; it comes back fully typed
-          const c = chars[i++];
-          if (c === " ") caret.before(" ");
-          else {
-            const k = document.createElement("span");
-            k.className = "key";
-            k.setAttribute("aria-hidden", "true");
-            k.textContent = c;
-            k.style.cssText = `--y:${jitter(0.025).toFixed(3)}em;--r:${jitter(1.4).toFixed(2)}deg;--ink:${(0.82 + Math.random() * 0.18).toFixed(2)}`;
-            caret.before(k);
+          if (i >= chars.length) {
+            setTimeout(() => caret.remove(), 1200);
+            return;
           }
-          if (i < chars.length) return setTimeout(strike, 70 + Math.random() * 60 + (c === " " ? 110 : 0) + (c === "," ? 280 : 0));
-          setTimeout(() => caret.classList.add("gone"), 2200);
-        };
-        setTimeout(strike, 450);
+          const span = chars[i++];
+          span.classList.remove("tw-hidden");
+          span.classList.add("tw-struck");
+          span.after(caret);
+
+          // a typist's rhythm: quick strikes, a beat after each word, the odd hesitation
+          let delay = 110 + Math.random() * 110;
+          if (span.textContent === " ") delay = 260 + Math.random() * 160;
+          else if (Math.random() < 0.08) delay += 250;
+          setTimeout(typeNext, delay);
+        }
+
+        chars[0].before(caret);
+        setTimeout(typeNext, 600);
       }
 
       function render() {
