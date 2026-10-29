@@ -1414,6 +1414,34 @@
       .csv-btn {
         border-bottom: 1px solid var(--hair);
       }
+      /* the way back in: always points at the first unfinished week */
+      .resume-btn {
+        display: grid;
+        gap: 2px;
+        width: 100%;
+        padding: 11px 12px;
+        border: 0;
+        border-bottom: 1px solid var(--hair);
+        background: var(--accent);
+        color: var(--on-accent);
+        font-family: var(--body);
+        text-align: left;
+      }
+      .resume-btn span {
+        font-size: 0.74rem;
+        opacity: 0.85;
+      }
+      .resume-btn b {
+        font-family: var(--display);
+        font-size: 0.92rem;
+        line-height: 1.25;
+      }
+      .resume-btn:hover {
+        filter: brightness(1.08);
+      }
+      .resume-btn:active {
+        transform: translateY(1px);
+      }
       .csv-btn svg,
       .reset-btn svg {
         width: 13px;
@@ -1589,6 +1617,14 @@
         border-radius: 50%;
         animation: pulse 1.8s ease-out infinite;
         pointer-events: none;
+      }
+      .stop.lit .node {
+        animation: flare 1.6s ease-out;
+      }
+      @keyframes flare {
+        0% { box-shadow: 0 0 0 0 var(--sw); transform: scale(1); }
+        25% { box-shadow: 0 0 26px 10px var(--sw); transform: scale(1.18); }
+        100% { box-shadow: 0 0 0 0 transparent; transform: scale(1); }
       }
       @keyframes pulse {
         from { transform: scale(0.9); opacity: 1; }
@@ -3233,9 +3269,18 @@
         const weeks = ROADMAP.filter(weekComplete).length;
         const cur = currentWeek();
         const stage = STAGES.find((s) => s.id === (cur || ROADMAP[ROADMAP.length - 1]).stage);
+        const started = ROADMAP.some((w) => weekComplete(w) || weekDone(w) > 0);
 
         return `<div class="rm-hero">
           <div class="stats">
+            ${
+              cur
+                ? `<button class="resume-btn" type="button" data-resume="${cur.n}">
+                    <span>${started ? "Continue where you left off" : "Start the roadmap"}</span>
+                    <b>Week ${cur.n}: ${esc(cur.title)}</b>
+                  </button>`
+                : ""
+            }
             <div class="stat"><span>Weeks complete</span><b>${weeks}/${ROADMAP.length}</b></div>
             <div class="stat"><span title="Core courses and articles ticked off; optional ones don't count">Items done</span><b>${got}/${total}</b></div>
             <div class="stat"><span>Current stage</span><b>${esc(stage.name)}</b></div>
@@ -4135,6 +4180,14 @@
 
       // confetti and balloons from the tick; a bigger burst with champagne when a topic or week is finished
       const FX_COLORS = [...TOPICS.map((t) => `var(--c-${t.id})`), "var(--accent)"];
+      // the week you just finished flares like a small star, then settles as done
+      function lightUp(n) {
+        const stop = document.querySelector(`.stop[data-week="${n}"]`);
+        if (!stop) return;
+        stop.classList.add("lit");
+        setTimeout(() => stop.classList.remove("lit"), 1700);
+      }
+
       function celebrate(rect, big) {
         if (!rect || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         const x = rect.left + rect.width / 2;
@@ -4198,7 +4251,11 @@
         else history.pushState(null, "", url);
       }
       function applyRoute(instant) {
-        const hash = location.hash.slice(1);
+        let hash = location.hash.slice(1);
+        if (hash === "continue") {
+          hash = "week-" + (currentWeek() || ROADMAP[0]).n;
+          history.replaceState(null, "", "#" + hash);
+        }
         const wk = /^week-(\d+)$/.exec(hash);
         if (wk && weekByN(+wk[1])) {
           state.mode = "roadmap";
@@ -4338,6 +4395,8 @@
         if (wk) return selectWeek(+wk.dataset.week, { open: true, focus: wk.dataset.focus });
         const go = e.target.closest("[data-go]");
         if (go) return selectWeek(+go.dataset.go, { open: true });
+        const resume = e.target.closest("[data-resume]");
+        if (resume) return selectWeek(+resume.dataset.resume, { open: true, scroll: true });
         if (e.target.closest("[data-close]")) return dismissSheet();
         const fin = e.target.closest("[data-complete]");
         if (fin) {
@@ -4347,8 +4406,15 @@
           required(w).forEach((k) => done.add(k));
           saveProgress();
           renderRoadmap();
+          lightUp(w.n);
           const nxt = weekByN(w.n + 1);
-          toast(nxt ? `Week ${w.n} complete! Next up: ${nxt.title}` : "Roadmap complete! Time to teach it.", w.t);
+          const left = ROADMAP.filter((x) => !weekComplete(x)).length;
+          toast(
+            left
+              ? `Week ${w.n} done, ${left} to go. Next up: ${nxt ? nxt.title : currentWeek().title}`
+              : "Roadmap complete! Time to teach it.",
+            w.t
+          );
           const go = $("#panel [data-go='" + (w.n + 1) + "'].next-btn");
           if (go) go.focus({ preventScroll: true });
           return;

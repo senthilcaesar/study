@@ -751,6 +751,43 @@
         box-shadow: var(--lift);
       }
 
+      /* the guide ends on a way forward, not a dead end */
+      .next-step {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px 24px;
+        margin-top: 40px;
+        padding: 22px 24px;
+        border: 1px solid var(--edge);
+        border-radius: var(--r-card);
+        background: var(--surface);
+        box-shadow: var(--lift);
+      }
+      .next-step p {
+        flex: 1 1 280px;
+        margin: 0;
+      }
+      .next-step .go {
+        padding: 12px 22px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: var(--on-accent);
+        font-weight: 700;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: transform 0.15s ease, filter 0.15s ease;
+      }
+      .next-step .go:hover {
+        filter: brightness(1.08);
+        transform: translateY(-1px);
+      }
+      .next-step .go:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 3px;
+      }
+
       @media (prefers-reduced-motion: reduce) {
         * {
           transition: none !important;
@@ -886,9 +923,22 @@
           workflow, evals to measure quality, and observability to diagnose failures.
         </p>
       </div>
+
+      <div class="next-step">
+        <p id="next-copy">You have the map. Now take the first step: week 1 is short and needs no code.</p>
+        <a class="go" id="next-go" href="index.html#continue">Start week 1</a>
+      </div>
     </main>
 
     <script>
+      // someone who has already ticked things off is sent back to where they stopped
+      try {
+        if (JSON.parse(localStorage.getItem("shelf-progress") || "[]").length) {
+          document.getElementById("next-copy").textContent = "Welcome back. Pick up the roadmap at your next unfinished week.";
+          document.getElementById("next-go").textContent = "Continue the roadmap";
+        }
+      } catch (e) {}
+
       // turn each layer's "a · b · c" terms line into the hover list
       document.querySelectorAll(".layers > li").forEach((li) => {
         const terms = li.querySelector(".terms").textContent.split("·").map((t) => t.trim());
