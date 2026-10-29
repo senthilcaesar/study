@@ -141,36 +141,172 @@
         letter-spacing: -0.02em;
         text-decoration: none;
       }
-      .brand-mark {
-        display: flex;
-        align-items: flex-end;
-        gap: 2px;
-        height: 22px;
+      /* the logo: a small Sun with one planet circling it */
+      .brand-sun {
+        position: relative;
+        flex: none;
+        width: 26px;
+        height: 26px;
       }
-      .brand-mark i {
-        display: block;
+      .brand-sun::before {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 38%, #fff6cf, #ffc94a 55%, #f08a24);
+        box-shadow: 0 0 8px 1px rgba(255, 180, 60, 0.55);
+      }
+      .brand-sun i {
+        position: absolute;
+        inset: 0;
+        border: 1px solid color-mix(in srgb, var(--ink) 25%, transparent);
+        border-radius: 50%;
+        animation: brand-orbit 9s linear infinite;
+      }
+      .brand-sun i::after {
+        content: "";
+        position: absolute;
+        top: -3px;
+        left: calc(50% - 3px);
         width: 6px;
-        border: 1.5px solid var(--line);
+        height: 6px;
+        border-radius: 50%;
+        background: var(--orbit-dot);
+        box-shadow: 0 0 6px var(--orbit-dot);
       }
-      .brand-mark i:nth-child(1) { height: 20px; background: var(--c-skills); }
-      .brand-mark i:nth-child(2) { height: 15px; background: var(--c-mcp); }
-      .brand-mark i:nth-child(3) { height: 22px; background: var(--c-agents); transform: rotate(9deg); transform-origin: bottom left; }
+      @keyframes brand-orbit {
+        to {
+          rotate: 360deg;
+        }
+      }
+
+      /* the views: plain names over a thin orbit line, with a small planet on the
+         line under the current view that glides to the one you pick next
+         (placeOrbit), and a faint ring where it would land under the pointer.
+         Every name keeps the same weight, so switching never shifts the row. */
+      .bar {
+        --orbit-dot: var(--accent);
+      }
+      .orbit-nav {
+        --orbit-x: -40px;
+        position: relative;
+        display: flex;
+        gap: 4px;
+        padding-bottom: 12px;
+      }
+      .orbit-nav::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        right: 4px;
+        bottom: 5px;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          color-mix(in srgb, var(--ink) 32%, transparent) 12%,
+          color-mix(in srgb, var(--ink) 32%, transparent) 88%,
+          transparent
+        );
+      }
+      .orbit-nav::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: calc(var(--orbit-x) - 5px);
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 35%, #fff, var(--orbit-dot) 60%);
+        box-shadow: 0 0 10px 2px color-mix(in srgb, var(--orbit-dot) 55%, transparent);
+      }
+      .orbit-nav.glide::after {
+        transition: left 0.65s cubic-bezier(0.65, 0, 0.35, 1);
+      }
+      .orbit-nav > :is(button, a) {
+        position: relative;
+        border: 0;
+        background: none;
+        padding: 6px 12px;
+        font-family: var(--display);
+        font-size: 0.98rem;
+        font-weight: 650;
+        line-height: normal;
+        letter-spacing: -0.005em;
+        color: var(--dim);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .orbit-nav > :is([aria-pressed="true"], [aria-current="page"]) {
+        color: var(--ink);
+      }
+      .orbit-nav > :is(button, a)::after {
+        content: "";
+        position: absolute;
+        left: calc(50% - 5px);
+        bottom: -12px;
+        width: 10px;
+        height: 10px;
+        box-sizing: border-box;
+        border: 1.5px solid var(--orbit-dot);
+        border-radius: 50%;
+        opacity: 0;
+        scale: 0.4;
+        transition: opacity 0.2s, scale 0.2s;
+      }
+      @media (hover: hover) {
+        .orbit-nav > :is(button, a):hover {
+          color: var(--ink);
+        }
+        .orbit-nav > :not([aria-pressed="true"], [aria-current="page"]):hover::after {
+          opacity: 0.8;
+          scale: 1;
+        }
+      }
+
+      /* the theme button lifts off the bar on hover, its hard shadow growing (mouse only) */
+      .theme-btn {
+        transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+      }
+      @media (hover: hover) {
+        .theme-btn:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 4px 4px 0 var(--shadow);
+        }
+      }
+      .theme-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
       .search {
         display: flex;
         align-items: center;
         gap: 10px;
         padding: 0 12px;
         height: 42px;
-        border: 2px solid var(--line);
-        background: var(--surface);
-        box-shadow: 3px 3px 0 var(--shadow);
+        /* a soft orbit-style field: a thin outline that lights up in the
+           planet's colour when you type, instead of the hard box and shadow */
+        border: 1px solid color-mix(in srgb, var(--ink) 24%, transparent);
+        border-radius: 999px;
+        background: color-mix(in srgb, var(--surface) 60%, transparent);
+        transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
         min-width: 0;
         /* small so the view buttons lead; centred between the logo and the buttons */
         justify-self: center;
         width: min(420px, calc(100% - 40px));
       }
+      .search:hover {
+        border-color: color-mix(in srgb, var(--ink) 40%, transparent);
+      }
       .search:focus-within {
-        box-shadow: 5px 5px 0 var(--hair);
+        border-color: var(--orbit-dot);
+        background: var(--surface);
+        box-shadow:
+          0 0 0 3px color-mix(in srgb, var(--orbit-dot) 22%, transparent),
+          0 0 18px color-mix(in srgb, var(--orbit-dot) 22%, transparent);
+      }
+      .search kbd {
+        border-radius: 6px;
       }
       .search svg {
         flex: none;
@@ -211,28 +347,6 @@
         padding-inline: 0 20px;
         white-space: nowrap;
       }
-      .view-toggle {
-        display: flex;
-        border: 2px solid var(--line);
-        box-shadow: 2px 2px 0 var(--shadow);
-      }
-      .view-toggle > a {
-        border: 0;
-        background: var(--surface);
-        padding: 9px 16px;
-        font-family: var(--mono);
-        font-size: 0.85rem;
-        font-weight: 600;
-        line-height: normal;
-        text-decoration: none;
-      }
-      .view-toggle > a + a {
-        border-left: 2px solid var(--line);
-      }
-      .view-toggle a[aria-current="page"] {
-        background: var(--ink);
-        color: var(--bg);
-      }
       .theme-btn {
         border: 2px solid var(--line);
         background: var(--surface);
@@ -241,29 +355,6 @@
         font-size: 0.75rem;
         line-height: 1.55; /* the shelf's body line height, which its buttons inherit */
         box-shadow: 2px 2px 0 var(--shadow);
-      }
-      /* same hover as the shelf: lift, and colour the option under the pointer */
-      .theme-btn,
-      .view-toggle {
-        transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
-      }
-      .view-toggle > a {
-        transition: background-color 0.15s, color 0.15s;
-      }
-      @media (hover: hover) {
-        .theme-btn:hover,
-        .view-toggle:hover {
-          transform: translate(-2px, -2px);
-          box-shadow: 4px 4px 0 var(--shadow);
-        }
-        .view-toggle > a:not([aria-current="page"]):hover {
-          background: var(--c-skills);
-          color: var(--chip-ink);
-        }
-      }
-      .theme-btn:active {
-        transform: translate(2px, 2px);
-        box-shadow: none;
       }
       /* once there's room, sit on the header's midline rather than the middle of its column */
       @media (min-width: 1440px) {
@@ -536,7 +627,7 @@
   <body>
     <header class="bar">
       <a class="brand" href="index.html" aria-label="AI Learning Shelf, back to the intro">
-        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-sun" aria-hidden="true"><i></i></span>
         <span class="brand-text">AI Learning Shelf</span>
       </a>
       <!-- searching from here opens the library with the results -->
@@ -549,7 +640,7 @@
         <kbd>/</kbd>
       </form>
       <div class="bar-meta">
-        <nav class="view-toggle" aria-label="Go to">
+        <nav class="orbit-nav" aria-label="Go to">
           <a href="index.html">home</a>
           <a href="start.html" aria-current="page">guide</a>
           <a href="index.html#roadmap">roadmap</a>
@@ -678,6 +769,32 @@
         li.tabIndex = 0;
         li.appendChild(pop);
       });
+
+      // the nav's planet sits under the current view and glides to the next one.
+      // Arriving from the other page, it starts under the view you came from.
+      function placeOrbit() {
+        const nav = document.querySelector(".orbit-nav");
+        const cur = nav && nav.querySelector('[aria-pressed="true"], [aria-current="page"]');
+        if (!cur) return;
+        const mid = (el) => el.offsetLeft + el.offsetWidth / 2 + "px";
+        if (!nav.classList.contains("glide")) {
+          let from = cur;
+          try {
+            const last = sessionStorage.getItem("orbit-from");
+            from = [...nav.children].find((el) => el.textContent.trim() === last) || cur;
+          } catch (e) {}
+          nav.style.setProperty("--orbit-x", mid(from));
+          nav.getBoundingClientRect(); // settle the start before the glide
+          nav.classList.add("glide");
+        }
+        nav.style.setProperty("--orbit-x", mid(cur));
+        try {
+          sessionStorage.setItem("orbit-from", cur.textContent.trim());
+        } catch (e) {}
+      }
+      window.addEventListener("resize", placeOrbit);
+      document.fonts.ready.then(placeOrbit);
+      placeOrbit();
 
       document.addEventListener("keydown", (e) => {
         if (e.key === "/" && !e.target.matches("input")) {
