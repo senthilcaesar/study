@@ -283,12 +283,14 @@
       .start-short {
         display: none;
       }
-      @media (max-width: 1100px) {
-        .start-long {
+      /* give the search box room once the bar gets tight */
+      @media (max-width: 1500px) {
+        .bar-meta .counter {
           display: none;
         }
-        /* give the search box room once the bar gets tight */
-        .bar-meta .counter {
+      }
+      @media (max-width: 1100px) {
+        .start-long {
           display: none;
         }
         .start-short {
@@ -428,6 +430,14 @@
       .view-toggle button[aria-pressed="true"] {
         background: var(--ink);
         color: var(--bg);
+      }
+      .view-toggle.is-off {
+        visibility: hidden;
+      }
+      @media (max-width: 860px) {
+        .view-toggle.is-off {
+          display: none;
+        }
       }
 
       /* header buttons lift off the bar on hover, their hard shadow growing;
@@ -2053,6 +2063,7 @@
         >
         <span class="counter"><b id="count-shown">0</b> / <span id="count-total">0</span> <span id="count-unit">resources</span></span>
         <div class="view-toggle" role="group" aria-label="Mode">
+          <button type="button" id="mode-intro" aria-pressed="true">home</button>
           <button type="button" id="mode-roadmap" aria-pressed="false">roadmap</button>
           <button type="button" id="mode-library" aria-pressed="true">library</button>
         </div>
@@ -2929,9 +2940,11 @@
       function render() {
         const road = state.mode === "roadmap";
         const intro = state.mode === "intro";
+        $("#mode-intro").setAttribute("aria-pressed", intro);
         $("#mode-roadmap").setAttribute("aria-pressed", road);
         $("#mode-library").setAttribute("aria-pressed", state.mode === "library");
-        $("#view-toggle").hidden = road || intro;
+        // keeps its space when unused, so the buttons beside it don't jump between views
+        $("#view-toggle").classList.toggle("is-off", road || intro);
         $(".shell").classList.toggle("solo", road || intro);
         $("#intro").hidden = !intro;
         $("#roadmap").hidden = !road;
@@ -2969,11 +2982,24 @@
         if (wasOpen && stop) stop.focus({ preventScroll: true });
       }
 
+      // closing a week by hand goes back to the roadmap entry it was opened from
+      function dismissSheet() {
+        if (history.state && history.state.sheet) return history.back();
+        history.replaceState(null, "", "#roadmap");
+        closeSheet();
+      }
+
       // select a week: fill the drawer and, when asked, slide it in
       function selectWeek(n, opts = {}) {
         if (!weekByN(n)) return;
         state.sel = n;
-        history.replaceState(null, "", "#week-" + n);
+        // the open week lives in the URL; stepping between weeks replaces the
+        // entry, so Back closes the week instead of walking through each one
+        if (opts.route !== false) {
+          const h = "#week-" + n;
+          if (state.open || /^#week-/.test(location.hash)) history.replaceState(history.state, "", h);
+          else history.pushState({ sheet: true }, "", h);
+        }
         renderRoadmap();
         $("#panel").scrollTop = 0;
         if (opts.scroll) {
@@ -3171,12 +3197,44 @@
         Promise.all(anims.map((a) => a.finished)).then(() => layer.remove());
       }
 
-      function setMode(m) {
-        state.mode = m;
-        history.replaceState(null, "", location.pathname + location.search);
+      // every view has its own URL, so Back and Forward move between them:
+      // no hash = intro, #roadmap, #week-5 (that week open), #library, #mcp (a topic)
+      function routeHash() {
+        if (state.mode === "intro") return "";
+        if (state.mode === "roadmap") return state.open ? "week-" + state.sel : "roadmap";
+        return state.topic === "all" ? "library" : state.topic;
+      }
+      function pushRoute(replace) {
+        const h = routeHash();
+        if (location.hash.slice(1) === h) return;
+        const url = h ? "#" + h : location.pathname + location.search;
+        if (replace) history.replaceState(null, "", url);
+        else history.pushState(null, "", url);
+      }
+      function applyRoute(instant) {
+        const hash = location.hash.slice(1);
+        const wk = /^week-(\d+)$/.exec(hash);
+        if (wk && weekByN(+wk[1])) {
+          state.mode = "roadmap";
+          render();
+          return selectWeek(+wk[1], { scroll: true, instant, open: true, route: false });
+        }
+        if (hash === "roadmap") state.mode = "roadmap";
+        else if (hash === "library") (state.mode = "library"), (state.topic = "all");
+        else if (topicOf(hash)) (state.mode = "library"), (state.topic = hash);
+        else state.mode = "intro";
+        if (state.open) closeSheet();
         render();
         window.scrollTo(0, 0);
       }
+
+      function setMode(m) {
+        state.mode = m;
+        render();
+        pushRoute();
+        window.scrollTo(0, 0);
+      }
+      $("#mode-intro").addEventListener("click", () => setMode("intro"));
       $("#mode-roadmap").addEventListener("click", () => setMode("roadmap"));
       $("#mode-library").addEventListener("click", () => setMode("library"));
       $("#intro").addEventListener("click", (e) => {
@@ -3196,6 +3254,7 @@
         state.q = "";
         $("#q").value = "";
         render();
+        pushRoute(true);
       }
 
       // resets ask for a second click before wiping anything, like the roadmap's
@@ -3227,6 +3286,7 @@
         if (!b) return;
         state.topic = b.dataset.topic;
         render();
+        pushRoute();
         $("#main").scrollIntoView({ block: "start", behavior: "smooth" });
       });
       $("#fmt-row").addEventListener("click", (e) => {
@@ -3255,6 +3315,7 @@
         if (go) {
           state.topic = go.dataset.goto;
           render();
+          pushRoute();
           $("#main").scrollIntoView({ block: "start", behavior: "smooth" });
         }
       });
@@ -3291,7 +3352,7 @@
         if (wk) return selectWeek(+wk.dataset.week, { open: true, focus: wk.dataset.focus });
         const go = e.target.closest("[data-go]");
         if (go) return selectWeek(+go.dataset.go, { open: true });
-        if (e.target.closest("[data-close]")) return closeSheet();
+        if (e.target.closest("[data-close]")) return dismissSheet();
         const fin = e.target.closest("[data-complete]");
         if (fin) {
           const w = weekByN(+fin.dataset.complete);
@@ -3355,7 +3416,7 @@
         celebrate(rect);
         toast(`🎉 Congratulations! You completed ${byUrl[k].title}`, byUrl[k].t);
       });
-      $("#backdrop").addEventListener("click", closeSheet);
+      $("#backdrop").addEventListener("click", dismissSheet);
       if (matchMedia("(hover: hover)").matches) {
         $("#rm-main").addEventListener("mouseover", (e) => {
           const stop = e.target.closest(".stop");
@@ -3397,6 +3458,7 @@
         state.q = e.target.value.trim();
         if (state.q && state.mode === "intro") state.mode = "library";
         render();
+        pushRoute();
       });
       $("#q-clear").addEventListener("click", (e) => {
         e.preventDefault();
@@ -3442,7 +3504,7 @@
           e.preventDefault();
           $("#q").focus();
         } else if (e.key === "Escape") {
-          if ($("#panel").classList.contains("open")) return closeSheet();
+          if ($("#panel").classList.contains("open")) return dismissSheet();
           if (typing) $("#q").blur();
           reset();
         } else if ((e.key === "ArrowLeft" || e.key === "ArrowRight") && state.open && !e.metaKey && !e.altKey) {
@@ -3455,24 +3517,10 @@
 
       // deep links: index.html#week-5 opens the roadmap at that week,
       // index.html#mcp opens the library on that topic; no hash opens the intro
-      const hash = location.hash.slice(1);
-      const wkMatch = /^week-(\d+)$/.exec(hash);
       state.sel = (currentWeek() || ROADMAP[ROADMAP.length - 1]).n;
-      if (wkMatch && weekByN(+wkMatch[1])) {
-        state.mode = "roadmap";
-        state.sel = +wkMatch[1];
-      } else if (topicOf(hash)) {
-        state.mode = "library";
-        state.topic = hash;
-      }
-      render();
-      if (wkMatch) selectWeek(state.sel, { scroll: true, instant: true, open: true });
-      window.addEventListener("hashchange", () => {
-        const m = /^#week-(\d+)$/.exec(location.hash);
-        if (!m) return;
-        if (state.mode !== "roadmap") setMode("roadmap");
-        selectWeek(+m[1], { scroll: true, open: true });
-      });
+      applyRoute(true);
+      // Back, Forward and hand-edited hashes all land here
+      window.addEventListener("popstate", () => applyRoute(false));
     </script>
   </body>
 </html>
