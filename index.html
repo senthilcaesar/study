@@ -283,6 +283,10 @@
         .start-long {
           display: none;
         }
+        /* give the search box room once the bar gets tight */
+        .bar-meta .counter {
+          display: none;
+        }
         .start-short {
           display: inline;
         }
@@ -683,74 +687,258 @@
         grid-template-columns: minmax(0, 1fr);
       }
 
-      /* ---------- intro: where first-time visitors land ---------- */
+      /* ---------- intro: where first-time visitors land ----------
+         One loud thing: a shelf of five book spines, one per layer of the
+         field (same colours as start.html), that drop in on load and lift on
+         hover. Slow-drifting colour fields sit behind; everything else stays
+         quiet. Reduced motion is handled by the global rule at the end. */
       .intro {
-        max-width: 720px;
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        /* bleed past main's padding so the colour fields have no hard edge */
+        margin: -36px -40px 0;
+        min-height: calc(100vh - var(--bar));
+      }
+      .intro-glow {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+      }
+      .intro-glow i {
+        position: absolute;
+        width: var(--s);
+        height: var(--s);
+        border-radius: 50%;
+        background: var(--c);
+        filter: blur(70px);
+        opacity: 0.55;
+        animation: drift var(--d) ease-in-out infinite alternate;
+      }
+      .intro-glow i:nth-child(1) { --s: 520px; --c: var(--c-skills); --d: 19s; top: -160px; right: -80px; }
+      .intro-glow i:nth-child(2) { --s: 420px; --c: var(--c-context); --d: 23s; bottom: -140px; left: -120px; }
+      .intro-glow i:nth-child(3) { --s: 340px; --c: var(--c-evals); --d: 17s; top: 38%; left: 42%; }
+      .intro-glow i:nth-child(4) { --s: 300px; --c: var(--c-harness); --d: 26s; bottom: -60px; right: 18%; }
+      :root[data-theme="dark"] .intro-glow i {
+        opacity: 0.28;
+      }
+      @keyframes drift {
+        to {
+          transform: translate(60px, -40px) scale(1.15);
+        }
+      }
+
+      .intro-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+        gap: 56px;
+        align-items: center;
+        max-width: 1160px;
         margin: 0 auto;
-        padding: 56px 20px 40px;
+        padding: 64px 32px 56px;
       }
       .intro h1 {
-        margin: 0 0 18px;
+        margin: 0 0 20px;
         font-family: var(--display);
         font-weight: 800;
-        font-size: clamp(2rem, 5vw, 3rem);
-        line-height: 1.1;
-        letter-spacing: -0.02em;
+        font-variation-settings: "wdth" 92;
+        font-size: clamp(2.4rem, 5.2vw, 4.2rem);
+        line-height: 1.02;
+        letter-spacing: -0.025em;
+        max-width: 13ch;
       }
-      .intro p {
-        margin: 0 0 14px;
-        font-size: 1.08rem;
+      .intro-lede {
+        margin: 0 0 30px;
+        max-width: 46ch;
+        font-size: 1.12rem;
+        line-height: 1.6;
         color: var(--ink-soft);
       }
+
       .intro-ways {
         display: grid;
         gap: 14px;
-        margin: 26px 0 22px;
+        margin: 0 0 22px;
+        max-width: 540px;
       }
       .way {
-        display: block;
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr);
+        gap: 16px;
+        align-items: center;
         width: 100%;
         text-align: left;
         text-decoration: none;
-        padding: 16px 20px;
+        padding: 14px 18px 14px 14px;
         border: 2px solid var(--line);
         background: var(--surface);
-        box-shadow: 3px 3px 0 var(--shadow);
-        transition: transform 0.12s, box-shadow 0.12s;
+        box-shadow: 4px 4px 0 var(--shadow);
+        transition: transform 0.15s, box-shadow 0.15s;
       }
       .way:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 5px 5px 0 var(--shadow);
+        transform: translate(-3px, -3px);
+        box-shadow: 7px 7px 0 var(--shadow);
       }
       .way:active {
-        transform: translate(3px, 3px);
+        transform: translate(4px, 4px);
         box-shadow: none;
       }
-      .way-k {
+      .way-icon {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+      }
+      .way-q {
         display: block;
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
+        font-size: 0.88rem;
         color: var(--dim);
       }
       .way b {
         display: block;
-        margin: 4px 0 4px;
+        margin: 1px 0 3px;
         font-family: var(--display);
-        font-size: 1.3rem;
+        font-size: 1.28rem;
         font-weight: 750;
-        letter-spacing: -0.01em;
+        letter-spacing: -0.015em;
+        line-height: 1.2;
       }
       .way-d {
         display: block;
         color: var(--ink-soft);
-        font-size: 0.95rem;
+        font-size: 0.93rem;
+        line-height: 1.45;
       }
-      .intro .intro-note {
-        font-family: var(--mono);
-        font-size: 0.78rem;
+      .intro-note {
+        margin: 0;
+        font-size: 0.85rem;
         color: var(--dim);
+      }
+
+      /* the shelf */
+      .shelf {
+        position: relative;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 12px;
+        height: 420px;
+        padding: 0 28px;
+      }
+      .shelf::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -14px;
+        height: 14px;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        box-shadow: 4px 4px 0 var(--shadow);
+      }
+      .spine {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: var(--w);
+        height: var(--h);
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+        box-shadow: 4px 4px 0 var(--shadow);
+        text-decoration: none;
+        transform-origin: bottom center;
+        transform: rotate(var(--r, 0deg));
+        transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+        animation: land 0.75s cubic-bezier(0.25, 1.5, 0.45, 1) backwards;
+        animation-delay: calc(var(--i) * 110ms + 150ms);
+      }
+      /* the bands near the top and bottom of a book spine */
+      .spine::before,
+      .spine::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 7px;
+        border-block: 2px solid var(--line);
+      }
+      .spine::before { top: 18px; }
+      .spine::after { bottom: 18px; }
+      .spine span {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        font-family: var(--display);
+        font-weight: 750;
+        font-size: 1.15rem;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+      .spine:hover,
+      .spine:focus-visible {
+        transform: translateY(-22px) rotate(var(--r, 0deg));
+      }
+      .spine:nth-child(1) { --i: 0; --w: 64px; --h: 330px; --sw: var(--c-skills); }
+      .spine:nth-child(2) { --i: 1; --w: 72px; --h: 380px; --sw: var(--c-context); }
+      .spine:nth-child(3) { --i: 2; --w: 58px; --h: 300px; --sw: var(--c-agents); }
+      .spine:nth-child(4) { --i: 3; --w: 68px; --h: 352px; --sw: var(--c-evals); }
+      .spine:nth-child(5) { --i: 4; --w: 62px; --h: 286px; --sw: var(--c-harness); --r: 9deg; transform-origin: bottom left; }
+      @keyframes land {
+        from {
+          opacity: 0;
+          transform: translateY(-460px) rotate(-6deg);
+        }
+        60% {
+          opacity: 1;
+        }
+      }
+      .shelf-caption {
+        margin: 34px 0 0;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--dim);
+      }
+
+      /* main's padding shrinks at 860px, so the bleed does too */
+      @media (max-width: 860px) {
+        .intro {
+          margin: -24px -16px 0;
+        }
+      }
+      @media (max-width: 960px) {
+        .intro-inner {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 36px;
+          padding: 36px 16px 48px;
+        }
+        .intro-art {
+          order: -1;
+        }
+        .shelf {
+          height: 200px;
+          gap: 8px;
+          max-width: 400px;
+          margin: 0 auto;
+          padding: 0 8px;
+        }
+        .spine {
+          width: calc(var(--w) * 0.7);
+          height: calc(var(--h) * 0.5);
+        }
+        .spine span {
+          font-size: 0.82rem;
+        }
+        .spine::before { top: 10px; }
+        .spine::after { bottom: 10px; }
+        .shelf-caption {
+          margin-top: 26px;
+          font-size: 0.8rem;
+        }
       }
       .shell.solo .rail {
         display: none;
@@ -2648,6 +2836,12 @@
       }
 
       // the intro: three ways in, so nobody starts on the full shelf
+      const INTRO_ICON = {
+        guide: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v16H5.5c-.8 0-1.5-.7-1.5-1.5v-13zM13 4h5.5c.8 0 1.5.7 1.5 1.5v13c0 .8-.7 1.5-1.5 1.5H13V4z"/></svg>',
+        road: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="6" r="2.2"/><path d="M7 18h6a3 3 0 0 0 0-6h-2a3 3 0 0 1 0-6h6"/></svg>',
+        library: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg>',
+      };
+      const LAYERS = ["Capabilities", "Knowledge", "Execution", "Quality", "Production"];
       function renderIntro() {
         const cur = currentWeek();
         const road = !done.size
@@ -2656,28 +2850,47 @@
             ? `Continue week ${cur.n}: ${esc(cur.title)}`
             : "Review the roadmap";
         $("#intro").innerHTML = `
-          <h1>Learn to build with AI, one step at a time</h1>
-          <p>AI Learning Shelf is a free reading list for AI engineering. It has ${RESOURCES.length} courses, videos and
-            articles, and a roadmap of ${ROADMAP.length} weeks that puts them in order.</p>
-          <p>You don't need to look at everything. Pick one way in:</p>
-          <div class="intro-ways">
-            <a class="way" href="start.html">
-              <span class="way-k">New to AI engineering?</span>
-              <b>Read the short guide</b>
-              <span class="way-d">The five parts of the field and the order to learn them in. About ten minutes.</span>
-            </a>
-            <button class="way" type="button" data-mode="roadmap">
-              <span class="way-k">Want a plan?</span>
-              <b>${road}</b>
-              <span class="way-d">${ROADMAP.length} weeks, from beginner to advanced. Tick things off as you go.</span>
-            </button>
-            <button class="way" type="button" data-mode="library">
-              <span class="way-k">Know what you need?</span>
-              <b>Browse the library</b>
-              <span class="way-d">Every resource, sorted by topic, with search and filters.</span>
-            </button>
-          </div>
-          <p class="intro-note">Your progress is saved in this browser only.</p>`;
+          <div class="intro-glow" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <div class="intro-inner">
+            <div class="intro-text">
+              <h1>Learn to build with AI, one step at a time</h1>
+              <p class="intro-lede">A free reading list for AI engineering: ${RESOURCES.length} courses, videos and articles,
+                and a roadmap of ${ROADMAP.length} weeks that puts them in order. You don't need all of it. Pick one way in.</p>
+              <div class="intro-ways">
+                <a class="way" href="start.html" style="--sw:var(--c-skills)">
+                  <span class="way-icon">${INTRO_ICON.guide}</span>
+                  <span>
+                    <span class="way-q">New to AI engineering?</span>
+                    <b>Read the short guide</b>
+                    <span class="way-d">The five parts of the field and the order to learn them in.</span>
+                  </span>
+                </a>
+                <button class="way" type="button" data-mode="roadmap" style="--sw:var(--c-mcp)">
+                  <span class="way-icon">${INTRO_ICON.road}</span>
+                  <span>
+                    <span class="way-q">Want a plan?</span>
+                    <b>${road}</b>
+                    <span class="way-d">${ROADMAP.length} weeks, from beginner to advanced. Tick things off as you go.</span>
+                  </span>
+                </button>
+                <button class="way" type="button" data-mode="library" style="--sw:var(--c-agents)">
+                  <span class="way-icon">${INTRO_ICON.library}</span>
+                  <span>
+                    <span class="way-q">Know what you need?</span>
+                    <b>Browse the library</b>
+                    <span class="way-d">Every resource, sorted by topic, with search and filters.</span>
+                  </span>
+                </button>
+              </div>
+              <p class="intro-note">Your progress is saved in this browser only.</p>
+            </div>
+            <div class="intro-art">
+              <div class="shelf">
+                ${LAYERS.map((l) => `<a class="spine" href="start.html" aria-label="${l}: read about this layer in the guide"><span>${l}</span></a>`).join("")}
+              </div>
+              <p class="shelf-caption">Five layers of AI engineering. Pick one to read about it.</p>
+            </div>
+          </div>`;
         $("#count-shown").textContent = RESOURCES.length;
         $("#count-total").textContent = RESOURCES.length;
         $("#count-unit").textContent = "resources";
