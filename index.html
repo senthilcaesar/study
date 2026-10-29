@@ -718,44 +718,42 @@
       }
 
       /* ---------- intro: where first-time visitors land ----------
-         One loud thing: a shelf of five book spines, one per layer of the
-         field (same colours as start.html), that drop in on load and lift on
-         hover. Slow-drifting colour fields sit behind; everything else stays
-         quiet. Reduced motion is handled by the global rule at the end. */
+         One loud thing: a shelf of five book spines (library topics) that drop
+         in on load and lift on hover, set against a night sky with the Milky
+         Way drawn on a canvas. Reduced motion is handled by the global rule. */
       .intro {
         position: relative;
         isolation: isolate;
         overflow: hidden;
-        /* bleed past main's padding so the colour fields have no hard edge */
+        /* bleed past main's padding so the sky has no hard edge */
         margin: -36px -40px 0;
         min-height: calc(100vh - var(--bar));
+        background: #05060f;
+        /* hard shadows in starlight, since black ones vanish against the sky */
+        --shadow: #d6cfff;
       }
-      .intro-glow {
+      .sky,
+      .sky-twinkle {
         position: absolute;
         inset: 0;
         z-index: -1;
+        width: 100%;
+        height: 100%;
         pointer-events: none;
       }
-      .intro-glow i {
+      .sky-twinkle i {
         position: absolute;
-        width: var(--s);
-        height: var(--s);
+        width: 3px;
+        height: 3px;
         border-radius: 50%;
-        background: var(--c);
-        filter: blur(70px);
-        opacity: 0.55;
-        animation: drift var(--d) ease-in-out infinite alternate;
+        background: #fff;
+        box-shadow: 0 0 6px 1px rgba(210, 220, 255, 0.8);
+        animation: twinkle var(--d) ease-in-out var(--t) infinite;
       }
-      .intro-glow i:nth-child(1) { --s: 520px; --c: var(--c-skills); --d: 19s; top: -160px; right: -80px; }
-      .intro-glow i:nth-child(2) { --s: 420px; --c: var(--c-context); --d: 23s; bottom: -140px; left: -120px; }
-      .intro-glow i:nth-child(3) { --s: 340px; --c: var(--c-evals); --d: 17s; top: 38%; left: 42%; }
-      .intro-glow i:nth-child(4) { --s: 300px; --c: var(--c-harness); --d: 26s; bottom: -60px; right: 18%; }
-      :root[data-theme="dark"] .intro-glow i {
-        opacity: 0.28;
-      }
-      @keyframes drift {
-        to {
-          transform: translate(60px, -40px) scale(1.15);
+      @keyframes twinkle {
+        50% {
+          opacity: 0.15;
+          transform: scale(0.6);
         }
       }
 
@@ -772,6 +770,7 @@
          cap it on wide screens */
       .intro h1 {
         grid-column: 1 / -1;
+        color: #f4f1ff; /* starlight on the night sky */
         margin: 0;
         white-space: nowrap;
         /* the typewriter style from senthilcaesar.github.io's greeting */
@@ -817,7 +816,7 @@
         width: 0.6em;
         height: 1em;
         margin-right: -0.6em;
-        border-bottom: 2px solid var(--ink);
+        border-bottom: 2px solid currentColor;
         vertical-align: text-bottom;
         animation: tw-blink 0.9s step-end infinite;
       }
@@ -887,7 +886,7 @@
       .intro-note {
         margin: 0;
         font-size: 0.85rem;
-        color: var(--dim);
+        color: #b8b4dc;
       }
 
       /* the shelf of layer spines (not .shelf, which is a library topic section) */
@@ -973,7 +972,7 @@
         margin: 34px 0 0;
         text-align: center;
         font-size: 0.85rem;
-        color: var(--dim);
+        color: #b8b4dc;
       }
 
       /* main's padding shrinks at 860px, so the bleed does too */
@@ -2925,7 +2924,8 @@
             ? `Continue week ${cur.n}: ${esc(cur.title)}`
             : "Review the roadmap";
         $("#intro").innerHTML = `
-          <div class="intro-glow" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+          <canvas class="sky" aria-hidden="true"></canvas>
+          <div class="sky-twinkle" aria-hidden="true">${TWINKLES}</div>
           <div class="intro-inner">
             <h1>Learn AI, one concept at a time</h1>
             <div class="intro-text">
@@ -2965,7 +2965,86 @@
             </div>
           </div>`;
         typeHeadline();
+        drawGalaxy();
       }
+
+      // the intro's night sky. A seeded random keeps it the same on every visit:
+      // a band of glow from lower left to upper right with a warm core, dust
+      // lanes down its middle, and stars that crowd along it
+      const seeded = (seed) => () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      const TWINKLES = (() => {
+        const r = seeded(11);
+        return Array.from({ length: 36 }, () =>
+          `<i style="left:${(r() * 100).toFixed(1)}%;top:${(r() * 100).toFixed(1)}%;--d:${(2.5 + r() * 4).toFixed(1)}s;--t:${(-r() * 6).toFixed(1)}s"></i>`
+        ).join("");
+      })();
+      function drawGalaxy() {
+        const cv = $("#intro .sky");
+        if (!cv || $("#intro").hidden) return;
+        const W = cv.clientWidth, H = cv.clientHeight;
+        if (!W || !H) return;
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        cv.width = Math.round(W * dpr);
+        cv.height = Math.round(H * dpr);
+        const c = cv.getContext("2d");
+        c.scale(dpr, dpr);
+        const rnd = seeded(7);
+        const gauss = () => (rnd() + rnd() + rnd() - 1.5) / 1.5; // about -1..1, bunched near 0
+
+        const bg = c.createLinearGradient(0, 0, W, H);
+        bg.addColorStop(0, "#04050d");
+        bg.addColorStop(0.5, "#0b1027");
+        bg.addColorStop(1, "#05060f");
+        c.fillStyle = bg;
+        c.fillRect(0, 0, W, H);
+
+        const ax = -0.1 * W, ay = 0.98 * H, bx = 1.1 * W, by = 0.02 * H;
+        const len = Math.hypot(bx - ax, by - ay);
+        const ux = (bx - ax) / len, uy = (by - ay) / len;
+        const band = Math.max(W, H) * 0.15;
+        const at = (t, off) => [ax + ux * len * t - uy * off, ay + uy * len * t + ux * off];
+        const glow = (x, y, r, rgb, a) => {
+          const g = c.createRadialGradient(x, y, 0, x, y, r);
+          g.addColorStop(0, `rgba(${rgb},${a})`);
+          g.addColorStop(1, `rgba(${rgb},0)`);
+          c.fillStyle = g;
+          c.fillRect(x - r, y - r, r * 2, r * 2);
+        };
+
+        c.globalCompositeOperation = "lighter";
+        const tints = ["120,90,255", "80,130,255", "255,120,200", "150,110,255"];
+        for (let i = 0; i < 90; i++) {
+          const [x, y] = at(rnd(), gauss() * band * 0.8);
+          glow(x, y, band * (0.35 + rnd() * 0.6), tints[i % 4], 0.04 + rnd() * 0.05);
+        }
+        for (let i = 0; i < 30; i++) {
+          const [x, y] = at(0.56 + gauss() * 0.12, gauss() * band * 0.4);
+          glow(x, y, band * (0.2 + rnd() * 0.4), "255,214,170", 0.04 + rnd() * 0.05);
+        }
+        const stars = Math.round((W * H) / 650);
+        for (let i = 0; i < stars; i++) {
+          let x, y;
+          if (rnd() < 0.55) [x, y] = at(rnd(), gauss() * band * 1.1);
+          else (x = rnd() * W), (y = rnd() * H);
+          const r = rnd() < 0.97 ? 0.3 + rnd() * 0.7 : 1 + rnd() * 0.8;
+          c.fillStyle = `rgba(255,${(235 + rnd() * 20) | 0},${(215 + rnd() * 40) | 0},${(0.35 + rnd() * 0.65).toFixed(2)})`;
+          c.beginPath();
+          c.arc(x, y, r, 0, 7);
+          c.fill();
+          if (r > 1.4) glow(x, y, r * 6, "200,210,255", 0.25);
+        }
+        c.globalCompositeOperation = "source-over";
+        for (let i = 0; i < 70; i++) {
+          const [x, y] = at(0.12 + rnd() * 0.8, gauss() * band * 0.25);
+          glow(x, y, band * (0.08 + rnd() * 0.18), "6,7,18", 0.3 + rnd() * 0.25);
+        }
+      }
+      // redraw when the intro changes size (window resize, fonts arriving, typing)
+      let skyTimer;
+      new ResizeObserver(() => {
+        clearTimeout(skyTimer);
+        skyTimer = setTimeout(drawGalaxy, 120);
+      }).observe($("#intro"));
 
       // Types the headline one key strike at a time, like an old manual typewriter
       // (the same as senthilcaesar.github.io's greeting): uneven rhythm, a pause
