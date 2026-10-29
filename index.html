@@ -49,7 +49,6 @@
         --c-docs: #b5e3e0;
         --c-claude-code: #e9b8a6;
         --c-foundations: #aab4ff;
-        --c-start: #ffd9b8;       /* only the start button uses this */
 
         --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
         --body: "Atkinson Hyperlegible", -apple-system, "Segoe UI", system-ui, sans-serif;
@@ -83,7 +82,6 @@
         --c-docs: #85c1dc;      /* sapphire */
         --c-claude-code: #f2d5cf; /* rosewater */
         --c-foundations: #babbf1; /* lavender */
-        --c-start: #eebebe;       /* flamingo */
         color-scheme: dark;
       }
 
@@ -261,40 +259,22 @@
         transform: translate(2px, 2px);
         box-shadow: none;
       }
-      /* the way in for newcomers: links to start.html */
-      .start-btn {
-        display: inline-block;
-        border: 2px solid var(--line);
-        /* a soft apricot no card or topic uses, so the button stands apart quietly */
-        background: var(--c-start);
-        color: var(--chip-ink);
-        padding: 6px 10px;
-        font-family: var(--mono);
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-decoration: none;
-        white-space: nowrap;
-        box-shadow: 2px 2px 0 var(--shadow);
-      }
-      .start-btn:active {
-        transform: translate(2px, 2px);
-        box-shadow: none;
-      }
-      .start-short {
-        display: none;
-      }
-      /* give the search box room once the bar gets tight */
-      @media (max-width: 1500px) {
+      /* give the search box room once the bar gets tight: drop the counter,
+         then (until phones move search to its own row) the brand's name */
+      @media (max-width: 1100px) {
         .bar-meta .counter {
           display: none;
         }
       }
-      @media (max-width: 1100px) {
-        .start-long {
-          display: none;
+      @media (min-width: 861px) and (max-width: 1100px) {
+        .bar {
+          grid-template-columns: auto minmax(0, 1fr) auto;
         }
-        .start-short {
-          display: inline;
+        .brand {
+          border-right: 0;
+        }
+        .brand-text {
+          display: none;
         }
       }
 
@@ -417,14 +397,18 @@
         border: 2px solid var(--line);
         box-shadow: 2px 2px 0 var(--shadow);
       }
-      .view-toggle button {
+      /* buttons switch views in place; the guide is a link to start.html */
+      .view-toggle > button,
+      .view-toggle > a {
         border: 0;
         background: var(--surface);
         padding: 6px 10px;
         font-family: var(--mono);
         font-size: 0.75rem;
+        line-height: normal;
+        text-decoration: none;
       }
-      .view-toggle button + button {
+      .view-toggle > :is(button, a) + :is(button, a) {
         border-left: 2px solid var(--line);
       }
       .view-toggle button[aria-pressed="true"] {
@@ -443,26 +427,23 @@
       /* header buttons lift off the bar on hover, their hard shadow growing;
          in a toggle the whole group lifts and the option under the pointer
          fills with colour. Mouse only, so taps on phones don't stick. */
-      .start-btn,
       .theme-btn,
       .view-toggle {
         transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
       }
-      .view-toggle button {
+      .view-toggle > * {
         transition: background-color 0.15s, color 0.15s;
       }
       @media (hover: hover) {
-        .start-btn:hover,
         .theme-btn:hover,
         .view-toggle:hover {
           transform: translate(-2px, -2px);
           box-shadow: 4px 4px 0 var(--shadow);
         }
-        .view-toggle button:not([aria-pressed="true"]):hover {
+        .view-toggle > :not([aria-pressed="true"]):hover {
           background: var(--c-skills);
           color: var(--chip-ink);
         }
-        .start-btn:active,
         .theme-btn:active {
           transform: translate(2px, 2px);
           box-shadow: none;
@@ -2037,7 +2018,7 @@
     <header class="bar">
       <a class="brand" href="#top" aria-label="AI Learning Shelf, back to the intro">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
-        AI Learning Shelf
+        <span class="brand-text">AI Learning Shelf</span>
       </a>
 
       <label class="search" for="q">
@@ -2050,7 +2031,7 @@
           type="search"
           autocomplete="off"
           spellcheck="false"
-          placeholder="Search titles, topics or publishers"
+          placeholder="Search the library"
           aria-label="Search resources"
         />
         <button class="search-clear" id="q-clear" type="button" hidden>clear</button>
@@ -2058,12 +2039,10 @@
       </label>
 
       <div class="bar-meta">
-        <a class="start-btn" href="start.html" title="The five layers of AI engineering, the order to learn them and one project to build"
-          ><span class="start-long">I don't know where to start</span><span class="start-short">start here</span></a
-        >
         <span class="counter"><b id="count-shown">0</b> / <span id="count-total">0</span> <span id="count-unit">resources</span></span>
-        <div class="view-toggle" role="group" aria-label="Mode">
+        <div class="view-toggle" role="group" aria-label="Go to">
           <button type="button" id="mode-intro" aria-pressed="true">home</button>
+          <a href="start.html" title="The five layers of AI engineering and the order to learn them">guide</a>
           <button type="button" id="mode-roadmap" aria-pressed="false">roadmap</button>
           <button type="button" id="mode-library" aria-pressed="true">library</button>
         </div>
@@ -2902,7 +2881,7 @@
                   <span class="way-icon">${INTRO_ICON.guide}</span>
                   <span>
                     <span class="way-q">New to AI engineering?</span>
-                    <b>Read the short guide</b>
+                    <b>Read the guide</b>
                     <span class="way-d">The five parts of the field and the order to learn them in.</span>
                   </span>
                 </a>
@@ -3519,6 +3498,15 @@
       // index.html#mcp opens the library on that topic; no hash opens the intro
       state.sel = (currentWeek() || ROADMAP[ROADMAP.length - 1]).n;
       applyRoute(true);
+      // the guide page's search sends index.html?q=term: show those results in the library
+      const q0 = new URLSearchParams(location.search).get("q");
+      if (q0 && q0.trim()) {
+        state.q = q0.trim();
+        $("#q").value = state.q;
+        state.mode = "library";
+        history.replaceState(null, "", location.pathname + "#" + routeHash());
+        render();
+      }
       // Back, Forward and hand-edited hashes all land here
       window.addEventListener("popstate", () => applyRoute(false));
     </script>

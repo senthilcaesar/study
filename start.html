@@ -113,14 +113,15 @@
       }
 
       /* ---------- top bar ---------- */
+      /* the same header as index.html: brand, search, the navigation group, theme */
       .bar {
         position: sticky;
         top: 0;
         z-index: 10;
-        display: flex;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
         align-items: center;
-        justify-content: space-between;
-        gap: 12px;
+        gap: 10px 20px;
         min-height: 64px;
         padding: 10px 20px;
         background: var(--bg);
@@ -154,6 +155,101 @@
         display: flex;
         align-items: center;
         gap: 10px;
+      }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        max-width: 560px;
+        padding: 0 12px;
+        height: 42px;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        box-shadow: 3px 3px 0 var(--shadow);
+        min-width: 0;
+      }
+      .search:focus-within {
+        box-shadow: 5px 5px 0 var(--hair);
+      }
+      .search svg {
+        flex: none;
+        color: var(--dim);
+      }
+      .search input {
+        flex: 1;
+        min-width: 0;
+        border: 0;
+        background: none;
+        outline: none;
+        height: 100%;
+        font: inherit;
+        color: inherit;
+      }
+      .search input::placeholder {
+        color: var(--dim);
+      }
+      .nav {
+        display: flex;
+        border: 2px solid var(--line);
+        box-shadow: 2px 2px 0 var(--shadow);
+      }
+      .nav a {
+        background: var(--surface);
+        padding: 6px 10px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        text-decoration: none;
+      }
+      .nav a + a {
+        border-left: 2px solid var(--line);
+      }
+      .nav a[aria-current="page"] {
+        background: var(--ink);
+        color: var(--bg);
+      }
+      /* same hover as the shelf's header: lift, and colour the option under the pointer */
+      .nav,
+      .btn {
+        transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+      }
+      .nav a {
+        transition: background-color 0.15s, color 0.15s;
+      }
+      @media (hover: hover) {
+        .nav:hover,
+        .btn:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 4px 4px 0 var(--shadow);
+        }
+        .nav a:not([aria-current="page"]):hover {
+          background: var(--c-skills);
+          color: var(--chip-ink);
+        }
+      }
+      @media (min-width: 861px) and (max-width: 1100px) {
+        .brand-text {
+          display: none;
+        }
+      }
+      @media (max-width: 860px) {
+        .bar {
+          grid-template-columns: minmax(0, 1fr) auto;
+          padding-inline: 16px;
+        }
+        .search {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          max-width: none;
+        }
+      }
+      @media (max-width: 480px) {
+        .bar {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .bar-meta {
+          grid-row: 3;
+          flex-wrap: wrap;
+        }
       }
       .btn {
         display: inline-block;
@@ -362,12 +458,6 @@
       }
 
       @media (max-width: 480px) {
-        .bar {
-          padding-inline: 16px;
-        }
-        .brand-text {
-          display: none;
-        }
         main {
           padding: 32px 16px 64px;
         }
@@ -384,12 +474,25 @@
   </head>
   <body>
     <header class="bar">
-      <a class="brand" href="index.html" aria-label="AI Learning Shelf, back to the shelf">
+      <a class="brand" href="index.html" aria-label="AI Learning Shelf, back to the intro">
         <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
         <span class="brand-text">AI Learning Shelf</span>
       </a>
+      <!-- searching from here opens the library with the results -->
+      <form class="search" action="index.html" method="get" role="search">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="2" />
+          <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="2" />
+        </svg>
+        <input name="q" type="search" autocomplete="off" spellcheck="false" placeholder="Search the library" aria-label="Search resources" />
+      </form>
       <div class="bar-meta">
-        <a class="btn" href="index.html">← home</a>
+        <nav class="nav" aria-label="Go to">
+          <a href="index.html">home</a>
+          <a href="start.html" aria-current="page">guide</a>
+          <a href="index.html#roadmap">roadmap</a>
+          <a href="index.html#library">library</a>
+        </nav>
         <button class="btn" id="theme-btn" type="button">theme</button>
       </div>
     </header>
