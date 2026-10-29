@@ -778,6 +778,7 @@
         border-radius: 50%;
         background: #fff;
         box-shadow: 0 0 6px 1px rgba(210, 220, 255, 0.8);
+        opacity: 0.55;
         animation: twinkle var(--d) ease-in-out var(--t) infinite;
       }
       @keyframes twinkle {
@@ -919,11 +920,6 @@
         font-size: 0.93rem;
         line-height: 1.45;
       }
-      .intro-note {
-        margin: 0;
-        font-size: 0.85rem;
-        color: #b8b4dc;
-      }
 
       /* the solar system: the Sun is the LLM, and nine planets are the concepts
          that orbit it, the most important on the biggest planet. layoutSolar()
@@ -934,7 +930,7 @@
       .solar {
         --k: 1;
         position: relative;
-        height: 320px;
+        height: 360px;
         /* full bleed: the band runs edge to edge of the window, past the column */
         margin-inline: calc((100% - 100vw) / 2);
       }
@@ -957,6 +953,11 @@
         height: 100%;
         z-index: 1;
         pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.6s;
+      }
+      .solar.gl .planets3d {
+        opacity: 1;
       }
       .solar .planet {
         z-index: 2;
@@ -1171,12 +1172,6 @@
           translate: 0 -10px;
         }
       }
-      .shelf-caption {
-        margin: 14px 0 0;
-        text-align: center;
-        font-size: 0.85rem;
-        color: #b8b4dc;
-      }
 
       /* main's padding shrinks at 860px, so the bleed does too */
       @media (max-width: 860px) {
@@ -1196,9 +1191,6 @@
         .intro-ways {
           grid-template-columns: minmax(0, 1fr);
           max-width: 540px;
-        }
-        .shelf-caption {
-          font-size: 0.8rem;
         }
       }
       .shell.solo .rail {
@@ -3101,15 +3093,15 @@
       // in orbit order outward from the Sun. s is the planet's diameter in px.
       const SUN = { id: "foundations", name: "LLM" };
       const PLANETS = [
-        { body: "mercury", id: "claude-code", name: "Claude Code", s: 16 },
-        { body: "venus", id: "harness", name: "Harness", s: 27 },
-        { body: "earth", id: "evals", name: "Evals", s: 29 },
-        { body: "mars", id: "skills", name: "Skills", s: 22 },
-        { body: "jupiter", id: "agents", name: "Agents", s: 80 },
-        { body: "saturn", id: "context", name: "Prompting", s: 66 },
-        { body: "uranus", id: "graphrag", name: "RAG", s: 46 },
-        { body: "neptune", id: "mcp", name: "MCP", s: 44 },
-        { body: "pluto", id: "docs", name: "Doc parsing", s: 12 },
+        { body: "mercury", id: "claude-code", name: "Claude Code", s: 24 },
+        { body: "venus", id: "context", name: "Prompting", s: 40 },
+        { body: "earth", id: "evals", name: "Evals", s: 44 },
+        { body: "mars", id: "skills", name: "Skills", s: 32 },
+        { body: "jupiter", id: "agents", name: "Agents", s: 104 },
+        { body: "saturn", id: "harness", name: "Harness", s: 86 },
+        { body: "uranus", id: "graphrag", name: "RAG", s: 60 },
+        { body: "neptune", id: "mcp", name: "MCP", s: 58 },
+        { body: "pluto", id: "docs", name: "Doc parsing", s: 18 },
       ];
       const cap = (w) => w[0].toUpperCase() + w.slice(1);
       function renderIntro() {
@@ -3151,7 +3143,6 @@
                   </span>
                 </button>
               </div>
-              <p class="intro-note">Your progress is saved in this browser only.</p>
             </div>
             <div class="intro-art">
               <div class="solar">
@@ -3159,7 +3150,6 @@
                 <a class="sun" href="#${SUN.id}" aria-label="${SUN.name}, the Sun at the centre: open Foundations in the library"><span class="sun-name" aria-hidden="true">${SUN.name}</span></a>
                 ${PLANETS.map((t, i) => `<a class="planet pl-${t.body}" href="#${t.id}" style="--s:${t.s}px;--i:${i}" aria-label="${t.name}, on ${cap(t.body)}: open this topic in the library"><span class="orb" aria-hidden="true"></span><span class="pname">${t.name}</span></a>`).join("")}
               </div>
-              <p class="shelf-caption">The LLM is the Sun; the bigger the planet, the more the concept matters. Pick one to open it in the library.</p>
             </div>
           </div>`;
         typeHeadline();
@@ -3177,14 +3167,14 @@
         if (!box || $("#intro").hidden) return;
         const W = box.clientWidth;
         if (!W) return;
-        const tall = W < 860;
+        const tall = W < 1040;
         // wide: a big Sun rising in from the left edge; tall: a whole small Sun on top
         const R = tall ? 70 : 160;
-        const gap = tall ? 64 : (W - 40 - R * 0.55 - 70) / PLANETS.length;
+        const gap = tall ? 84 : (W - 40 - R * 0.55 - 70) / PLANETS.length;
         const cx = tall ? W / 2 : -R * 0.45;
-        const cy = tall ? R + 16 : 160;
-        const H = tall ? cy + R + 56 + gap * (PLANETS.length - 1) + 56 : 320;
-        const swing = tall ? Math.min(W * 0.24, 150) : 64; // how far planets sit either side of the line
+        const cy = tall ? R + 16 : 180;
+        const H = tall ? cy + R + 56 + gap * (PLANETS.length - 1) + 70 : 360;
+        const swing = tall ? Math.min(W * 0.24, 150) : 76; // how far planets sit either side of the line
         box.style.height = H + "px";
         box.style.setProperty("--k", tall ? 0.9 : 1);
         const sun = box.querySelector(".sun");
@@ -3232,6 +3222,9 @@
       };
       let space3d; // undefined until tried, false if unavailable, then the running scene
       async function startPlanets3D() {
+        // opened straight from disk, the browser won't let WebGL read the maps (the
+        // planets would draw black), so keep the CSS planets
+        if (location.protocol === "file:") space3d = false;
         if (space3d === false) return;
         if (!space3d) {
           if (startPlanets3D.loading) return;
@@ -3255,7 +3248,17 @@
         scene.add(new THREE.AmbientLight(0xffffff, 0.3));
         const sunLight = new THREE.PointLight(0xfff1dc, 3.4, 0, 0);
         scene.add(sunLight);
-        const manager = new THREE.LoadingManager(() => kick3D()); // redraw once the maps arrive
+        // show the 3D planets only once every map has arrived (no black spheres while
+        // loading), and give up for the CSS planets if any map fails
+        const manager = new THREE.LoadingManager(
+          () => {
+            if (!space3d) return; // a map failed, so the CSS planets stay
+            space3d.ready = true;
+            reveal3D();
+          },
+          undefined,
+          () => drop3D()
+        );
         const loader = new THREE.TextureLoader(manager);
         const texture = (file) => {
           const t = loader.load("textures/" + file);
@@ -3306,7 +3309,7 @@
         pivot.add(triton);
         bodies.neptune.holder.add(pivot);
         bodies.neptune.moon = pivot;
-        return { renderer, scene, camera, sunLight, bodies, links: {}, running: false, born: 0 };
+        return { renderer, scene, camera, sunLight, bodies, links: {}, running: false, born: 0, ready: false };
       }
 
       // Pluto has no map in the set, so paint one: tan ground, darker patches and its pale heart
@@ -3347,7 +3350,6 @@
         cv.className = "planets3d";
         cv.setAttribute("aria-hidden", "true");
         box.querySelector(".orbits").after(cv);
-        box.classList.add("gl");
         space3d.links = {};
         box.querySelectorAll(".planet").forEach((a) => {
           const body = /pl-(\w+)/.exec(a.className)[1];
@@ -3361,6 +3363,20 @@
         });
         space3d.born = performance.now();
         syncPlanets3D();
+        reveal3D();
+      }
+      // swap the CSS planets for the 3D ones (the canvas fades in) once the maps are in
+      function reveal3D() {
+        const box = $("#intro .solar");
+        if (!space3d || !space3d.ready || !box || !box.contains(space3d.renderer.domElement)) return;
+        box.classList.add("gl");
+        kick3D();
+      }
+      function drop3D() {
+        if (!space3d) return;
+        space3d.renderer.domElement.remove();
+        document.querySelectorAll(".solar.gl").forEach((el) => el.classList.remove("gl"));
+        space3d = false;
       }
 
       // match the 3D scene to the band: its size, each planet's place and size, the Sun's light
@@ -3391,6 +3407,7 @@
       }
       function spinFrame(now) {
         const s3 = space3d;
+        if (!s3) return; // the 3D planets were dropped for the CSS ones
         const box = $("#intro .solar");
         if (!box || $("#intro").hidden || !box.contains(s3.renderer.domElement)) return (s3.running = false);
         const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -3425,6 +3442,8 @@
           `<i style="left:${(r() * 100).toFixed(1)}%;top:${(r() * 100).toFixed(1)}%;--d:${(2.5 + r() * 4).toFixed(1)}s;--t:${(-r() * 6).toFixed(1)}s"></i>`
         ).join("");
       })();
+      // the sky is kept quiet so the planets stand out in front of it
+      const SKY_DIM = 0.5;
       function drawGalaxy() {
         const cv = $("#intro .sky");
         if (!cv || $("#intro").hidden) return;
@@ -3462,23 +3481,23 @@
         const tints = ["120,90,255", "80,130,255", "255,120,200", "150,110,255"];
         for (let i = 0; i < 90; i++) {
           const [x, y] = at(rnd(), gauss() * band * 0.8);
-          glow(x, y, band * (0.35 + rnd() * 0.6), tints[i % 4], 0.04 + rnd() * 0.05);
+          glow(x, y, band * (0.35 + rnd() * 0.6), tints[i % 4], (0.04 + rnd() * 0.05) * SKY_DIM);
         }
         for (let i = 0; i < 30; i++) {
           const [x, y] = at(0.56 + gauss() * 0.12, gauss() * band * 0.4);
-          glow(x, y, band * (0.2 + rnd() * 0.4), "255,214,170", 0.04 + rnd() * 0.05);
+          glow(x, y, band * (0.2 + rnd() * 0.4), "255,214,170", (0.04 + rnd() * 0.05) * SKY_DIM);
         }
-        const stars = Math.round((W * H) / 650);
+        const stars = Math.round((W * H) / 930);
         for (let i = 0; i < stars; i++) {
           let x, y;
           if (rnd() < 0.55) [x, y] = at(rnd(), gauss() * band * 1.1);
           else (x = rnd() * W), (y = rnd() * H);
           const r = rnd() < 0.97 ? 0.3 + rnd() * 0.7 : 1 + rnd() * 0.8;
-          c.fillStyle = `rgba(255,${(235 + rnd() * 20) | 0},${(215 + rnd() * 40) | 0},${(0.35 + rnd() * 0.65).toFixed(2)})`;
+          c.fillStyle = `rgba(255,${(235 + rnd() * 20) | 0},${(215 + rnd() * 40) | 0},${((0.35 + rnd() * 0.65) * 0.65).toFixed(2)})`;
           c.beginPath();
           c.arc(x, y, r, 0, 7);
           c.fill();
-          if (r > 1.4) glow(x, y, r * 6, "200,210,255", 0.25);
+          if (r > 1.4) glow(x, y, r * 6, "200,210,255", 0.14);
         }
         c.globalCompositeOperation = "source-over";
         for (let i = 0; i < 70; i++) {
