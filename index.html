@@ -954,11 +954,12 @@
       .spine:focus-visible {
         transform: translateY(-22px) rotate(var(--r, 0deg));
       }
-      .spine:nth-child(1) { --i: 0; --w: 64px; --h: 330px; --sw: var(--c-skills); }
-      .spine:nth-child(2) { --i: 1; --w: 72px; --h: 380px; --sw: var(--c-context); }
-      .spine:nth-child(3) { --i: 2; --w: 58px; --h: 300px; --sw: var(--c-agents); }
-      .spine:nth-child(4) { --i: 3; --w: 68px; --h: 352px; --sw: var(--c-evals); }
-      .spine:nth-child(5) { --i: 4; --w: 62px; --h: 286px; --sw: var(--c-harness); --r: 9deg; transform-origin: bottom left; }
+      /* each spine's colour is its library topic's, set inline from SHELF */
+      .spine:nth-child(1) { --i: 0; --w: 64px; --h: 330px; }
+      .spine:nth-child(2) { --i: 1; --w: 72px; --h: 380px; }
+      .spine:nth-child(3) { --i: 2; --w: 58px; --h: 300px; }
+      .spine:nth-child(4) { --i: 3; --w: 68px; --h: 352px; }
+      .spine:nth-child(5) { --i: 4; --w: 62px; --h: 286px; --r: 9deg; transform-origin: bottom left; }
       @keyframes land {
         from {
           opacity: 0;
@@ -2908,7 +2909,14 @@
         road: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="6" r="2.2"/><path d="M7 18h6a3 3 0 0 0 0-6h-2a3 3 0 0 1 0-6h6"/></svg>',
         library: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg>',
       };
-      const LAYERS = ["Capabilities", "Knowledge", "Execution", "Quality", "Production"];
+      // the shelf's spines: five library topics, each opening that topic
+      const SHELF = [
+        { id: "agents", name: "Agents" },
+        { id: "skills", name: "Skills" },
+        { id: "mcp", name: "MCP" },
+        { id: "harness", name: "Harness" },
+        { id: "evals", name: "Evals" },
+      ];
       function renderIntro() {
         const cur = currentWeek();
         const road = !done.size
@@ -2951,9 +2959,9 @@
             </div>
             <div class="intro-art">
               <div class="intro-shelf">
-                ${LAYERS.map((l) => `<a class="spine" href="start.html" aria-label="${l}: read about this layer in the guide"><span>${l}</span></a>`).join("")}
+                ${SHELF.map((t) => `<a class="spine" href="#${t.id}" style="--sw:var(--c-${t.id})" aria-label="${t.name}: open this topic in the library"><span>${t.name}</span></a>`).join("")}
               </div>
-              <p class="shelf-caption">Five layers of AI engineering. Pick one to read about it.</p>
+              <p class="shelf-caption">Five topics to start with. Pick one to open it in the library.</p>
             </div>
           </div>`;
         typeHeadline();
