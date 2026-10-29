@@ -508,7 +508,7 @@
       }
       .rail-item {
         display: grid;
-        grid-template-columns: 14px minmax(0, 1fr) auto;
+        grid-template-columns: 18px minmax(0, 1fr) auto;
         align-items: center;
         gap: 12px;
         width: 100%;
@@ -531,6 +531,52 @@
         height: 14px;
         border: 1.5px solid var(--line);
         background: var(--sw, var(--surface));
+      }
+      /* the topic's planet, small and still */
+      .rail-item .sw.mini {
+        --s: 16px;
+        --k: 1;
+        --i: 0;
+        display: grid;
+        place-items: center;
+        width: 18px;
+        height: 18px;
+        border: 0;
+        border-radius: 0;
+        background: none;
+      }
+      .rail-item .sw.mini .orb {
+        animation: none;
+        transition: scale 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+      }
+      .rail-item:hover .sw.mini .orb,
+      .rail-item[aria-pressed="true"] .sw.mini .orb {
+        scale: 1.15;
+      }
+      .mini-sun {
+        --c: #ffb43a;
+      }
+      .mini-sun .orb {
+        background: radial-gradient(circle at 40% 38%, #fff6cf, #ffc94a 55%, #f08a24);
+        box-shadow: 0 0 7px 1px rgba(255, 180, 58, 0.7);
+      }
+      .mini-moon {
+        --c: #c9c9d3;
+        --paint:
+          radial-gradient(circle at 62% 38%, rgba(60, 60, 70, 0.35) 0 10%, rgba(60, 60, 70, 0) 12%),
+          radial-gradient(circle at 36% 64%, rgba(60, 60, 70, 0.3) 0 8%, rgba(60, 60, 70, 0) 10%),
+          radial-gradient(circle at 40% 35%, #e4e4ea, #a3a3ae 60%, #55555f 100%);
+      }
+      /* a small barred spiral seen at a tilt */
+      .mini-galaxy .orb {
+        border-radius: 50%;
+        background:
+          radial-gradient(circle, #fffbe8 0 10%, rgba(255, 251, 232, 0) 22%),
+          conic-gradient(from 20deg, #8d74ff, rgba(70, 50, 190, 0.35) 25%, #8d74ff 50%, rgba(70, 50, 190, 0.35) 75%, #8d74ff);
+        -webkit-mask: radial-gradient(circle, #000 35%, transparent 70%);
+        mask: radial-gradient(circle, #000 35%, transparent 70%);
+        box-shadow: none;
+        transform: rotate(-24deg) scaleY(0.6);
       }
       .rail-item .n {
         font-family: var(--mono);
@@ -2341,7 +2387,7 @@
         .rail-item {
           width: auto;
           flex: none;
-          grid-template-columns: 12px auto auto;
+          grid-template-columns: 16px auto auto;
           gap: 8px;
           padding: 6px 12px;
           border: 2px solid var(--line);
@@ -3150,6 +3196,14 @@
       const doneIn = (rs) => rs.filter((r) => done.has(r.url)).length;
       const STATUSES = { all: "any", todo: "to do", done: "done" };
 
+      // each topic wears its planet from the intro; the rest get the sky's other bodies
+      function railBody(id) {
+        if (id === "all") return "mini-galaxy";
+        if (id === SUN.id) return "mini-sun";
+        const p = PLANETS.find((x) => x.id === id);
+        return p ? "pl-" + p.body : "mini-moon";
+      }
+
       function renderRail() {
         const pool = RESOURCES.filter(matches);
         const filtered = state.q || state.format !== "all" || state.status !== "all";
@@ -3163,7 +3217,7 @@
             const sw = t.id === "all" ? "var(--surface)" : `var(--c-${t.id})`;
             const pc = t.id === "all" ? "var(--accent)" : sw;
             return `<button class="rail-item" type="button" data-topic="${t.id}" aria-pressed="${state.topic === t.id}" title="${d} of ${all.length} done" style="--sw:${sw};--pc:${pc};--p:${Math.round((d / all.length) * 100)}%">
-              <span class="sw" aria-hidden="true"></span><span>${esc(t.name)}</span><span class="n">${n}</span></button>`;
+              <span class="sw mini ${railBody(t.id)}" aria-hidden="true"><span class="orb"></span></span><span>${esc(t.name)}</span><span class="n">${n}</span></button>`;
           })
           .join("");
 
