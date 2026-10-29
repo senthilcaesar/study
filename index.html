@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Kode+Mono:wght@700&display=swap"
       rel="stylesheet"
     />
 
@@ -768,18 +768,18 @@
         margin: 0 auto;
         padding: 64px 32px 56px;
       }
-      /* one line at every width: the text is about 10.2em wide, so size it
-         to the room available and cap it on wide screens */
+      /* one line at every width: size the text to the room available and
+         cap it on wide screens */
       .intro h1 {
         grid-column: 1 / -1;
         margin: 0;
         white-space: nowrap;
-        font-family: var(--display);
-        font-weight: 800;
-        font-variation-settings: "wdth" 92;
-        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 10.8));
-        line-height: 1.02;
-        letter-spacing: -0.025em;
+        font-family: "Kode Mono", var(--mono);
+        font-weight: 700;
+        /* Kode Mono is monospaced: the line is about 16.2em wide, so divide the room by 17 */
+        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 17));
+        line-height: 1.05;
+        letter-spacing: -0.02em;
       }
 
       .intro-ways {
@@ -938,7 +938,7 @@
       }
       @media (max-width: 960px) {
         .intro h1 {
-          font-size: calc((100vw - 32px) / 11.6);
+          font-size: calc((100vw - 32px) / 17.6);
         }
         .intro-inner {
           grid-template-columns: minmax(0, 1fr);
