@@ -2494,11 +2494,23 @@
       }
       /* on the night sky, a soft glow edges the cards instead of a dark shadow */
       .intro .way {
-        border-color: rgba(214, 207, 255, 0.35);
-        box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(214, 207, 255, 0.12);
+        border-color: rgba(214, 207, 255, 0.22);
+        /* tinted glass, so the night sky shows faintly through the card */
+        background: linear-gradient(160deg, rgba(58, 54, 128, 0.42), rgba(18, 20, 52, 0.55));
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        color: #eceaff;
+        box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(214, 207, 255, 0.08);
       }
       .intro .way:hover {
+        border-color: rgba(214, 207, 255, 0.4);
         box-shadow: 0 18px 40px -14px rgba(0, 0, 0, 0.8), 0 0 24px -6px rgba(214, 207, 255, 0.45);
+      }
+      .intro .way-q {
+        color: #a9a6d6;
+      }
+      .intro .way-d {
+        color: #c9c6ec;
       }
       .wk-num {
         border: 1px solid var(--edge);
