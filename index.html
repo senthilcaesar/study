@@ -954,12 +954,14 @@
         width: calc(var(--s) * var(--k));
         height: calc(var(--s) * var(--k));
         border-radius: 50%;
+        /* a soft highlight over the planet's own paint */
         background:
-          radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.75) 0 3%, rgba(255, 255, 255, 0) 32%),
-          radial-gradient(circle at 36% 32%, var(--c) 0 42%, color-mix(in srgb, var(--c) 55%, #05060f) 72%, #05060f 100%);
+          radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.5) 0 3%, rgba(255, 255, 255, 0) 30%),
+          var(--paint);
+        /* a glow in the planet's colour, and the night side shaded over everything */
         box-shadow:
           0 0 calc(34px * var(--k)) -6px var(--c),
-          inset calc(-10px * var(--k)) calc(-12px * var(--k)) calc(26px * var(--k)) rgba(0, 0, 0, 0.45);
+          inset calc(-14px * var(--k)) calc(-16px * var(--k)) calc(30px * var(--k)) rgba(3, 4, 12, 0.6);
         animation: drift var(--f) ease-in-out var(--fd) infinite alternate;
         transition: scale 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
       }
@@ -984,54 +986,74 @@
         text-decoration: underline;
         text-underline-offset: 4px;
       }
-      /* Agents: the big blue world, with a pale band of cloud */
-      .p-agents { --i: 0; --s: 150px; --x: 3%; --y: 24%; --f: 7s; --fd: -2s; }
-      .p-agents .orb::before {
-        inset: 0;
-        border-radius: 50%;
-        background:
-          radial-gradient(ellipse 60% 18% at 46% 58%, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0)),
-          radial-gradient(ellipse 40% 12% at 58% 36%, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+      /* Each topic is a real planet, painted as gradient layers under the shared
+         highlight; the inset shadow then shades the night side over all of it.
+         Sizes keep the real order: Jupiter, Saturn, Earth, Neptune, Mars. */
+      /* MCP is Jupiter: cream, tan and brown belts, and the Great Red Spot */
+      .p-mcp {
+        --i: 0; --s: 140px; --x: 2%; --y: 24%; --f: 10s; --fd: -6s;
+        --c: #e0b88a;
+        --paint:
+          radial-gradient(ellipse 15% 9% at 64% 64%, #c45a3a 0 55%, #d88a62 66%, rgba(216, 138, 98, 0) 74%),
+          linear-gradient(176deg, #d9c3a1 0 12%, #f0e4cf 12% 22%, #b98a62 22% 30%, #efe2c8 30% 40%, #c49a72 40% 48%, #e9d8bb 48% 58%, #a8744f 58% 66%, #eadcc2 66% 76%, #c6a27c 76% 86%, #dcc6a4 86% 100%);
       }
-      /* Skills: a banded gas giant */
-      .p-skills { --i: 1; --s: 118px; --x: 44%; --y: 0%; --f: 9s; --fd: -5s; }
-      .p-skills .orb::before {
-        inset: 0;
-        border-radius: 50%;
-        background: repeating-linear-gradient(-16deg, rgba(255, 255, 255, 0) 0 9%, rgba(255, 255, 255, 0.14) 9% 15%, rgba(5, 6, 15, 0.12) 15% 21%);
+      /* Agents is Earth: oceans, two continents, cloud streaks and a polar cap */
+      .p-agents {
+        --i: 1; --s: 96px; --x: 45%; --y: 2%; --f: 7s; --fd: -2s;
+        --c: #4a90e2;
+        --paint:
+          radial-gradient(ellipse 46% 9% at 50% 30%, rgba(255, 255, 255, 0.75) 0 40%, rgba(255, 255, 255, 0) 70%),
+          radial-gradient(ellipse 40% 7% at 58% 80%, rgba(255, 255, 255, 0.6) 0 40%, rgba(255, 255, 255, 0) 70%),
+          radial-gradient(circle at 50% 4%, #f4f8ff 0 10%, rgba(244, 248, 255, 0) 12%),
+          radial-gradient(ellipse 30% 22% at 36% 46%, #6f9a52 0 60%, rgba(111, 154, 82, 0) 64%),
+          radial-gradient(ellipse 20% 28% at 66% 60%, #8f8a4f 0 55%, rgba(143, 138, 79, 0) 60%),
+          radial-gradient(ellipse 16% 10% at 30% 72%, #6a8f4d 0 55%, rgba(106, 143, 77, 0) 60%),
+          radial-gradient(circle at 40% 35%, #3f86d6, #1d4f97 60%, #0b2350 100%);
       }
-      /* Evals: a small pink world with its own moon */
-      .p-evals { --i: 2; --s: 66px; --x: 82%; --y: 12%; --f: 6s; --fd: -1s; }
+      /* Skills is Mars: rust red, darker regions and a white polar cap */
+      .p-skills {
+        --i: 2; --s: 70px; --x: 81%; --y: 10%; --f: 6s; --fd: -1s;
+        --c: #e0663a;
+        --paint:
+          radial-gradient(ellipse 30% 12% at 50% 6%, #f6efe8 0 50%, rgba(246, 239, 232, 0) 62%),
+          radial-gradient(ellipse 28% 14% at 40% 48%, #8c3a22 0 55%, rgba(140, 58, 34, 0) 66%),
+          radial-gradient(ellipse 18% 22% at 66% 60%, #7d3320 0 50%, rgba(125, 51, 32, 0) 62%),
+          radial-gradient(ellipse 20% 8% at 30% 74%, #9a4527 0 50%, rgba(154, 69, 39, 0) 62%),
+          radial-gradient(circle at 40% 35%, #e0764a, #b4492a 60%, #5e1f10 100%);
+      }
+      /* Harness is Saturn: pale gold bands and its ring */
+      .p-harness {
+        --i: 3; --s: 112px; --x: 40%; --y: 56%; --f: 8s; --fd: -3s;
+        --c: #e8c98a;
+        --paint: linear-gradient(174deg, #e6cf9c 0 18%, #f2e2bb 18% 30%, #d6b67e 30% 40%, #efdcb0 40% 55%, #cfae76 55% 64%, #ead6a8 64% 80%, #d2b37d 80% 100%);
+      }
+      .p-harness .orb::after {
+        left: -40%;
+        right: -40%;
+        top: 40%;
+        height: 20%;
+        border: calc(4px * var(--k) + 1px) solid #d9c49a;
+        border-radius: 50%;
+        box-shadow: 0 0 0 calc(3px * var(--k) + 1px) rgba(217, 196, 154, 0.35);
+        rotate: -16deg;
+        opacity: 0.9;
+      }
+      /* Evals is Neptune: deep blue, faint bands, a dark storm, and Triton */
+      .p-evals {
+        --i: 4; --s: 90px; --x: 76%; --y: 54%; --f: 9s; --fd: -5s;
+        --c: #4f7bff;
+        --paint:
+          radial-gradient(ellipse 16% 9% at 60% 58%, rgba(10, 20, 70, 0.55) 0 60%, rgba(10, 20, 70, 0) 70%),
+          linear-gradient(172deg, rgba(170, 200, 255, 0) 0 30%, rgba(170, 200, 255, 0.18) 30% 36%, rgba(170, 200, 255, 0) 36% 62%, rgba(170, 200, 255, 0.14) 62% 67%, rgba(170, 200, 255, 0) 67%),
+          radial-gradient(circle at 40% 35%, #5b8cff, #2f52c9 60%, #13226b 100%);
+      }
       .p-evals .orb::after {
-        width: 30%;
-        height: 30%;
-        top: -14%;
-        right: -34%;
+        width: 22%;
+        height: 22%;
+        top: -10%;
+        right: -26%;
         border-radius: 50%;
         background: radial-gradient(circle at 35% 30%, #f4f2ff, #8b88a8 75%);
-      }
-      /* Harness: ringed, the ring tilted across the planet */
-      .p-harness { --i: 3; --s: 104px; --x: 40%; --y: 56%; --f: 8s; --fd: -3s; }
-      .p-harness .orb::after {
-        left: -38%;
-        right: -38%;
-        top: 41%;
-        height: 18%;
-        border: calc(3px * var(--k) + 1px) solid color-mix(in srgb, var(--c) 70%, #fff);
-        border-radius: 50%;
-        rotate: -16deg;
-        opacity: 0.85;
-      }
-      /* MCP: a small cratered world */
-      .p-mcp { --i: 4; --s: 84px; --x: 76%; --y: 54%; --f: 10s; --fd: -6s; }
-      .p-mcp .orb::before {
-        inset: 0;
-        border-radius: 50%;
-        background:
-          radial-gradient(circle at 62% 40%, rgba(5, 6, 15, 0.22) 0 8%, rgba(5, 6, 15, 0) 9%),
-          radial-gradient(circle at 40% 68%, rgba(5, 6, 15, 0.18) 0 6%, rgba(5, 6, 15, 0) 7%),
-          radial-gradient(circle at 70% 70%, rgba(5, 6, 15, 0.16) 0 5%, rgba(5, 6, 15, 0) 6%),
-          radial-gradient(circle at 30% 45%, rgba(5, 6, 15, 0.14) 0 4%, rgba(5, 6, 15, 0) 5%);
       }
       @keyframes arrive {
         from {
@@ -2974,7 +2996,7 @@
         road: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="5" cy="18" r="2.2"/><circle cx="19" cy="6" r="2.2"/><path d="M7 18h6a3 3 0 0 0 0-6h-2a3 3 0 0 1 0-6h6"/></svg>',
         library: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><rect x="14" y="14" width="6" height="6"/></svg>',
       };
-      // the planets: five library topics, each opening that topic
+      // the planets: five library topics, each drawn as a real planet and opening that topic
       const PLANETS = [
         { id: "agents", name: "Agents" },
         { id: "skills", name: "Skills" },
@@ -3025,7 +3047,7 @@
             </div>
             <div class="intro-art">
               <div class="planets">
-                ${PLANETS.map((t) => `<a class="planet p-${t.id}" href="#${t.id}" style="--c:var(--c-${t.id})" aria-label="${t.name}: open this topic in the library"><span class="orb" aria-hidden="true"></span><span class="pname">${t.name}</span></a>`).join("")}
+                ${PLANETS.map((t) => `<a class="planet p-${t.id}" href="#${t.id}" aria-label="${t.name}: open this topic in the library"><span class="orb" aria-hidden="true"></span><span class="pname">${t.name}</span></a>`).join("")}
               </div>
               <p class="shelf-caption">Five topics to start with. Pick a planet to open it in the library.</p>
             </div>
