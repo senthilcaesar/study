@@ -310,7 +310,7 @@
         list-style: none;
         margin: 24px 0;
         padding: 0;
-        counter-reset: step;
+        counter-reset: step -1; /* basics is step 0, so each step number matches its layer */
       }
       .steps > li {
         position: relative;
@@ -346,6 +346,15 @@
       }
       .steps p {
         margin: 0 0 10px;
+      }
+      .step-layer {
+        display: block;
+        margin-bottom: 2px;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--dim);
       }
       .weeks {
         display: flex;
@@ -562,11 +571,12 @@
 
       <h2>In what order should I learn it?</h2>
       <p>
-        The rule behind this order is simple: learn each idea just before you need it. Each step below links to the
-        roadmap weeks that teach it.
+        After four weeks of basics, the roadmap climbs the five layers from the bottom up, one layer at a time. Each
+        step below names its layer and links to the roadmap weeks that teach it.
       </p>
       <ol class="steps">
         <li style="--sw: var(--c-foundations)">
+          <span class="step-layer">Basics</span>
           <h3>Learn what a model is, and call one from code</h3>
           <p>
             Start with what AI can and can't do, enough Python to write a short script, and how to prompt well. Then
@@ -582,83 +592,78 @@
             <li><a href="index.html#week-4">week 4 · build with LLMs</a></li>
           </ul>
         </li>
-        <li style="--sw: var(--c-graphrag)">
-          <h3>Give it knowledge it wasn't trained on</h3>
-          <p>
-            <strong>Retrieval-augmented generation (RAG)</strong> means looking up the relevant passages in your own
-            documents and handing them to the model with the question. It's like letting someone check their notes
-            before they answer. You'll meet <strong>embeddings</strong>, which turn text into lists of numbers so
-            that passages with similar meanings end up close together and can be found by meaning, not just by
-            matching words.
-          </p>
-          <ul class="weeks">
-            <li><a href="index.html#week-5">week 5 · RAG</a></li>
-          </ul>
-        </li>
-        <li style="--sw: var(--c-agents)">
-          <h3>Let it act, by building the loop yourself</h3>
+        <li style="--sw: var(--c-skills)">
+          <span class="step-layer">Layer 1 · Capabilities</span>
+          <h3>Let it act, then give it tools and know-how</h3>
           <p>
             Build an agent by hand: call the model, run the tool it asks for, give it the result, and repeat until
-            it's done. That loop is all an agent is. Build it once yourself before you use a framework, so the
-            framework never feels like magic. Also learn the distinction that saves the most effort: many tasks need
-            a fixed <strong>workflow</strong> (step A, then step B) and not an open-ended agent at all.
+            it's done. That loop is all an agent is. Many tasks don't even need an agent, just a fixed
+            <strong>workflow</strong> (step A, then step B). Then look inside the model you've been calling, and
+            learn two ways to hand an agent more abilities. The <strong>Model Context Protocol (MCP)</strong> is a
+            standard plug for tools: write a tool once as an MCP server and any compatible agent can use it.
+            <strong>Agent Skills</strong> are folders of instructions and scripts an agent loads only when a task
+            needs them.
           </p>
           <ul class="weeks">
-            <li><a href="index.html#week-6">week 6 · your first agent</a></li>
+            <li><a href="index.html#week-5">week 5 · your first agent</a></li>
+            <li><a href="index.html#week-6">week 6 · how LLMs work</a></li>
+            <li><a href="index.html#week-7">week 7 · MCP fundamentals</a></li>
+            <li><a href="index.html#week-8">week 8 · build an MCP server</a></li>
+            <li><a href="index.html#week-9">week 9 · Agent Skills</a></li>
           </ul>
         </li>
         <li style="--sw: var(--c-context)">
-          <h3>Understand the model, then manage what it sees</h3>
+          <span class="step-layer">Layer 2 · Knowledge and context</span>
+          <h3>Give it knowledge, and choose what it sees</h3>
           <p>
-            Now that you've watched an agent's input grow with every turn, two questions come up: how does the model
-            actually work, and what should it be shown? <strong>Context engineering</strong> is the craft of filling
-            the model's limited working space with the right instructions, retrieved passages, memory and tool
-            results, and leaving out everything else.
+            <strong>Retrieval-augmented generation (RAG)</strong> means looking up the relevant passages in your own
+            documents and handing them to the model with the question, like letting someone check their notes before
+            they answer. It uses <strong>embeddings</strong>, which turn text into lists of numbers so that passages
+            with similar meanings can be found by meaning, not just by matching words. <strong>Context
+            engineering</strong> is deciding what goes into the model's limited working space and what stays out.
+            Knowledge graphs help when the answer only appears once you connect facts across many documents.
           </p>
           <ul class="weeks">
-            <li><a href="index.html#week-7">week 7 · how LLMs work</a></li>
-            <li><a href="index.html#week-8">week 8 · context engineering</a></li>
+            <li><a href="index.html#week-10">week 10 · RAG</a></li>
+            <li><a href="index.html#week-11">week 11 · context engineering</a></li>
+            <li><a href="index.html#week-12">week 12 · knowledge graphs</a></li>
           </ul>
         </li>
-        <li style="--sw: var(--c-mcp)">
-          <h3>Package tools and know-how so any agent can use them</h3>
+        <li style="--sw: var(--c-agents)">
+          <span class="step-layer">Layer 3 · Execution and control</span>
+          <h3>Build the harness around the model</h3>
           <p>
-            The <strong>Model Context Protocol (MCP)</strong> is a standard plug for tools: write a tool once as an
-            MCP server and any compatible agent can use it. <strong>Agent Skills</strong> package know-how, meaning
-            folders of instructions and scripts an agent loads only when a task needs them. Both build on the tool
-            loop from step 3, which is why they come after it.
+            The <strong>harness</strong> is everything around the model: the loop, the tools, the memory, the sandbox
+            that limits what commands can do, and the rules for retrying, stopping and asking a human. Tune the
+            harness and you change how good the agent is, often more than switching models would. You'll see a real
+            one up close by driving a coding agent.
           </p>
           <ul class="weeks">
-            <li><a href="index.html#week-9">week 9 · MCP fundamentals</a></li>
-            <li><a href="index.html#week-10">week 10 · build an MCP server</a></li>
-            <li><a href="index.html#week-11">week 11 · Agent Skills</a></li>
+            <li><a href="index.html#week-13">week 13 · harnesses</a></li>
           </ul>
         </li>
         <li style="--sw: var(--c-evals)">
-          <h3>Make it dependable</h3>
+          <span class="step-layer">Layer 4 · Quality and trust</span>
+          <h3>Prove that it works</h3>
           <p>
             <strong>Evals</strong> are tests for AI systems: a set of inputs, plus a way to score the outputs. The
-            score can come from exact checks, a rubric, or another model acting as judge. The
-            <strong>harness</strong> is everything around the model: the loop, the tools, the sandbox that limits
-            what commands can do, and the rules for retrying and stopping. Tune the harness and you change how good
-            the agent is, often more than switching models would.
+            score can come from exact checks, a rubric, or another model acting as judge. Run them on every change,
+            so "it seems better" becomes a number.
           </p>
           <ul class="weeks">
-            <li><a href="index.html#week-12">week 12 · evaluating agents</a></li>
-            <li><a href="index.html#week-14">week 14 · harnesses</a></li>
+            <li><a href="index.html#week-14">week 14 · evaluating agents</a></li>
           </ul>
         </li>
         <li style="--sw: var(--c-harness)">
-          <h3>Take it to production, and go deeper where you need to</h3>
+          <span class="step-layer">Layer 5 · Production</span>
+          <h3>Run it for real, then go deeper if you want</h3>
           <p>
-            Learn to run agents for real: caching, cost and latency, retries, monitoring. If your documents hide
-            answers that only appear when you connect facts across many files, look at knowledge graphs. Machine
-            learning theory, the maths and the research frontier are worth it eventually, but they're optional. You
-            can build good systems without them first.
+            Learn how real agent systems are kept reliable, fast and cheap: caching, cost and latency, retries,
+            monitoring. Machine learning theory, the maths and the research frontier are worth it eventually, but
+            they're optional. You can build good systems without them first.
           </p>
           <ul class="weeks">
             <li><a href="index.html#week-15">week 15 · production</a></li>
-            <li><a href="index.html#week-13">week 13 · knowledge graphs</a></li>
             <li><a href="index.html#week-16">weeks 16–18 · going deeper</a></li>
           </ul>
         </li>
@@ -673,7 +678,7 @@
           <h3>Keep a small test set from your first prompt</h3>
           <p>
             Write down 20 to 30 inputs and what a good answer looks like, and rerun them after every change. Without
-            them, "it works now" means "it worked on the one thing I tried". A spreadsheet is enough to start. Week 12
+            them, "it works now" means "it worked on the one thing I tried". A spreadsheet is enough to start. Week 14
             turns it into proper evals.
           </p>
         </div>
@@ -716,24 +721,24 @@
               <td>how many of your 20 sample requirements get sensible cases</td>
             </tr>
             <tr>
-              <td>week 5</td>
+              <td>weeks 5–9</td>
+              <td>run the tests itself, read failures and try again, using your tools through MCP and your team's testing procedures as Skills</td>
+              <td>how often it finishes a task without help</td>
+            </tr>
+            <tr>
+              <td>weeks 10–12</td>
               <td>find similar past test cases and reuse their patterns</td>
               <td>whether retrieval raised the score from the step before</td>
             </tr>
             <tr>
-              <td>weeks 6–8</td>
-              <td>run the tests itself, read failures and try again</td>
-              <td>how often it finishes a task without help</td>
-            </tr>
-            <tr>
-              <td>weeks 9–11</td>
-              <td>reach your tools through MCP and follow your team's testing procedures as Skills</td>
-              <td>whether a second agent can reuse the same tools unchanged</td>
-            </tr>
-            <tr>
-              <td>weeks 12–14</td>
+              <td>week 13</td>
               <td>ask before anything destructive, with every run traced</td>
-              <td>pass rate on a proper eval set, and the cause of each failure</td>
+              <td>where in a run each failure starts</td>
+            </tr>
+            <tr>
+              <td>week 14</td>
+              <td>be scored on a proper eval set after every change</td>
+              <td>pass rate, and whether each change moved it</td>
             </tr>
             <tr>
               <td>week 15</td>

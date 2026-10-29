@@ -6,7 +6,7 @@
     <title>AI Learning Shelf</title>
     <meta
       name="description"
-      content="A 12-week roadmap from beginner to advanced, plus a curated shelf of free courses, talks, tutorials and articles on agents, MCP, skills, RAG, evals and more."
+      content="An 18-week roadmap from beginner to advanced, plus a curated shelf of free courses, talks, tutorials and articles on agents, MCP, skills, RAG, evals and more."
     />
     <link
       rel="icon"
@@ -1979,26 +1979,27 @@
           about: "Agent = Model + Harness: works back from what agents need to the harness parts that provide it (filesystems, bash, sandboxes, memory, context management, long-horizon loops) and where harnesses are heading.", time: "12 min read", cost: "Free" },
       ];
 
-      // The roadmap: three stages, twelve weeks. Each week points at RESOURCES by
+      // The roadmap: three stages, eighteen weeks, ordered by the five layers on
+      // start.html (capabilities, knowledge, execution, quality, production). Each week points at RESOURCES by
       // url; `opt: true` marks extra reading that doesn't count toward progress.
       const STAGES = [
         {
           id: "beginner",
           name: "Beginner",
           sub: "Foundations",
-          blurb: "Understand what AI is, learn enough Python and prompting to use it, then call models from code, ground them in your own documents and build a first agent.",
+          blurb: "Understand what AI is, learn enough Python and prompting to use it, call models from code and build a first agent that uses tools.",
         },
         {
           id: "intermediate",
           name: "Intermediate",
-          sub: "Tools, skills and evals",
-          blurb: "Learn how LLMs work inside, manage what goes into the context window, connect agents to the outside world with MCP, package know-how as Skills, and measure whether any of it works.",
+          sub: "Capabilities, knowledge and context",
+          blurb: "Learn how LLMs work inside, connect agents to the outside world with MCP, package know-how as Skills, ground them in your own documents and knowledge graphs, and manage what goes into the context window.",
         },
         {
           id: "advanced",
           name: "Advanced",
-          sub: "Systems and research",
-          blurb: "Ground agents in knowledge graphs, engineer the harness around the model, learn machine learning and the maths underneath, and study how production and self-improving systems are built.",
+          sub: "Execution, quality and production",
+          blurb: "Engineer the harness around the model, measure whether it works with evals, study how production systems are kept reliable and cheap, then go deeper into machine learning, the maths and the research frontier.",
         },
       ];
 
@@ -2040,15 +2041,6 @@
           learn: [{ url: "https://developer.microsoft.com/en-us/reactor/series/S-1581/" }],
         },
         {
-          id: "rag", stage: "beginner", t: "graphrag",
-          title: "Retrieval-augmented generation",
-          goal: "Learn why models need retrieval, and how parsing, chunking, embeddings and vector search ground answers in your own documents.",
-          learn: [
-            { url: "https://www.deeplearning.ai/courses/retrieval-augmented-generation" },
-            { url: "https://youtu.be/RQi7x-navxU", note: "Why document parsing quietly decides how good your RAG is." },
-          ],
-        },
-        {
           id: "agent", stage: "beginner", t: "agents",
           title: "Your first agent",
           goal: "Move from single calls to a loop where the model chooses a tool, sees the result and decides what to do next.",
@@ -2067,15 +2059,6 @@
           learn: [
             { url: "https://www.quantamagazine.org/is-attention-the-essence-of-intelligence-20261012/", key: true, note: "Essential reading: what the attention mechanism does and why it made transformers work. Read it before the course." },
             { url: "https://www.coursera.org/learn/generative-ai-with-llms" },
-          ],
-        },
-        {
-          id: "context", stage: "intermediate", t: "context",
-          title: "Context engineering",
-          goal: "Treat the context window as a budget: what goes in, in what order, and what gets left out as your agents take on longer tasks.",
-          learn: [
-            { url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" },
-            { url: "https://www.langchain.com/blog/context-engineering-starts-with-retrieval", note: "Getting the right context in: search cheaply, load only what's needed, and offload the rest." },
           ],
         },
         {
@@ -2111,18 +2094,25 @@
           ],
         },
         {
-          id: "evals", stage: "intermediate", t: "evals",
-          title: "Evaluating agents",
-          goal: "Replace “it seems better” with numbers: test sets, code-based checks, LLM judges and automated runs on every change.",
+          id: "rag", stage: "intermediate", t: "graphrag",
+          title: "Retrieval-augmented generation",
+          goal: "Learn why models need retrieval, and how parsing, chunking, embeddings and vector search ground answers in your own documents.",
           learn: [
-            { url: "https://hugobowne.substack.com/p/how-evals-are-central-to-harness" },
-            { url: "https://www.langchain.com/blog/common-questions-about-agent-evals", note: "Quick answers to the questions you'll hit first: where to start, which evaluator to use, and when to trust an LLM judge." },
-            { url: "https://www.deeplearning.ai/courses/evaluating-ai-agents" },
-            { url: "https://www.deeplearning.ai/courses/automated-testing-llmops" },
+            { url: "https://www.deeplearning.ai/courses/retrieval-augmented-generation" },
+            { url: "https://youtu.be/RQi7x-navxU", note: "Why document parsing quietly decides how good your RAG is." },
           ],
         },
         {
-          id: "graphs", stage: "advanced", t: "graphrag",
+          id: "context", stage: "intermediate", t: "context",
+          title: "Context engineering",
+          goal: "Treat the context window as a budget: what goes in, in what order, and what gets left out as your agents take on longer tasks.",
+          learn: [
+            { url: "https://senthilcaesar.github.io/blogs/#/posts/context-engineering" },
+            { url: "https://www.langchain.com/blog/context-engineering-starts-with-retrieval", note: "Getting the right context in: search cheaply, load only what's needed, and offload the rest." },
+          ],
+        },
+        {
+          id: "graphs", stage: "intermediate", t: "graphrag",
           title: "Knowledge graphs and GraphRAG",
           goal: "Learn when relationships between facts matter more than similarity, and how agents can build and query knowledge graphs.",
           learn: [
@@ -2141,6 +2131,17 @@
             { url: "https://www.langchain.com/blog/the-anatomy-of-an-agent-harness", note: "Each harness part traced back to the agent behaviour it makes possible." },
             { url: "https://anthropic.skilljar.com/claude-code-101", note: "A real harness up close: how Claude Code reads, plans, edits and asks permission." },
             { url: "https://anthropic.skilljar.com/claude-code-in-action", note: "Drive it on real work: context, custom commands, hooks and MCP servers." },
+          ],
+        },
+        {
+          id: "evals", stage: "advanced", t: "evals",
+          title: "Evaluating agents",
+          goal: "Replace “it seems better” with numbers: test sets, code-based checks, LLM judges and automated runs on every change.",
+          learn: [
+            { url: "https://hugobowne.substack.com/p/how-evals-are-central-to-harness" },
+            { url: "https://www.langchain.com/blog/common-questions-about-agent-evals", note: "Quick answers to the questions you'll hit first: where to start, which evaluator to use, and when to trust an LLM judge." },
+            { url: "https://www.deeplearning.ai/courses/evaluating-ai-agents" },
+            { url: "https://www.deeplearning.ai/courses/automated-testing-llmops" },
           ],
         },
         {
