@@ -232,7 +232,7 @@
         display: grid;
         gap: 10px;
       }
-      .layers li {
+      .layers > li {
         display: grid;
         grid-template-columns: 44px minmax(0, 1fr);
         gap: 14px;
@@ -265,6 +265,47 @@
         font-family: var(--mono);
         font-size: 0.75rem;
         color: var(--dim);
+      }
+      /* hover (or focus) a layer card to see its terms as a list beside it;
+         the list is built from .terms by the script at the bottom */
+      .layers > li {
+        position: relative;
+        cursor: default;
+      }
+      .layers .pop {
+        position: absolute;
+        z-index: 5;
+        left: calc(100% + 14px);
+        top: -2px;
+        width: 230px;
+        margin: 0;
+        padding: 10px 14px 10px 30px;
+        border: 2px solid var(--line);
+        border-top: 8px solid var(--sw);
+        background: var(--surface);
+        box-shadow: 3px 3px 0 var(--shadow);
+        font-family: var(--mono);
+        font-size: 0.78rem;
+        line-height: 1.7;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateX(-6px);
+        transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+      }
+      .layers > li:hover .pop,
+      .layers > li:focus-within .pop,
+      .layers > li:focus .pop {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+      /* not enough room on the right: open the list below the card instead */
+      @media (max-width: 1259px) {
+        .layers .pop {
+          left: 72px;
+          top: calc(100% + 6px);
+          transform: translateY(-6px);
+        }
       }
 
       /* the learning steps */
@@ -726,6 +767,21 @@
     </main>
 
     <script>
+      // turn each layer's "a · b · c" terms line into the hover list
+      document.querySelectorAll(".layers > li").forEach((li) => {
+        const terms = li.querySelector(".terms").textContent.split("·").map((t) => t.trim());
+        const pop = document.createElement("ul");
+        pop.className = "pop";
+        pop.setAttribute("aria-label", "Terms in this layer");
+        terms.forEach((t) => {
+          const item = document.createElement("li");
+          item.textContent = t;
+          pop.appendChild(item);
+        });
+        li.tabIndex = 0;
+        li.appendChild(pop);
+      });
+
       const root = document.documentElement;
       const themeBtn = document.getElementById("theme-btn");
       let theme = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
