@@ -2048,8 +2048,8 @@
           <div class="fmt-row" id="status-row"></div>
           <div class="rail-label" style="padding: 8px 0 0">Layout</div>
           <div class="fmt-row" role="group" aria-label="Layout">
-            <button class="fmt-btn" type="button" id="view-list" aria-pressed="true">list</button>
-            <button class="fmt-btn" type="button" id="view-grid" aria-pressed="false">cards</button>
+            <button class="fmt-btn" type="button" id="view-list" aria-pressed="false">list</button>
+            <button class="fmt-btn" type="button" id="view-grid" aria-pressed="true">cards</button>
           </div>
           <div class="rail-label" style="padding: 8px 0 0">Your progress</div>
           <div class="rail-progress" id="rail-progress"></div>
@@ -2467,7 +2467,7 @@
       };
 
       // every visit opens on the library in list view; only a #week-N link opens the roadmap
-      const state = { mode: "intro", topic: "all", format: "all", status: "all", q: "", view: "list" };
+      const state = { mode: "intro", topic: "all", format: "all", status: "all", q: "", view: "grid" };
 
       // progress: ticked resource urls, plus "week:<id>" once a week is marked complete
       let done = new Set();
