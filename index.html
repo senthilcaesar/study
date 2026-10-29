@@ -49,6 +49,7 @@
         --c-docs: #b5e3e0;
         --c-claude-code: #e9b8a6;
         --c-foundations: #aab4ff;
+        --c-start: #ffd9b8;       /* only the start button uses this */
 
         --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
         --body: "Atkinson Hyperlegible", -apple-system, "Segoe UI", system-ui, sans-serif;
@@ -82,6 +83,7 @@
         --c-docs: #85c1dc;      /* sapphire */
         --c-claude-code: #f2d5cf; /* rosewater */
         --c-foundations: #babbf1; /* lavender */
+        --c-start: #eebebe;       /* flamingo */
         color-scheme: dark;
       }
 
@@ -263,8 +265,8 @@
       .start-btn {
         display: inline-block;
         border: 2px solid var(--line);
-        /* soft lilac, the same colour as the guide's icon on the intro */
-        background: var(--c-skills);
+        /* a soft apricot no card or topic uses, so the button stands apart quietly */
+        background: var(--c-start);
         color: var(--chip-ink);
         padding: 6px 10px;
         font-family: var(--mono);
