@@ -1,0 +1,747 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Where to Start</title>
+    <meta
+      name="description"
+      content="New to AI engineering? The five layers of the field, the order to learn them in, the habits to start on day one and one project to carry through the whole roadmap."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2316181d'/%3E%3Crect x='6' y='7' width='5' height='18' fill='%23c9b8ff'/%3E%3Crect x='13' y='10' width='5' height='15' fill='%23d4f25c'/%3E%3Crect x='20' y='5' width='6' height='20' fill='%238fd3ff' transform='rotate(8 23 15)'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // apply the saved theme before first paint so the page doesn't flash
+      try {
+        if (localStorage.getItem("shelf-theme") === "dark") document.documentElement.setAttribute("data-theme", "dark");
+      } catch (e) {}
+    </script>
+
+    <style>
+      /* Same tokens as index.html, so the two pages read as one site */
+      :root {
+        --bg: #eef1ec;
+        --surface: #ffffff;
+        --sunk: #e2e7df;
+        --ink: #16181d;
+        --ink-soft: #4a4f57;
+        --dim: #6f746c;
+        --line: #16181d;
+        --hair: #c7cdc3;
+        --accent: #3b2bd9;
+        --on-accent: #ffffff;
+        --chip-ink: #16181d;
+        --shadow: #16181d;
+
+        --c-skills: #c9b8ff;
+        --c-agents: #8fd3ff;
+        --c-harness: #ffd166;
+        --c-context: #8ef0c4;
+        --c-mcp: #d4f25c;
+        --c-evals: #ffb3d9;
+        --c-graphrag: #ffab91;
+        --c-foundations: #aab4ff;
+
+        --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+        --body: "Atkinson Hyperlegible", -apple-system, "Segoe UI", system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+        color-scheme: light;
+      }
+      :root[data-theme="dark"] {
+        --bg: #303446;
+        --surface: #414559;
+        --sunk: #292c3c;
+        --ink: #c6d0f5;
+        --ink-soft: #a5adce;
+        --dim: #838ba7;
+        --line: #949cbb;
+        --hair: #51576d;
+        --accent: #ca9ee6;
+        --on-accent: #232634;
+        --shadow: #232634;
+        --chip-ink: #232634;
+        --c-skills: #ca9ee6;
+        --c-agents: #99d1db;
+        --c-harness: #e5c890;
+        --c-context: #81c8be;
+        --c-mcp: #a6d189;
+        --c-evals: #f4b8e4;
+        --c-graphrag: #ef9f76;
+        --c-foundations: #babbf1;
+        color-scheme: dark;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--ink);
+        font: 400 17px/1.65 var(--body);
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: inherit;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      ::selection {
+        background: var(--accent);
+        color: var(--on-accent);
+      }
+
+      /* ---------- top bar ---------- */
+      .bar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 64px;
+        padding: 10px 20px;
+        background: var(--bg);
+        border-bottom: 1px solid var(--hair);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.15rem;
+        letter-spacing: -0.02em;
+        text-decoration: none;
+      }
+      .brand-mark {
+        display: flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 22px;
+      }
+      .brand-mark i {
+        display: block;
+        width: 6px;
+        border: 1.5px solid var(--line);
+      }
+      .brand-mark i:nth-child(1) { height: 20px; background: var(--c-skills); }
+      .brand-mark i:nth-child(2) { height: 15px; background: var(--c-mcp); }
+      .brand-mark i:nth-child(3) { height: 22px; background: var(--c-agents); transform: rotate(9deg); transform-origin: bottom left; }
+      .bar-meta {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn {
+        display: inline-block;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        padding: 6px 10px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        text-decoration: none;
+        white-space: nowrap;
+        box-shadow: 2px 2px 0 var(--shadow);
+      }
+      .btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
+
+      /* ---------- article ---------- */
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 48px 20px 80px;
+      }
+      .kicker {
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--dim);
+        margin: 0 0 10px;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+      }
+      h1 {
+        font-size: clamp(2.2rem, 6vw, 3.4rem);
+        font-weight: 800;
+        margin: 0 0 20px;
+      }
+      h2 {
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-weight: 750;
+        margin: 64px 0 14px;
+      }
+      h3 {
+        font-size: 1.15rem;
+        font-weight: 750;
+        margin: 0 0 6px;
+      }
+      p {
+        margin: 0 0 16px;
+      }
+      .lede {
+        font-size: 1.15rem;
+        color: var(--ink-soft);
+      }
+      strong {
+        font-weight: 700;
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 0.85em;
+        background: var(--sunk);
+        padding: 1px 5px;
+      }
+
+      /* the five layers, stacked like a layer cake */
+      .layers {
+        list-style: none;
+        margin: 24px 0;
+        padding: 0;
+        display: grid;
+        gap: 10px;
+      }
+      .layers li {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr);
+        gap: 14px;
+        align-items: start;
+        padding: 14px 16px;
+        border: 2px solid var(--line);
+        background: var(--surface);
+        box-shadow: 3px 3px 0 var(--shadow);
+      }
+      .layers .num {
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border: 2px solid var(--line);
+        background: var(--sw);
+        color: var(--chip-ink);
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.4rem;
+      }
+      .layers p {
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 0.95rem;
+      }
+      .layers .terms {
+        display: block;
+        margin-top: 4px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        color: var(--dim);
+      }
+
+      /* the learning steps */
+      .steps {
+        list-style: none;
+        margin: 24px 0;
+        padding: 0;
+        counter-reset: step;
+      }
+      .steps > li {
+        position: relative;
+        padding: 0 0 28px 64px;
+        counter-increment: step;
+      }
+      .steps > li::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: grid;
+        place-items: center;
+        width: 44px;
+        height: 44px;
+        border: 2px solid var(--line);
+        background: var(--sw, var(--surface));
+        color: var(--chip-ink);
+        font-family: var(--display);
+        font-weight: 800;
+        font-size: 1.3rem;
+      }
+      .steps > li::after {
+        content: "";
+        position: absolute;
+        left: 21px;
+        top: 46px;
+        bottom: 4px;
+        border-left: 2px dashed var(--hair);
+      }
+      .steps > li:last-child::after {
+        display: none;
+      }
+      .steps p {
+        margin: 0 0 10px;
+      }
+      .weeks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      .weeks a {
+        display: inline-block;
+        border: 1.5px solid var(--line);
+        background: var(--surface);
+        padding: 3px 8px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        text-decoration: none;
+      }
+      .weeks a:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: var(--on-accent);
+      }
+
+      /* callout for the day-one habits */
+      .habits {
+        display: grid;
+        gap: 12px;
+        margin: 24px 0;
+      }
+      .habit {
+        border: 2px solid var(--line);
+        border-left-width: 8px;
+        border-left-color: var(--sw);
+        background: var(--surface);
+        padding: 14px 18px;
+      }
+      .habit p {
+        margin: 0;
+        color: var(--ink-soft);
+        font-size: 0.95rem;
+      }
+
+      /* the project milestones */
+      .table-wrap {
+        overflow-x: auto;
+        margin: 24px 0;
+        border: 2px solid var(--line);
+        box-shadow: 3px 3px 0 var(--shadow);
+        background: var(--surface);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+      }
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--hair);
+      }
+      th {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--dim);
+        background: var(--sunk);
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      td:first-child {
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+
+      .cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 32px;
+      }
+      .cta a {
+        display: inline-block;
+        border: 2px solid var(--line);
+        padding: 12px 18px;
+        font-family: var(--display);
+        font-weight: 750;
+        font-size: 1.05rem;
+        text-decoration: none;
+        box-shadow: 3px 3px 0 var(--shadow);
+        background: var(--surface);
+      }
+      .cta a.primary {
+        background: var(--accent);
+        color: var(--on-accent);
+        border-color: var(--accent);
+      }
+      .cta a:active {
+        transform: translate(3px, 3px);
+        box-shadow: none;
+      }
+
+      @media (max-width: 480px) {
+        .bar {
+          padding-inline: 16px;
+        }
+        .brand-text {
+          display: none;
+        }
+        main {
+          padding: 32px 16px 64px;
+        }
+        .steps > li {
+          padding-left: 56px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="bar">
+      <a class="brand" href="index.html" aria-label="AI Learning Shelf, back to the shelf">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="brand-text">AI Learning Shelf</span>
+      </a>
+      <div class="bar-meta">
+        <a class="btn" href="index.html">← back to the shelf</a>
+        <button class="btn" id="theme-btn" type="button">theme</button>
+      </div>
+    </header>
+
+    <main>
+      <p class="kicker">Start here</p>
+      <h1>I don't know where to start</h1>
+      <p class="lede">
+        Open any AI engineering newsletter and you'll meet thirty words in a week: agents, MCP, Skills, RAG,
+        embeddings, evals, harnesses, guardrails. It looks like thirty separate things to learn. It's really five
+        layers of one system, and they're easiest to learn in a set order, ideally while you build one small
+        project.
+      </p>
+      <p>
+        This page gives you the map, the order and the project. It takes about ten minutes to read. After that, the
+        <a href="index.html#week-1">roadmap</a> will take you through it week by week.
+      </p>
+
+      <h2>What is the field made of?</h2>
+      <p>
+        Picture an AI application as a building with five floors. Each floor depends on the one below it, and each
+        word you keep hearing lives on exactly one floor.
+      </p>
+      <ol class="layers">
+        <li style="--sw: var(--c-skills)">
+          <span class="num">1</span>
+          <div>
+            <h3>Capabilities: what the agent can do</h3>
+            <p>
+              The model itself, the instructions you give it, and the tools it can call. An agent is a model that
+              decides for itself which tool to use next.
+            </p>
+            <span class="terms">models · prompting · structured outputs · tool calling · Skills · MCP</span>
+          </div>
+        </li>
+        <li style="--sw: var(--c-context)">
+          <span class="num">2</span>
+          <div>
+            <h3>Knowledge and context: what it knows</h3>
+            <p>
+              A model only knows its training data and whatever you put in front of it. This floor is about choosing
+              what goes into that limited space, and fetching it from your own documents.
+            </p>
+            <span class="terms">RAG · embeddings · reranking · context engineering · memory · knowledge graphs</span>
+          </div>
+        </li>
+        <li style="--sw: var(--c-agents)">
+          <span class="num">3</span>
+          <div>
+            <h3>Execution and control: how it works through a task</h3>
+            <p>
+              The loop that runs the model, carries out its tool calls, recovers from errors and knows when to stop
+              or ask a human.
+            </p>
+            <span class="terms">workflows vs agents · orchestration · state · harnesses · human-in-the-loop</span>
+          </div>
+        </li>
+        <li style="--sw: var(--c-evals)">
+          <span class="num">4</span>
+          <div>
+            <h3>Quality and trust: how you know it works</h3>
+            <p>
+              Tests for systems whose answers vary from run to run, records of what the agent did and why, and limits
+              on what it's allowed to do.
+            </p>
+            <span class="terms">evals · tracing and observability · guardrails · prompt-injection defence</span>
+          </div>
+        </li>
+        <li style="--sw: var(--c-harness)">
+          <span class="num">5</span>
+          <div>
+            <h3>Production: how you run it for real</h3>
+            <p>Keeping it fast, cheap, secure and up when real people depend on it.</p>
+            <span class="terms">deployment · caching · cost and latency · retries and fallbacks · governance</span>
+          </div>
+        </li>
+      </ol>
+      <p>
+        The floors explain the field, but they aren't the order to learn it in. You don't need to finish floor 1
+        before peeking at floor 4. In fact, the two most important habits come from floor 4 and should start in week
+        one (more on that below).
+      </p>
+
+      <h2>In what order should I learn it?</h2>
+      <p>
+        The rule behind this order is simple: learn each idea just before you need it. Each step below links to the
+        roadmap weeks that teach it.
+      </p>
+      <ol class="steps">
+        <li style="--sw: var(--c-foundations)">
+          <h3>Learn what a model is, and call one from code</h3>
+          <p>
+            Start with what AI can and can't do, enough Python to write a short script, and how to prompt well. Then
+            call a model from code and ask for <strong>structured output</strong>, meaning a reply in a fixed format
+            such as JSON (a standard text format for data) that your program can read without guessing. Along the
+            way, learn what a <strong>token</strong> is (a chunk of text, roughly three-quarters of a word, that
+            models read and charge by).
+          </p>
+          <ul class="weeks">
+            <li><a href="index.html#week-1">week 1 · what AI can do</a></li>
+            <li><a href="index.html#week-2">week 2 · Python</a></li>
+            <li><a href="index.html#week-3">week 3 · prompting</a></li>
+            <li><a href="index.html#week-4">week 4 · build with LLMs</a></li>
+          </ul>
+        </li>
+        <li style="--sw: var(--c-graphrag)">
+          <h3>Give it knowledge it wasn't trained on</h3>
+          <p>
+            <strong>Retrieval-augmented generation (RAG)</strong> means looking up the relevant passages in your own
+            documents and handing them to the model with the question. It's like letting someone check their notes
+            before they answer. You'll meet <strong>embeddings</strong>, which turn text into lists of numbers so
+            that passages with similar meanings end up close together and can be found by meaning, not just by
+            matching words.
+          </p>
+          <ul class="weeks">
+            <li><a href="index.html#week-5">week 5 · RAG</a></li>
+          </ul>
+        </li>
+        <li style="--sw: var(--c-agents)">
+          <h3>Let it act, by building the loop yourself</h3>
+          <p>
+            Build an agent by hand: call the model, run the tool it asks for, give it the result, and repeat until
+            it's done. That loop is all an agent is. Build it once yourself before you use a framework, so the
+            framework never feels like magic. Also learn the distinction that saves the most effort: many tasks need
+            a fixed <strong>workflow</strong> (step A, then step B) and not an open-ended agent at all.
+          </p>
+          <ul class="weeks">
+            <li><a href="index.html#week-6">week 6 · your first agent</a></li>
+          </ul>
+        </li>
+        <li style="--sw: var(--c-context)">
+          <h3>Understand the model, then manage what it sees</h3>
+          <p>
+            Now that you've watched an agent's input grow with every turn, two questions come up: how does the model
+            actually work, and what should it be shown? <strong>Context engineering</strong> is the craft of filling
+            the model's limited working space with the right instructions, retrieved passages, memory and tool
+            results, and leaving out everything else.
+          </p>
+          <ul class="weeks">
+            <li><a href="index.html#week-7">week 7 · how LLMs work</a></li>
+            <li><a href="index.html#week-8">week 8 · context engineering</a></li>
+          </ul>
+        </li>
+        <li style="--sw: var(--c-mcp)">
+          <h3>Package tools and know-how so any agent can use them</h3>
+          <p>
+            The <strong>Model Context Protocol (MCP)</strong> is a standard plug for tools: write a tool once as an
+            MCP server and any compatible agent can use it. <strong>Agent Skills</strong> package know-how, meaning
+            folders of instructions and scripts an agent loads only when a task needs them. Both build on the tool
+            loop from step 3, which is why they come after it.
+          </p>
+          <ul class="weeks">
+            <li><a href="index.html#week-9">week 9 · MCP fundamentals</a></li>
+            <li><a href="index.html#week-10">week 10 · build an MCP server</a></li>
+            <li><a href="index.html#week-11">week 11 · Agent Skills</a></li>
+          </ul>
+        </li>
+        <li style="--sw: var(--c-evals)">
+          <h3>Make it dependable</h3>
+          <p>
+            <strong>Evals</strong> are tests for AI systems: a set of inputs, plus a way to score the outputs. The
+            score can come from exact checks, a rubric, or another model acting as judge. The
+            <strong>harness</strong> is everything around the model: the loop, the tools, the sandbox that limits
+            what commands can do, and the rules for retrying and stopping. Tune the harness and you change how good
+            the agent is, often more than switching models would.
+          </p>
+          <ul class="weeks">
+            <li><a href="index.html#week-12">week 12 · evaluating agents</a></li>
+            <li><a href="index.html#week-14">week 14 · harnesses</a></li>
+          </ul>
+        </li>
+        <li style="--sw: var(--c-harness)">
+          <h3>Take it to production, and go deeper where you need to</h3>
+          <p>
+            Learn to run agents for real: caching, cost and latency, retries, monitoring. If your documents hide
+            answers that only appear when you connect facts across many files, look at knowledge graphs. Machine
+            learning theory, the maths and the research frontier are worth it eventually, but they're optional. You
+            can build good systems without them first.
+          </p>
+          <ul class="weeks">
+            <li><a href="index.html#week-15">week 15 · production</a></li>
+            <li><a href="index.html#week-13">week 13 · knowledge graphs</a></li>
+            <li><a href="index.html#week-16">weeks 16–18 · going deeper</a></li>
+          </ul>
+        </li>
+      </ol>
+
+      <h2>Which habits should I start in week one?</h2>
+      <p>
+        Two topics sit late in most courses but pay off from the first week. Start them early, even in a rough form.
+      </p>
+      <div class="habits">
+        <div class="habit" style="--sw: var(--c-evals)">
+          <h3>Keep a small test set from your first prompt</h3>
+          <p>
+            Write down 20 to 30 inputs and what a good answer looks like, and rerun them after every change. Without
+            them, "it works now" means "it worked on the one thing I tried". A spreadsheet is enough to start. Week 12
+            turns it into proper evals.
+          </p>
+        </div>
+        <div class="habit" style="--sw: var(--c-graphrag)">
+          <h3>Treat everything the agent reads as untrusted</h3>
+          <p>
+            Once an agent can call tools, a web page or document it reads can contain text that tries to give it new
+            orders. This is called <strong>prompt injection</strong>. Give each tool only the permissions it needs,
+            and ask a human before anything that deletes, sends or pays.
+          </p>
+        </div>
+        <div class="habit" style="--sw: var(--c-agents)">
+          <h3>Record every run</h3>
+          <p>
+            Log each prompt, tool call and result. This kind of record is called a <strong>trace</strong>. When an
+            agent goes wrong on step seven of twelve, the trace is the only way to see why.
+          </p>
+        </div>
+      </div>
+
+      <h2>What should I build?</h2>
+      <p>
+        Don't treat these as buzzwords to memorise. Build one small agent and let it grow as you go, so each new
+        idea solves a problem you've already hit. Here's one example: an agent that writes and runs software tests.
+        Any project you care about works the same way.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>After</th>
+              <th>Your testing agent can…</th>
+              <th>And you can measure…</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>weeks 1–4</td>
+              <td>turn a written requirement into test cases, returned as JSON</td>
+              <td>how many of your 20 sample requirements get sensible cases</td>
+            </tr>
+            <tr>
+              <td>week 5</td>
+              <td>find similar past test cases and reuse their patterns</td>
+              <td>whether retrieval raised the score from the step before</td>
+            </tr>
+            <tr>
+              <td>weeks 6–8</td>
+              <td>run the tests itself, read failures and try again</td>
+              <td>how often it finishes a task without help</td>
+            </tr>
+            <tr>
+              <td>weeks 9–11</td>
+              <td>reach your tools through MCP and follow your team's testing procedures as Skills</td>
+              <td>whether a second agent can reuse the same tools unchanged</td>
+            </tr>
+            <tr>
+              <td>weeks 12–14</td>
+              <td>ask before anything destructive, with every run traced</td>
+              <td>pass rate on a proper eval set, and the cause of each failure</td>
+            </tr>
+            <tr>
+              <td>week 15</td>
+              <td>run on a schedule for real users</td>
+              <td>cost per run and time to finish</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        The last column matters most. A sentence like "the pass rate went from 60% to 78% after I added
+        retrieval" means you understood what retrieval was for, which is worth more than having read about it.
+      </p>
+      <p>
+        You won't feel ready, and that's fine. Nobody does when the field changes this quickly. Open week 1 and write
+        your first five test cases.
+      </p>
+
+      <div class="cta">
+        <a class="primary" href="index.html#week-1">Start week 1 →</a>
+        <a href="index.html">Browse the library</a>
+      </div>
+    </main>
+
+    <script>
+      const root = document.documentElement;
+      const themeBtn = document.getElementById("theme-btn");
+      let theme = root.getAttribute("data-theme") === "dark" ? "dark" : "light";
+      function applyTheme() {
+        root.setAttribute("data-theme", theme);
+        themeBtn.textContent = "theme: " + theme;
+        themeBtn.setAttribute("aria-label", "Switch to " + (theme === "dark" ? "light" : "dark") + " theme");
+      }
+      applyTheme();
+      themeBtn.addEventListener("click", () => {
+        theme = theme === "dark" ? "light" : "dark";
+        applyTheme();
+        try {
+          localStorage.setItem("shelf-theme", theme);
+        } catch (e) {}
+      });
+    </script>
+  </body>
+</html>

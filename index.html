@@ -259,6 +259,34 @@
         transform: translate(2px, 2px);
         box-shadow: none;
       }
+      /* the way in for newcomers: links to start.html */
+      .start-btn {
+        border: 2px solid var(--accent);
+        background: var(--accent);
+        color: var(--on-accent);
+        padding: 6px 10px;
+        font-family: var(--mono);
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+        box-shadow: 2px 2px 0 var(--shadow);
+      }
+      .start-btn:active {
+        transform: translate(2px, 2px);
+        box-shadow: none;
+      }
+      .start-short {
+        display: none;
+      }
+      @media (max-width: 1100px) {
+        .start-long {
+          display: none;
+        }
+        .start-short {
+          display: inline;
+        }
+      }
 
       /* ---------- shell ---------- */
       .shell {
@@ -1690,6 +1718,8 @@
         }
         .bar-meta {
           grid-row: 3;
+          flex-wrap: wrap;
+          row-gap: 10px;
         }
       }
 
@@ -1728,6 +1758,9 @@
       </label>
 
       <div class="bar-meta">
+        <a class="start-btn" href="start.html" title="The five layers of AI engineering, the order to learn them and one project to build"
+          ><span class="start-long">I don't know where to start</span><span class="start-short">start here</span></a
+        >
         <span class="counter"><b id="count-shown">0</b> / <span id="count-total">0</span> <span id="count-unit">resources</span></span>
         <div class="view-toggle" role="group" aria-label="Mode">
           <button type="button" id="mode-roadmap" aria-pressed="false">roadmap</button>
