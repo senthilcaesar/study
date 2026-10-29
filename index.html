@@ -261,6 +261,7 @@
       }
       /* the way in for newcomers: links to start.html */
       .start-btn {
+        display: inline-block;
         border: 2px solid var(--accent);
         background: var(--accent);
         color: var(--on-accent);
@@ -424,6 +425,35 @@
       .view-toggle button[aria-pressed="true"] {
         background: var(--ink);
         color: var(--bg);
+      }
+
+      /* header buttons lift off the bar on hover, their hard shadow growing;
+         in a toggle the whole group lifts and the option under the pointer
+         fills with colour. Mouse only, so taps on phones don't stick. */
+      .start-btn,
+      .theme-btn,
+      .view-toggle {
+        transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+      }
+      .view-toggle button {
+        transition: background-color 0.15s, color 0.15s;
+      }
+      @media (hover: hover) {
+        .start-btn:hover,
+        .theme-btn:hover,
+        .view-toggle:hover {
+          transform: translate(-2px, -2px);
+          box-shadow: 4px 4px 0 var(--shadow);
+        }
+        .view-toggle button:not([aria-pressed="true"]):hover {
+          background: var(--c-skills);
+          color: var(--chip-ink);
+        }
+        .start-btn:active,
+        .theme-btn:active {
+          transform: translate(2px, 2px);
+          box-shadow: none;
+        }
       }
 
       /* ---------- shelves ---------- */
