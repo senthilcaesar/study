@@ -782,6 +782,39 @@
         letter-spacing: -0.02em;
       }
 
+      /* typewriter: each struck key lands with a small jolt, a little off the
+         line and with uneven ink; a cursor runs ahead and fades once the line is done */
+      .intro h1 .key {
+        display: inline-block;
+        opacity: var(--ink);
+        transform: translateY(var(--y)) rotate(var(--r));
+        animation: strike 0.13s ease-out;
+      }
+      @keyframes strike {
+        from {
+          opacity: 0;
+          transform: translateY(calc(var(--y) - 0.12em)) scale(1.12) rotate(var(--r));
+        }
+      }
+      .intro h1 .caret {
+        display: inline-block;
+        width: 0.09em;
+        height: 0.85em;
+        margin-left: 0.05em;
+        vertical-align: -0.06em;
+        background: var(--accent);
+        animation: blink 0.9s steps(1) infinite;
+        transition: opacity 0.5s;
+      }
+      .intro h1 .caret.gone {
+        opacity: 0;
+      }
+      @keyframes blink {
+        50% {
+          background: transparent;
+        }
+      }
+
       .intro-ways {
         display: grid;
         gap: 14px;
@@ -2911,6 +2944,42 @@
               <p class="shelf-caption">Five layers of AI engineering. Pick one to read about it.</p>
             </div>
           </div>`;
+        typeHeadline();
+      }
+
+      // the headline types itself out once per visit, like a 1950s typewriter:
+      // an uneven key rhythm, longer pauses at spaces and the comma, and each
+      // letter struck a little off the line with a little more or less ink
+      let headlineTyped = false;
+      function typeHeadline() {
+        const h = $("#intro h1");
+        if (headlineTyped || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        headlineTyped = true;
+        const chars = [...h.textContent];
+        h.setAttribute("aria-label", h.textContent);
+        h.textContent = "";
+        const caret = document.createElement("span");
+        caret.className = "caret";
+        caret.setAttribute("aria-hidden", "true");
+        h.append(caret);
+        const jitter = (n) => (Math.random() * 2 - 1) * n;
+        let i = 0;
+        const strike = () => {
+          if (!h.isConnected) return; // left the intro mid-line; it comes back fully typed
+          const c = chars[i++];
+          if (c === " ") caret.before(" ");
+          else {
+            const k = document.createElement("span");
+            k.className = "key";
+            k.setAttribute("aria-hidden", "true");
+            k.textContent = c;
+            k.style.cssText = `--y:${jitter(0.025).toFixed(3)}em;--r:${jitter(1.4).toFixed(2)}deg;--ink:${(0.82 + Math.random() * 0.18).toFixed(2)}`;
+            caret.before(k);
+          }
+          if (i < chars.length) return setTimeout(strike, 70 + Math.random() * 60 + (c === " " ? 110 : 0) + (c === "," ? 280 : 0));
+          setTimeout(() => caret.classList.add("gone"), 2200);
+        };
+        setTimeout(strike, 450);
       }
 
       function render() {
