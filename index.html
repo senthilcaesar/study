@@ -778,8 +778,8 @@
         font-family: "Special Elite", "Courier New", monospace;
         font-weight: 400;
         word-spacing: 0.2em; /* Special Elite has a narrow space */
-        /* the line is about 15.1em wide, so divide the room by 16 */
-        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 16));
+        /* the line is about 16.9em wide, so divide the room by 17.9 */
+        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 17.9));
         line-height: 1.15;
       }
 
@@ -983,7 +983,7 @@
       }
       @media (max-width: 960px) {
         .intro h1 {
-          font-size: calc((100vw - 32px) / 16.6);
+          font-size: calc((100vw - 32px) / 18.5);
         }
         .intro-inner {
           grid-template-columns: minmax(0, 1fr);
@@ -2919,7 +2919,7 @@
         $("#intro").innerHTML = `
           <div class="intro-glow" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
           <div class="intro-inner">
-            <h1>Learn AI, one step at a time</h1>
+            <h1>Learn AI, one concept at a time</h1>
             <div class="intro-text">
               <div class="intro-ways">
                 <a class="way" href="start.html" style="--sw:var(--c-skills)">
