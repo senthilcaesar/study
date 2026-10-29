@@ -49,6 +49,7 @@
         --c-docs: #b5e3e0;
         --c-claude-code: #e9b8a6;
         --c-foundations: #aab4ff;
+        --c-observability: #ffcf9f;
 
         --display: "Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
         --body: "Atkinson Hyperlegible", -apple-system, "Segoe UI", system-ui, sans-serif;
@@ -82,6 +83,7 @@
         --c-docs: #85c1dc;      /* sapphire */
         --c-claude-code: #f2d5cf; /* rosewater */
         --c-foundations: #babbf1; /* lavender */
+        --c-observability: #ea999c; /* maroon */
         color-scheme: dark;
       }
 
@@ -808,8 +810,8 @@
         font-family: "Special Elite", "Courier New", monospace;
         font-weight: 400;
         word-spacing: 0.2em; /* Special Elite has a narrow space */
-        /* the line is about 16.9em wide, so divide the room by 17.9 */
-        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 17.9));
+        /* the line is about 17.4em wide, so divide the room by 18.4 */
+        font-size: min(4.6rem, calc((min(100vw, 1160px) - 64px) / 18.4));
         line-height: 1.15;
       }
 
@@ -1181,7 +1183,7 @@
       }
       @media (max-width: 960px) {
         .intro h1 {
-          font-size: calc((100vw - 32px) / 18.5);
+          font-size: calc((100vw - 32px) / 19);
         }
         .intro-inner {
           grid-template-columns: minmax(0, 1fr);
@@ -2359,6 +2361,10 @@
           name: "Evals",
         },
         {
+          id: "observability",
+          name: "Observability",
+        },
+        {
           id: "claude-code",
           name: "Claude Code",
         },
@@ -2472,6 +2478,16 @@
           about: "Build a simple agent with routers, skills and memory, then add tracing, evaluate its skills and routing with code, LLM-judge and human evaluators, and run structured experiments.", level: "Beginner", time: "2h 36m (15 video lessons)", cost: "Free" },
         { t: "evals", f: "course", title: "Automated Testing for LLMOps", by: "DeepLearning.AI", url: "https://www.deeplearning.ai/courses/automated-testing-llmops",
           about: "Write rules-based and model-graded evals for an LLM app and run them automatically on every change in a CircleCI continuous integration pipeline.", level: "Intermediate", time: "1h 12m (6 video lessons)", cost: "Free" },
+        { t: "observability", f: "guide", title: "LLM Observability & Application Tracing", by: "Langfuse", url: "https://langfuse.com/docs/observability/overview",
+          about: "Open source tracing and observability for LLM apps: capture traces, monitor latency, track costs and debug issues across OpenAI, LangChain, LlamaIndex and more.", cost: "Free" },
+        { t: "observability", f: "guide", title: "LangSmith Observability", by: "LangChain", url: "https://docs.langchain.com/langsmith/observability",
+          about: "How to instrument an LLM application, investigate its traces and monitor its performance in production with LangSmith.", cost: "Free" },
+        { t: "observability", f: "guide", title: "What is Arize Phoenix?", by: "Arize AI", url: "https://arize.com/docs/phoenix",
+          about: "An open source platform for AI observability and evaluation, built on OpenTelemetry with OpenInference instrumentation: tracing, evaluation and integrations with common frameworks.", cost: "Free" },
+        { t: "observability", f: "article", title: "An Introduction to Observability for LLM-based applications using OpenTelemetry", by: "Ishan Jain at Grafana", url: "https://opentelemetry.io/blog/2024/llm-observability/",
+          about: "Why LLM apps need monitoring, then a worked example: OpenLIT auto-instruments the app, Prometheus and Jaeger store its metrics and traces, and Grafana shows them. From June 2024.", cost: "Free" },
+        { t: "observability", f: "course", title: "Quality and Safety for LLM Applications", by: "DeepLearning.AI with WhyLabs", url: "https://www.deeplearning.ai/courses/quality-safety-llm-applications",
+          about: "How to evaluate the safety and security of LLM applications, protect them against risks, and monitor and strengthen their safeguards over time.", level: "Beginner", cost: "Free" },
 
         { t: "claude-code", f: "course", title: "Claude Code 101", by: "Anthropic Academy", url: "https://anthropic.skilljar.com/claude-code-101",
           about: "Install Claude Code and learn the core workflow: prompting and Plan Mode, explore-to-commit, context management, CLAUDE.md, subagents, skills, MCP servers and hooks.", cost: "Free" },
@@ -3101,7 +3117,7 @@
         { body: "saturn", id: "harness", name: "Harness", s: 86 },
         { body: "uranus", id: "graphrag", name: "RAG", s: 60 },
         { body: "neptune", id: "mcp", name: "MCP", s: 58 },
-        { body: "pluto", id: "docs", name: "Doc parsing", s: 18 },
+        { body: "pluto", id: "observability", name: "Observability", s: 18 },
       ];
       const cap = (w) => w[0].toUpperCase() + w.slice(1);
       function renderIntro() {
@@ -3115,7 +3131,7 @@
           <canvas class="sky" aria-hidden="true"></canvas>
           <div class="sky-twinkle" aria-hidden="true">${TWINKLES}</div>
           <div class="intro-inner">
-            <h1>Learn AI, one concept at a time</h1>
+            <h1>Master AI, one concept at a time</h1>
             <div class="intro-text">
               <div class="intro-ways">
                 <a class="way" href="start.html" style="--sw:var(--c-skills)">
