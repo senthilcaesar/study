@@ -848,8 +848,8 @@
         color: var(--dim);
       }
 
-      /* the shelf */
-      .shelf {
+      /* the shelf of layer spines (not .shelf, which is a library topic section) */
+      .intro-shelf {
         position: relative;
         display: flex;
         align-items: flex-end;
@@ -858,7 +858,7 @@
         height: 420px;
         padding: 0 28px;
       }
-      .shelf::after {
+      .intro-shelf::after {
         content: "";
         position: absolute;
         left: 0;
@@ -951,7 +951,7 @@
         .intro-art {
           order: -1;
         }
-        .shelf {
+        .intro-shelf {
           height: 200px;
           gap: 8px;
           max-width: 400px;
@@ -2915,7 +2915,7 @@
               <p class="intro-note">Your progress is saved in this browser only.</p>
             </div>
             <div class="intro-art">
-              <div class="shelf">
+              <div class="intro-shelf">
                 ${LAYERS.map((l) => `<a class="spine" href="start.html" aria-label="${l}: read about this layer in the guide"><span>${l}</span></a>`).join("")}
               </div>
               <p class="shelf-caption">Five layers of AI engineering. Pick one to read about it.</p>
