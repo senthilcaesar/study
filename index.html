@@ -4,6 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>AI Learning Shelf</title>
+    <script>
+      // apply the theme before first paint so the page doesn't flash:
+      // dark unless the visitor chose light before
+      let savedTheme = null;
+      try {
+        savedTheme = localStorage.getItem("shelf-theme");
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", savedTheme === "light" ? "light" : "dark");
+    </script>
     <meta
       name="description"
       content="An 18-week roadmap from beginner to advanced, plus a curated shelf of free courses, talks, tutorials and articles on agents, MCP, skills, RAG, evals and more."
@@ -62,19 +71,20 @@
       }
       /* dark theme (chosen with the toggle): a Milky Way night sky */
       :root[data-theme="dark"] {
-        /* night sky: deep navy, starlight text, a lilac accent; the topic
-           pastels below are kept from the earlier dark palette */
-        --bg: #0b0e1f;
-        --surface: #151a33;
-        --sunk: #0f1328;
+        /* dusk slate: a cool charcoal ground that warms to steel blue near the
+           bottom, starlight text, a lilac accent; the topic pastels below are
+           kept from the earlier dark palette */
+        --bg: #1e252e;
+        --surface: #262e3a;
+        --sunk: #19202a;
         --ink: #d6d8f2;
         --ink-soft: #bcbfe3;
         --dim: #8f93bd;
         --line: #7f86c6;
-        --hair: #272c4f;
+        --hair: #333c4a;
         --accent: #b6a3ff;
-        --on-accent: #0b0e1f;
-        --shadow: #3d4178;
+        --on-accent: #1e252e;
+        --shadow: #3a4558;
         --chip-ink: #141729;
         --c-foundations: #f2bd5e;   /* the Sun */
         --c-claude-code: #bab6b0;   /* Mercury */
@@ -107,10 +117,11 @@
         min-height: 100vh;
       }
 
-      /* dark mode's Milky Way: a faint band of violet and blue haze crossing the
-         window from lower left to upper right, with two sprinkles of small stars,
-         fixed behind every page. Kept dim so text over it stays crisp, and cards,
-         panels and the header sit on solid surfaces above it. */
+      /* dark mode's dusk: a flat slate sky that brightens into a broad steel-blue
+         glow rising from the bottom edge, its lower corners falling back into
+         shadow, with two sprinkles of small stars, fixed behind every page. Kept
+         soft so text over it stays crisp, and cards, panels and the header sit
+         on solid surfaces above it. */
       :root[data-theme="dark"] body::before,
       :root[data-theme="dark"] body::after {
         content: "";
@@ -121,11 +132,10 @@
       }
       :root[data-theme="dark"] body::before {
         background:
-          radial-gradient(ellipse 42% 20% at 14% 86%, rgba(132, 104, 255, 0.11), rgba(132, 104, 255, 0) 70%),
-          radial-gradient(ellipse 46% 22% at 40% 62%, rgba(110, 120, 255, 0.1), rgba(110, 120, 255, 0) 70%),
-          radial-gradient(ellipse 40% 18% at 66% 38%, rgba(96, 150, 255, 0.09), rgba(96, 150, 255, 0) 70%),
-          radial-gradient(ellipse 34% 16% at 90% 14%, rgba(230, 140, 210, 0.07), rgba(230, 140, 210, 0) 70%),
-          radial-gradient(ellipse 18% 9% at 52% 50%, rgba(255, 214, 170, 0.05), rgba(255, 214, 170, 0) 70%);
+          radial-gradient(ellipse 70% 55% at 50% 100%, rgba(74, 95, 138, 0.55), rgba(74, 95, 138, 0) 72%),
+          radial-gradient(ellipse 40% 40% at 22% 88%, rgba(74, 95, 138, 0.22), rgba(74, 95, 138, 0) 70%),
+          radial-gradient(ellipse 40% 40% at 78% 88%, rgba(74, 95, 138, 0.22), rgba(74, 95, 138, 0) 70%),
+          linear-gradient(to bottom, rgba(30, 37, 46, 0) 45%, rgba(40, 52, 70, 0.35));
       }
       :root[data-theme="dark"] body::after {
         background:
@@ -893,21 +903,21 @@
         flex-wrap: wrap;
       }
 
-      /* on the home view the header, footer and page behind them take the night
-         sky's colours, so the galaxy isn't framed by pale strips; layout is unchanged */
+      /* on the home view the header, footer and page behind them take the dusk
+         sky's slate, so the galaxy isn't framed by pale strips; layout is unchanged */
       :root.on-intro body {
-        background: #05060f;
+        background: #1e252e;
       }
       :root.on-intro .bar,
       :root.on-intro footer {
-        --bg: #070915;
-        --surface: #12162e;
-        --sunk: #0c0f22;
+        --bg: #1e252e;
+        --surface: #262e3a;
+        --sunk: #19202a;
         --ink: #ecebff;
         --ink-soft: #c3c1e6;
         --dim: #9896c2;
         --line: #8d91c9;
-        --hair: #23284a;
+        --hair: #333c4a;
         --shadow: #d6cfff;
         --orbit-dot: #ffcf6a;
         color: var(--ink);
@@ -924,8 +934,8 @@
 
       /* ---------- intro: where first-time visitors land ----------
          One loud thing: five planets (library topics) that arrive on load and
-         grow on hover, set against a night sky with the Milky Way drawn on a
-         canvas. Reduced motion is handled by the global rule. */
+         grow on hover, set against a dusk sky (slate, with a steel-blue glow
+         rising from the bottom) and the Milky Way drawn on a canvas. Reduced motion is handled by the global rule. */
       .intro {
         position: relative;
         isolation: isolate;
@@ -933,18 +943,18 @@
         /* bleed past main's padding so the sky has no hard edge */
         margin: -36px -40px 0;
         min-height: calc(100vh - var(--bar));
-        background: #05060f;
+        background: #1e252e;
         /* hard shadows in starlight, since black ones vanish against the sky */
         --shadow: #d6cfff;
       }
-      /* fade the sky's foot into the footer's night colour, so there's no seam */
+      /* fade the sky's foot into the footer's slate, so there's no seam */
       .intro::after {
         content: "";
         position: absolute;
         inset: auto 0 0;
         height: 160px;
         z-index: -1;
-        background: linear-gradient(to bottom, rgba(5, 6, 15, 0), #05060f);
+        background: linear-gradient(to bottom, rgba(30, 37, 46, 0), #1e252e);
         pointer-events: none;
       }
       .sky,
@@ -1240,7 +1250,7 @@
         font-size: 0.88rem;
         white-space: nowrap;
         letter-spacing: -0.01em;
-        text-shadow: 0 1px 10px rgba(5, 6, 15, 0.95);
+        text-shadow: 0 1px 10px rgba(20, 25, 32, 0.95);
       }
       .planet:hover .pname {
         text-decoration: underline;
@@ -2570,7 +2580,7 @@
       .intro .way {
         border-color: rgba(214, 207, 255, 0.22);
         /* tinted glass, so the night sky shows faintly through the card */
-        background: linear-gradient(160deg, rgba(58, 54, 128, 0.42), rgba(18, 20, 52, 0.55));
+        background: linear-gradient(160deg, rgba(72, 86, 116, 0.42), rgba(22, 28, 38, 0.55));
         -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
         color: #eceaff;
@@ -3912,12 +3922,21 @@
         const rnd = seeded(7);
         const gauss = () => (rnd() + rnd() + rnd() - 1.5) / 1.5; // about -1..1, bunched near 0
 
-        const bg = c.createLinearGradient(0, 0, W, H);
-        bg.addColorStop(0, "#04050d");
-        bg.addColorStop(0.5, "#0b1027");
-        bg.addColorStop(1, "#05060f");
-        c.fillStyle = bg;
+        // dusk ground: flat slate, warming to a steel-blue glow that rises from the
+        // bottom edge (drawn on a squashed circle so it spreads wide and low)
+        c.fillStyle = "#1e252e";
         c.fillRect(0, 0, W, H);
+        const gr = W * 0.7;
+        c.save();
+        c.translate(W / 2, H * 1.02);
+        c.scale(1, (H * 0.6) / gr);
+        const dusk = c.createRadialGradient(0, 0, 0, 0, 0, gr);
+        dusk.addColorStop(0, "rgba(74,95,138,0.6)");
+        dusk.addColorStop(0.55, "rgba(74,95,138,0.3)");
+        dusk.addColorStop(1, "rgba(74,95,138,0)");
+        c.fillStyle = dusk;
+        c.fillRect(-gr, -gr, gr * 2, gr * 2);
+        c.restore();
 
         const ax = -0.1 * W, ay = 0.98 * H, bx = 1.1 * W, by = 0.02 * H;
         const len = Math.hypot(bx - ax, by - ay);
@@ -3957,7 +3976,7 @@
         c.globalCompositeOperation = "source-over";
         for (let i = 0; i < 70; i++) {
           const [x, y] = at(0.12 + rnd() * 0.8, gauss() * band * 0.25);
-          glow(x, y, band * (0.08 + rnd() * 0.18), "6,7,18", 0.3 + rnd() * 0.25);
+          glow(x, y, band * (0.08 + rnd() * 0.18), "20,26,34", 0.3 + rnd() * 0.25);
         }
       }
       // redraw when the intro changes size (window resize, fonts arriving, typing)
@@ -4604,14 +4623,11 @@
       $("#view-list").addEventListener("click", () => setView("list"));
       $("#view-grid").addEventListener("click", () => setView("grid"));
 
-      // theme: opens in light unless the visitor chose dark before;
-      // each click flips between light and dark
+      // theme: opens in dark unless the visitor chose light before (set in
+      // the head, before first paint); each click flips between light and dark
       const root = document.documentElement;
       const themeBtn = $("#theme-btn");
-      let theme = "light";
-      try {
-        if (localStorage.getItem("shelf-theme") === "dark") theme = "dark";
-      } catch (e) {}
+      let theme = root.getAttribute("data-theme") === "light" ? "light" : "dark";
 
       const THEME_ICON = {
         // shown in light mode: the Moon, to switch to dark

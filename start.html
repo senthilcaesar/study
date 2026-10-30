@@ -20,10 +20,13 @@
       rel="stylesheet"
     />
     <script>
-      // apply the saved theme before first paint so the page doesn't flash
+      // apply the theme before first paint so the page doesn't flash:
+      // dark unless the visitor chose light before
+      let savedTheme = null;
       try {
-        if (localStorage.getItem("shelf-theme") === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        savedTheme = localStorage.getItem("shelf-theme");
       } catch (e) {}
+      document.documentElement.setAttribute("data-theme", savedTheme === "light" ? "light" : "dark");
     </script>
 
     <style>
@@ -57,19 +60,20 @@
         color-scheme: light;
       }
       :root[data-theme="dark"] {
-        /* night sky: deep navy, starlight text, a lilac accent; the topic
-           pastels below are kept from the earlier dark palette */
-        --bg: #0b0e1f;
-        --surface: #151a33;
-        --sunk: #0f1328;
+        /* dusk slate: a cool charcoal ground that warms to steel blue near the
+           bottom, starlight text, a lilac accent; the topic pastels below are
+           kept from the earlier dark palette */
+        --bg: #1e252e;
+        --surface: #262e3a;
+        --sunk: #19202a;
         --ink: #d6d8f2;
         --ink-soft: #bcbfe3;
         --dim: #8f93bd;
         --line: #7f86c6;
-        --hair: #272c4f;
+        --hair: #333c4a;
         --accent: #b6a3ff;
-        --on-accent: #0b0e1f;
-        --shadow: #3d4178;
+        --on-accent: #1e252e;
+        --shadow: #3a4558;
         --chip-ink: #141729;
         --c-skills: #ca9ee6;
         --c-agents: #99d1db;
@@ -98,10 +102,11 @@
         -webkit-font-smoothing: antialiased;
       }
 
-      /* dark mode's Milky Way: a faint band of violet and blue haze crossing the
-         window from lower left to upper right, with two sprinkles of small stars,
-         fixed behind every page. Kept dim so text over it stays crisp, and cards,
-         panels and the header sit on solid surfaces above it. */
+      /* dark mode's dusk: a flat slate sky that brightens into a broad steel-blue
+         glow rising from the bottom edge, its lower corners falling back into
+         shadow, with two sprinkles of small stars, fixed behind every page. Kept
+         soft so text over it stays crisp, and cards, panels and the header sit
+         on solid surfaces above it. */
       :root[data-theme="dark"] body::before,
       :root[data-theme="dark"] body::after {
         content: "";
@@ -112,11 +117,10 @@
       }
       :root[data-theme="dark"] body::before {
         background:
-          radial-gradient(ellipse 42% 20% at 14% 86%, rgba(132, 104, 255, 0.11), rgba(132, 104, 255, 0) 70%),
-          radial-gradient(ellipse 46% 22% at 40% 62%, rgba(110, 120, 255, 0.1), rgba(110, 120, 255, 0) 70%),
-          radial-gradient(ellipse 40% 18% at 66% 38%, rgba(96, 150, 255, 0.09), rgba(96, 150, 255, 0) 70%),
-          radial-gradient(ellipse 34% 16% at 90% 14%, rgba(230, 140, 210, 0.07), rgba(230, 140, 210, 0) 70%),
-          radial-gradient(ellipse 18% 9% at 52% 50%, rgba(255, 214, 170, 0.05), rgba(255, 214, 170, 0) 70%);
+          radial-gradient(ellipse 70% 55% at 50% 100%, rgba(74, 95, 138, 0.55), rgba(74, 95, 138, 0) 72%),
+          radial-gradient(ellipse 40% 40% at 22% 88%, rgba(74, 95, 138, 0.22), rgba(74, 95, 138, 0) 70%),
+          radial-gradient(ellipse 40% 40% at 78% 88%, rgba(74, 95, 138, 0.22), rgba(74, 95, 138, 0) 70%),
+          linear-gradient(to bottom, rgba(30, 37, 46, 0) 45%, rgba(40, 52, 70, 0.35));
       }
       :root[data-theme="dark"] body::after {
         background:
