@@ -35,18 +35,23 @@
          on the left (chip scroller on phones), and a main pane where each
          category is a shelf of tactile, hard-edged resource slips. */
       :root {
-        --bg: #eef1ec;
+        --bg: #eef1f5;
         --surface: #ffffff;
-        --sunk: #e2e7df;
+        --sunk: #e1e6ee;
         --ink: #16181d;
         --ink-soft: #4a4f57;
-        --dim: #6f746c;
+        --dim: #6b7280;
         --line: #16181d;
-        --hair: #c7cdc3;
+        --hair: #c6cdd8;
         --accent: #3b2bd9;
         --on-accent: #ffffff;
         --chip-ink: #16181d;
         --shadow: #16181d;
+        /* the sky behind every page: a glow rising from the bottom edge, two
+           softer ones either side of it, and a deepening toward the foot */
+        --dusk-glow: rgba(120, 145, 200, 0.22);
+        --dusk-side: rgba(120, 145, 200, 0.1);
+        --dusk-foot: rgba(160, 178, 215, 0.18);
 
         /* category swatches: each topic wears its planet's colour, as a pastel
            fill that always carries dark text */
@@ -86,6 +91,9 @@
         --accent: #b6a3ff;
         --on-accent: #1e252e;
         --shadow: #3a4558;
+        --dusk-glow: rgba(74, 95, 138, 0.55);
+        --dusk-side: rgba(74, 95, 138, 0.22);
+        --dusk-foot: rgba(40, 52, 70, 0.35);
         --chip-ink: #141729;
         --c-foundations: #f2bd5e;   /* the Sun */
         --c-claude-code: #bab6b0;   /* Mercury */
@@ -118,11 +126,12 @@
         min-height: 100vh;
       }
 
-      /* dark mode's dusk: a flat slate sky that brightens into a broad steel-blue
-         glow rising from the bottom edge, its lower corners falling back into
-         shadow, with two sprinkles of small stars, fixed behind every page. Kept
-         soft so text over it stays crisp, and cards, panels and the header sit
-         on solid surfaces above it. */
+      /* the dusk sky, the same pattern in both themes (only the --dusk-*
+         colours change): a flat ground that brightens into a broad glow rising
+         from the bottom edge, its lower corners falling back into shadow. Each
+         theme adds its own sprinkle of small stars. Fixed behind every page and kept
+         soft so text over it stays crisp; cards, panels and the header sit on
+         solid surfaces above it. */
       :root[data-theme="dark"] body::before,
       :root[data-theme="dark"] body::after {
         content: "";
@@ -131,12 +140,12 @@
         z-index: -1;
         pointer-events: none;
       }
-      :root[data-theme="dark"] body::before {
+      body::before {
         background:
-          radial-gradient(ellipse 70% 55% at 50% 100%, rgba(74, 95, 138, 0.55), rgba(74, 95, 138, 0) 72%),
-          radial-gradient(ellipse 40% 40% at 22% 88%, rgba(74, 95, 138, 0.22), rgba(74, 95, 138, 0) 70%),
-          radial-gradient(ellipse 40% 40% at 78% 88%, rgba(74, 95, 138, 0.22), rgba(74, 95, 138, 0) 70%),
-          linear-gradient(to bottom, rgba(30, 37, 46, 0) 45%, rgba(40, 52, 70, 0.35));
+          radial-gradient(ellipse 70% 55% at 50% 100%, var(--dusk-glow), transparent 72%),
+          radial-gradient(ellipse 40% 40% at 22% 88%, var(--dusk-side), transparent 70%),
+          radial-gradient(ellipse 40% 40% at 78% 88%, var(--dusk-side), transparent 70%),
+          linear-gradient(to bottom, transparent 45%, var(--dusk-foot));
       }
       :root[data-theme="dark"] body::after {
         background:
@@ -2516,9 +2525,9 @@
         background: linear-gradient(160deg, rgba(182, 163, 255, 0.32), rgba(120, 100, 230, 0.18));
       }
 
-      /* the daylight sky: light mode's counterpart to the Milky Way, a pale
-         lavender-to-blue haze, three faint orbit rings round an unseen sun in the
-         top right corner, and a few soft stars, fixed behind every page */
+      /* the daylight sky: the same dusk pattern as dark mode in pale colours
+         (the glow itself is drawn by the shared body::before rule), with a few
+         soft stars, fixed behind every page */
       :root:not([data-theme="dark"]) body::before,
       :root:not([data-theme="dark"]) body::after {
         content: "";
@@ -2526,12 +2535,6 @@
         inset: 0;
         z-index: -1;
         pointer-events: none;
-      }
-      :root:not([data-theme="dark"]) body::before {
-        background:
-          radial-gradient(ellipse 55% 45% at 92% 0%, rgba(201, 184, 255, 0.32), rgba(201, 184, 255, 0) 70%),
-          radial-gradient(ellipse 50% 40% at 0% 100%, rgba(143, 211, 255, 0.22), rgba(143, 211, 255, 0) 70%),
-          radial-gradient(ellipse 40% 30% at 45% 55%, rgba(255, 214, 230, 0.12), rgba(255, 214, 230, 0) 70%);
       }
       :root:not([data-theme="dark"]) body::after {
         background:
@@ -2669,6 +2672,15 @@
       }
       .panel {
         border-left: 1px solid var(--edge);
+      }
+      /* the week panel wears the page's sky, in either theme: the glow rising
+         from its foot is pinned to the panel, not its content, so it stays put
+         while the reading list scrolls */
+      .panel {
+        background:
+          radial-gradient(ellipse 90% 45% at 50% 100%, var(--dusk-glow), transparent 72%),
+          linear-gradient(to bottom, transparent 45%, var(--dusk-foot)),
+          var(--bg);
       }
       .fx i {
         border: 0;
