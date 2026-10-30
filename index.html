@@ -6,10 +6,11 @@
     <title>AI Learning Shelf</title>
     <script>
       // apply the theme before first paint so the page doesn't flash:
-      // dark unless the visitor chose light before
+      // dark unless the visitor chose light before (the key is "-v2" so choices
+      // saved back when light was the default are forgotten)
       let savedTheme = null;
       try {
-        savedTheme = localStorage.getItem("shelf-theme");
+        savedTheme = localStorage.getItem("shelf-theme-v2");
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", savedTheme === "light" ? "light" : "dark");
     </script>
@@ -4650,7 +4651,7 @@
         void themeBtn.offsetWidth; // restart the spin on every click
         themeBtn.classList.add("swap");
         try {
-          localStorage.setItem("shelf-theme", theme);
+          localStorage.setItem("shelf-theme-v2", theme);
         } catch (e) {}
       });
 
