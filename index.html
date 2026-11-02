@@ -2958,6 +2958,8 @@
           about: "Plain-language intro to AI agents, the harness around them (planning, context, memory, tools, guardrails, loops, logging) and Karpathy-style autoresearch loops.", level: "Beginner", cost: "Free" },
         { t: "harness", f: "article", title: "The Anatomy of an Agent Harness", by: "Vivek Trivedy at LangChain", url: "https://www.langchain.com/blog/the-anatomy-of-an-agent-harness",
           about: "Agent = Model + Harness: works back from what agents need to the harness parts that provide it (filesystems, bash, sandboxes, memory, context management, long-horizon loops) and where harnesses are heading.", time: "12 min read", cost: "Free" },
+        { t: "harness", f: "video", title: "How to Build Agents That Improve Over Time: Model, Harness, Context", by: "Harrison Chase, LangChain · Interrupt London", url: "https://youtu.be/xy_7SzwsIjM",
+          about: "Splits an agent into model, harness and context and shows how each improves: fine-tuning or RL for the model, trace-driven fixes for the harness, memory for the context, with traces and evals (realistic inputs, criteria, simulation environments, red teaming) as the shared foundation.", time: "20 min", cost: "Free" },
       ];
 
       // The roadmap: three stages, eighteen weeks, ordered by the five layers on
@@ -3110,6 +3112,7 @@
           learn: [
             { url: "https://senthilcaesar.github.io/blogs/#/posts/engine-behind-autonomous-ai-agents-harnesses-autoresearch" },
             { url: "https://www.langchain.com/blog/the-anatomy-of-an-agent-harness", note: "Each harness part traced back to the agent behaviour it makes possible." },
+            { url: "https://youtu.be/xy_7SzwsIjM", note: "Where the harness sits next to the model and the context, and how traces and evals let each one get better over time." },
             { url: "https://anthropic.skilljar.com/claude-code-101", note: "A real harness up close: how Claude Code reads, plans, edits and asks permission." },
             { url: "https://anthropic.skilljar.com/claude-code-in-action", note: "Drive it on real work: context, custom commands, hooks and MCP servers." },
           ],
