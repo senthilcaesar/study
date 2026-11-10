@@ -514,6 +514,24 @@
         border-right: 1px solid var(--hair);
         min-height: calc(100vh - var(--bar));
         padding-block: 20px;
+        /* a quiet scrollbar: clear track over the page sky, thumb in the hairline tone */
+        scrollbar-width: thin;
+        scrollbar-color: var(--hair) transparent;
+      }
+      .rail::-webkit-scrollbar {
+        width: 8px;
+      }
+      .rail::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .rail::-webkit-scrollbar-thumb {
+        background-color: var(--hair);
+        border-radius: 8px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+      }
+      .rail::-webkit-scrollbar-thumb:hover {
+        background-color: var(--dim);
       }
       .rail-label {
         font-family: var(--mono);
@@ -2404,6 +2422,7 @@
           gap: 8px;
           padding: 2px 16px 6px;
           scrollbar-width: thin;
+          scrollbar-color: var(--hair) transparent;
         }
         .rail-item {
           width: auto;
