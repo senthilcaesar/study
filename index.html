@@ -2779,7 +2779,8 @@
       /* on-site articles: short pages listed in a tab like any other resource */
       .reading {
         max-width: 960px;
-        margin: 0 auto;
+        /* room below the text, so its last lines can scroll up to mid-screen */
+        margin: 0 auto 50vh;
         text-align: center;
       }
       .reading-crumb {
@@ -2857,6 +2858,13 @@
         margin: 0 0 1.1em;
         font-size: 1.25rem;
         line-height: 1.7;
+      }
+      .reading-body h3 {
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 1.45rem;
+        letter-spacing: -0.01em;
+        margin: 1.6em 0 0.6em;
       }
       .reading-body p:last-child {
         margin-bottom: 0;
@@ -3011,7 +3019,21 @@
       ];
 
       // short reading pages that live under a tab, opened from its shelf
+      // a body line starting with "## " is a subheading; the rest are paragraphs
       const PAGES = [
+        {
+          id: "prompting-tips", t: "context",
+          title: "Prompting Tips",
+          body: [
+            "The serial position effect.",
+            "Psychologists have studied it for over a century. Items at the beginning of a list benefit from primacy (they get rehearsed more), and items at the end benefit from recency (they're still fresh). The middle gets neither advantage.",
+            "The fascinating part: large language models exhibit the same pattern. In 2023, researchers at Stanford tested what happens when you place a key fact at different positions within a long context window. Accuracy was highest when the fact appeared at the very beginning or very end — and dropped by more than 30% when it was buried in the middle.",
+            "This isn't a quirk. It's structural. Transformer attention patterns naturally weight the edges of the context window more heavily.",
+            "## What This Means for Prompting",
+            "If you paste a 20-page document into a prompt and ask a question about something on page 11, the model is more likely to miss it than something on page 1 or page 20. This has real implications for how you structure context.",
+            "Put your most important instructions at the beginning and end of the context. If a constraint absolutely must be followed, state it early in the system prompt and restate it near the end. Don't rely on the model to give equal weight to everything in between.",
+          ],
+        },
         {
           id: "embeddings", t: "graphrag",
           title: "Embeddings",
@@ -3054,6 +3076,8 @@
         { t: "foundations", f: "course", title: "CS 336: Language Modeling from Scratch", by: "Stanford University", url: "https://cs336.stanford.edu/",
           about: "Build a language model end to end: tokenizer, Transformer and optimizer, a FlashAttention-2 kernel in Triton, scaling-law fits, Common Crawl data filtering, and SFT/RL post-training for math reasoning.", level: "Advanced", time: "10 weeks of lectures", cost: "Free" },
 
+        { t: "context", f: "article", title: "Prompting Tips", by: "AI Learning Shelf", url: "#context/prompting-tips", page: "prompting-tips",
+          about: "Why models, like people, remember the start and end of a long context best and miss the middle, and how to place your key instructions so they get followed.", cost: "Free" },
         { t: "context", f: "course", title: "Google Prompting Essentials", by: "Google on Coursera", url: "https://www.coursera.org/specializations/prompting-essentials-google/",
           about: "Learn a 5-step prompting framework and use it for emails, tables, document summaries, data analysis and charts, plus few-shot, chain-of-thought, multimodal and meta-prompting and responsible AI use.", level: "Beginner", time: "4 courses · under 10 hrs", cost: "Paid" },
         { t: "context", f: "course", title: "Prompt Engineering for ChatGPT", by: "Vanderbilt University on Coursera", url: "https://www.coursera.org/learn/prompt-engineering",
@@ -3558,7 +3582,7 @@
           <button class="link-btn reading-crumb" type="button" data-goto="${t.id}"><span class="crumb-arrow" aria-hidden="true">←</span> Back to ${esc(t.name)}</button>
           <h2 id="h-page"><span class="tab" style="--sw:var(--c-${t.id})" aria-hidden="true"></span>${esc(p.title)}</h2>
           <p class="reading-topic">${esc(t.name)} · article</p>
-          <div class="reading-body">${p.body.map((s) => `<p>${esc(s)}</p>`).join("")}</div>
+          <div class="reading-body">${p.body.map((s) => (s.startsWith("## ") ? `<h3>${esc(s.slice(3))}</h3>` : `<p>${esc(s)}</p>`)).join("")}</div>
         </article>`;
         $("#q-clear").hidden = !state.q;
       }
