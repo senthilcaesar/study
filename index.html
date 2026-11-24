@@ -26,7 +26,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Special+Elite&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Special+Elite&family=Cormorant+Garamond:ital,wght@0,500;1,500&family=DM+Sans:opsz,wght@9..40,400..600&display=swap"
       rel="stylesheet"
     />
 
@@ -1280,7 +1280,7 @@
       .pname {
         font-family: var(--display);
         font-weight: 750;
-        font-size: 0.88rem;
+        font-size: 1.1rem;
         white-space: nowrap;
         letter-spacing: -0.01em;
         text-shadow: 0 1px 10px rgba(20, 25, 32, 0.95);
@@ -2883,6 +2883,380 @@
           animation: none !important;
         }
       }
+      /* ---------- library landing: what "library" opens on ----------
+         A quiet two-column hero on a soft grey wash: a serif
+         headline in Cormorant Garamond (the second line in italic), a lead,
+         two calls to action and a "continue" card on the left; on the right,
+         an editor window that queries the shelf and shows the busiest topics. */
+      .lp {
+        --lp-bg: #e9e9e9;
+        --lp-wash: #f7f7f7;
+        --lp-ink: #111111;
+        --lp-soft: #4b4b4b;
+        --lp-dim: #8a8a8a;
+        --lp-card: #ffffff;
+        --lp-line: #e4e4e4;
+        --lp-row: #f1f1f1;
+        --lp-num: #b4441c;
+        --lp-btn: #0b0b0b;
+        --lp-btn-hover: #2b2b2b;
+        --lp-on-btn: #ffffff;
+        --lp-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.28), 0 2px 6px rgba(0, 0, 0, 0.06);
+        --lp-serif: "Cormorant Garamond", "Cormorant", Garamond, "Times New Roman", serif;
+        --lp-sans: "DM Sans", var(--body);
+        position: relative;
+        isolation: isolate;
+        margin: -36px -40px 0;
+        min-height: calc(100vh - var(--bar));
+        display: grid;
+        align-items: center;
+        padding: 64px 40px 72px;
+        color: var(--lp-ink);
+        font-family: var(--lp-sans);
+        background:
+          radial-gradient(ellipse 60% 70% at 92% 8%, var(--lp-wash), transparent 70%),
+          radial-gradient(ellipse 55% 60% at 8% 96%, var(--lp-wash), transparent 70%),
+          linear-gradient(135deg, var(--lp-bg) 0%, var(--lp-wash) 55%, var(--lp-bg) 100%);
+      }
+      :root[data-theme="dark"] .lp {
+        --lp-bg: #15181d;
+        --lp-wash: #22262d;
+        --lp-ink: #f2f2f2;
+        --lp-soft: #b7b9be;
+        --lp-dim: #80848c;
+        --lp-card: #1b1e24;
+        --lp-line: #2d3139;
+        --lp-row: #23272e;
+        --lp-num: #f08a5d;
+        --lp-btn: #f2f2f2;
+        --lp-btn-hover: #d6d6d6;
+        --lp-on-btn: #0b0b0b;
+        --lp-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+      .lp-inner {
+        width: 100%;
+        max-width: 1240px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 590px);
+        gap: 48px;
+        align-items: center;
+      }
+      .lp h1 {
+        margin: 0;
+        font-family: var(--lp-serif);
+        font-weight: 500;
+        font-size: clamp(40px, 4.6vw, 72px);
+        line-height: 1.04;
+        letter-spacing: -0.01em;
+        color: var(--lp-ink);
+      }
+      .lp h1 em {
+        display: block;
+        font-style: italic;
+      }
+      @media (min-width: 1001px) {
+        .lp h1,
+        .lp h1 em {
+          white-space: nowrap;
+        }
+      }
+      .lp-lead {
+        max-width: 600px;
+        margin: 22px 0 0;
+        font-size: 18px;
+        line-height: 1.62;
+        color: var(--lp-soft);
+      }
+      .lp-ctas {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 36px;
+      }
+      .lp-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        height: 48px;
+        padding: 0 24px;
+        border-radius: 7px;
+        border: 1px solid var(--lp-line);
+        background: var(--lp-card);
+        color: var(--lp-ink);
+        font: 500 17px/1 var(--lp-sans);
+        text-decoration: none;
+        transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
+      }
+      .lp-btn.primary {
+        background: var(--lp-btn);
+        border-color: var(--lp-btn);
+        color: var(--lp-on-btn);
+      }
+      .lp-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 18px -10px rgba(0, 0, 0, 0.35);
+      }
+      .lp-btn.primary:hover {
+        background: var(--lp-btn-hover);
+        border-color: var(--lp-btn-hover);
+      }
+      .lp-btn:focus-visible,
+      .lp-continue:focus-visible,
+      .lp-run:focus-visible {
+        outline: 2px solid var(--lp-ink);
+        outline-offset: 3px;
+      }
+      .lp-continue {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        width: min(100%, 360px);
+        margin-top: 34px;
+        padding: 16px 20px 16px 20px;
+        border: 1px solid var(--lp-line);
+        border-radius: 9px;
+        background: var(--lp-card);
+        color: var(--lp-ink);
+        text-decoration: none;
+        transition: box-shadow 0.15s ease;
+      }
+      .lp-continue:hover {
+        box-shadow: 0 8px 18px -12px rgba(0, 0, 0, 0.3);
+      }
+      .lp-continue .go {
+        flex: none;
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 7px;
+        background: var(--lp-row);
+      }
+      .lp-continue b {
+        display: block;
+        font-size: 14.5px;
+        font-weight: 600;
+      }
+      .lp-continue small {
+        display: block;
+        margin-top: 2px;
+        font-size: 12.5px;
+        color: var(--lp-soft);
+      }
+      .lp-continue .chev {
+        margin-left: auto;
+        color: var(--lp-soft);
+      }
+      /* the editor window */
+      .lp-win {
+        overflow: hidden;
+        border: 1px solid var(--lp-line);
+        border-radius: 14px;
+        background: var(--lp-card);
+        box-shadow: var(--lp-shadow);
+        font: 400 13px/1 var(--mono);
+        color: var(--lp-ink);
+      }
+      .lp-win-head {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 14px;
+        height: 38px;
+        border-bottom: 1px solid var(--lp-line);
+        font-size: 11.5px;
+        color: var(--lp-soft);
+      }
+      .lp-win-head i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ee6a5f;
+      }
+      .lp-win-head i:nth-child(2) {
+        background: #f5c04f;
+      }
+      .lp-win-head i:nth-child(3) {
+        background: #62c454;
+      }
+      .lp-win-head .file {
+        margin-left: 14px;
+      }
+      .lp-win-head .state {
+        margin-left: auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 10.5px;
+      }
+      .lp-win-head .state::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--lp-ink);
+      }
+      .lp-code {
+        margin: 0;
+        padding: 20px 18px 20px 22px;
+        font: inherit;
+        font-size: 13.5px;
+        line-height: 23px;
+        white-space: pre;
+        overflow-x: auto;
+      }
+      .lp-code .ln {
+        display: inline-block;
+        width: 22px;
+        margin-right: 14px;
+        text-align: right;
+        color: var(--lp-dim);
+      }
+      .lp-code .c {
+        font-style: italic;
+        color: var(--lp-soft);
+      }
+      .lp-code .n {
+        color: var(--lp-num);
+      }
+      .lp-code .cur {
+        display: inline-block;
+        width: 1.5px;
+        height: 16px;
+        margin-left: 2px;
+        vertical-align: -3px;
+        background: var(--lp-ink);
+        animation: lp-blink 1.1s steps(1) infinite;
+      }
+      @keyframes lp-blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .lp-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 16px;
+        height: 40px;
+        border-top: 1px solid var(--lp-line);
+        border-bottom: 1px solid var(--lp-line);
+        font-size: 11px;
+        color: var(--lp-soft);
+      }
+      .lp-run {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        height: 22px;
+        padding: 0 8px;
+        border: 1px solid var(--lp-ink);
+        border-radius: 4px;
+        background: var(--lp-card);
+        color: var(--lp-ink);
+        font: 500 11px/1 var(--mono);
+      }
+      .lp-bar .ok {
+        margin-left: auto;
+        color: var(--lp-ink);
+      }
+      .lp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12.5px;
+      }
+      .lp-table th {
+        height: 36px;
+        padding: 0 16px;
+        text-align: left;
+        font-size: 10px;
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        color: var(--lp-soft);
+        text-transform: uppercase;
+      }
+      .lp-table td {
+        height: 39px;
+        padding: 0 16px;
+        border-top: 1px solid var(--lp-line);
+        white-space: nowrap;
+      }
+      .lp-table tbody tr {
+        cursor: pointer;
+      }
+      .lp-table td {
+        transition: background-color 0.2s ease, color 0.2s ease;
+      }
+      .lp-table td a {
+        display: inline-block;
+        color: inherit;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+      }
+      /* the first row starts highlighted, as in the design; once the pointer is
+         over the table, the highlight follows the pointer instead */
+      .lp-table tbody tr:first-child td,
+      .lp-table tbody tr:hover td {
+        background: var(--lp-row);
+      }
+      .lp-table tbody:hover tr:first-child:not(:hover) td {
+        background: transparent;
+      }
+      .lp-table tbody tr:hover td:first-child {
+        color: var(--lp-ink);
+      }
+      .lp-table tbody tr:hover td a {
+        transform: translateX(4px);
+      }
+      .lp-table td:first-child {
+        color: var(--lp-soft);
+      }
+      .lp-table tbody tr:first-child td:first-child {
+        color: var(--lp-ink);
+      }
+      .lp-table .park {
+        color: var(--lp-soft);
+      }
+      .lp-table .num,
+      .lp-table th:last-child {
+        text-align: right;
+      }
+      .lp-table .num {
+        color: var(--lp-num);
+      }
+      .lp-table.rerun tbody {
+        animation: lp-rows 0.45s ease;
+      }
+      @keyframes lp-rows {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+      }
+      @media (max-width: 1000px) {
+        .lp-inner {
+          grid-template-columns: minmax(0, 1fr);
+          gap: 48px;
+        }
+        .lp-win {
+          max-width: 590px;
+        }
+      }
+      @media (max-width: 860px) {
+        .lp {
+          margin: -24px -16px 0;
+          padding: 40px 16px 56px;
+          align-items: start;
+          min-height: 0;
+        }
+        .lp-lead {
+          font-size: 16.5px;
+        }
+        .lp-table .park {
+          display: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -2947,6 +3321,7 @@
 
       <main id="main">
         <div class="intro" id="intro" hidden></div>
+        <section class="lp" id="landing" hidden aria-labelledby="lp-title"></section>
         <div class="rm" id="roadmap" hidden>
           <div class="rm-main" id="rm-main"></div>
           <aside class="panel" id="panel" aria-labelledby="panel-title"></aside>
@@ -4317,19 +4692,84 @@
         setTimeout(typeNext, 600);
       }
 
+      // the library's landing page: a hero on the left and, on the right, an
+      // editor window whose "query" result is real: every sidebar topic, in the
+      // sidebar's order, with its resource count and the format it leans on most
+      function renderLanding() {
+        const rows = TOPICS.map((t, i) => {
+          const rs = RESOURCES.filter((r) => r.t === t.id);
+          const by = {};
+          rs.forEach((r) => (by[r.f] = (by[r.f] || 0) + 1));
+          const top = Object.keys(by).sort((a, b) => by[b] - by[a])[0];
+          return { id: "TP" + String(i + 1).padStart(3, "0"), t, n: rs.length, f: top ? (FORMATS[top] ? FORMATS[top].label : top) : "" };
+        });
+        const complete = ROADMAP.filter(weekComplete).length;
+        const going = ROADMAP.filter((w) => !weekComplete(w) && weekDone(w) > 0).length;
+        const icon = (d, w = 20) => `<svg width="${w}" height="${w}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+        const L = (n, html) => `<span class="ln">${n}</span>${html}`;
+        $("#landing").innerHTML = `
+          <div class="lp-inner">
+            <div class="lp-copy">
+              <h1 id="lp-title">Ride the AI curve <em>from basics to mastery.</em></h1>
+              <p class="lp-lead">Learn AI engineering with a hand-picked shelf of ${RESOURCES.length} courses, talks and articles — free, with no signup. From prompts and embeddings to agents, MCP, RAG and evals, with an ${ROADMAP.length}-week roadmap in your browser.</p>
+              <div class="lp-ctas">
+                <a class="lp-btn primary" href="#shelf" data-mode="library">${icon('<path d="M2 5c3-1.3 6.3-1.3 10 1 3.7-2.3 7-2.3 10-1v14c-3-1.3-6.3-1.3-10 1-3.7-2.3-7-2.3-10-1z"/><path d="M12 6v14"/>')}Start Learning</a>
+              </div>
+              <a class="lp-continue" href="#continue">
+                <span class="go">${icon('<path d="M5 12h14M13 6l6 6-6 6"/>', 18)}</span>
+                <span><b>Continue where you left off</b><small>${complete} completed · ${going} in progress</small></span>
+                <span class="chev">${icon('<path d="M9 6l6 6-6 6"/>', 16)}</span>
+              </a>
+            </div>
+            <div class="lp-win" aria-label="Every topic in the library, with its resource count">
+              <div class="lp-win-head"><i></i><i></i><i></i><span class="file">topics.sql</span><span class="state">ready</span></div>
+              <pre class="lp-code">${[
+                L(1, '<span class="c">-- every topic on the shelf</span>'),
+                L(2, "SELECT id, topic, format, COUNT(*) AS resources"),
+                L(3, "FROM   topics"),
+                L(4, "JOIN   resources USING(topic_id)"),
+                L(5, `GROUP BY id ORDER BY id;<span class="cur"></span>`),
+              ].join("\n")}</pre>
+              <div class="lp-bar"><button class="lp-run" type="button">▶ Run</button><span>· ${rows.length} rows · 12ms</span><span class="ok">✓ passed</span></div>
+              <table class="lp-table">
+                <thead><tr><th>Id</th><th>Topic</th><th class="park">Format</th><th>Resources</th></tr></thead>
+                <tbody>${rows
+                  .map((r) => `<tr><td>${r.id}</td><td><a href="#${r.t.id}">${esc(r.t.name)}</a></td><td class="park">${esc(r.f)}</td><td class="num">${r.n}</td></tr>`)
+                  .join("")}</tbody>
+              </table>
+            </div>
+          </div>`;
+        // the whole row opens its topic, not just the name
+        $("#landing .lp-table tbody").addEventListener("click", (e) => {
+          const row = e.target.closest("tr");
+          if (row && !e.target.closest("a")) row.querySelector("a").click();
+        });
+        $("#landing .lp-run").addEventListener("click", () => {
+          const tb = $("#landing .lp-table");
+          tb.classList.remove("rerun");
+          void tb.offsetWidth;
+          tb.classList.add("rerun");
+        });
+      }
+
       function render() {
         const road = state.mode === "roadmap";
         const intro = state.mode === "intro";
+        const landing = state.mode === "landing";
         document.documentElement.classList.toggle("on-intro", intro);
         requestAnimationFrame(placeOrbit);
         $("#mode-intro").setAttribute("aria-pressed", intro);
         $("#mode-roadmap").setAttribute("aria-pressed", road);
-        $("#mode-library").setAttribute("aria-pressed", state.mode === "library");
-        $(".shell").classList.toggle("solo", road || intro);
+        $("#mode-library").setAttribute("aria-pressed", state.mode === "library" || landing);
+        $(".shell").classList.toggle("solo", road || intro || landing);
         $("#intro").hidden = !intro;
+        $("#landing").hidden = !landing;
         $("#roadmap").hidden = !road;
-        $("#shelves").hidden = road || intro;
-        if (intro) {
+        $("#shelves").hidden = road || intro || landing;
+        if (landing) {
+          closeSheet();
+          renderLanding();
+        } else if (intro) {
           closeSheet();
           renderIntro();
         } else if (road) {
@@ -4611,12 +5051,14 @@
       }
 
       // every view has its own URL, so Back and Forward move between them:
-      // no hash = intro, #roadmap, #week-5 (that week open), #library, #mcp (a topic)
+      // no hash = intro, #roadmap, #week-5 (that week open), #library (the landing
+      // page), #shelf (every topic), #mcp (a topic)
       function routeHash() {
         if (state.mode === "intro") return "";
+        if (state.mode === "landing") return "library";
         if (state.mode === "roadmap") return state.open ? "week-" + state.sel : "roadmap";
         if (state.page) return state.topic + "/" + state.page;
-        return state.topic === "all" ? "library" : state.topic;
+        return state.topic === "all" ? "shelf" : state.topic;
       }
       function pushRoute(replace) {
         const h = routeHash();
@@ -4641,7 +5083,8 @@
         state.page = null;
         if (pg && pageOf(pg[2]) && pageOf(pg[2]).t === pg[1]) (state.mode = "library"), (state.topic = pg[1]), (state.page = pg[2]);
         else if (hash === "roadmap") state.mode = "roadmap";
-        else if (hash === "library") (state.mode = "library"), (state.topic = "all");
+        else if (hash === "library") state.mode = "landing";
+        else if (hash === "shelf") (state.mode = "library"), (state.topic = "all");
         else if (topicOf(hash)) (state.mode = "library"), (state.topic = hash);
         else state.mode = "intro";
         if (state.open) closeSheet();
@@ -4658,7 +5101,14 @@
       }
       $("#mode-intro").addEventListener("click", () => setMode("intro"));
       $("#mode-roadmap").addEventListener("click", () => setMode("roadmap"));
-      $("#mode-library").addEventListener("click", () => setMode("library"));
+      $("#mode-library").addEventListener("click", () => setMode("landing"));
+      $("#landing").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-mode]");
+        if (!b) return;
+        e.preventDefault();
+        if (b.dataset.mode === "library") (state.topic = "all"), (state.q = ""), ($("#q").value = "");
+        setMode(b.dataset.mode);
+      });
       $("#intro").addEventListener("click", (e) => {
         const b = e.target.closest("[data-mode]");
         if (b) setMode(b.dataset.mode);
@@ -4912,7 +5362,7 @@
       $("#q").addEventListener("input", (e) => {
         state.q = e.target.value.trim();
         if (state.q) state.page = null;
-        if (state.q && state.mode === "intro") state.mode = "library";
+        if (state.q && (state.mode === "intro" || state.mode === "landing")) state.mode = "library";
         render();
         pushRoute();
       });
